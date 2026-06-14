@@ -1,5 +1,4 @@
-//val serverPluginDirectory = file("path/to/serverPluginsFolder...")
-val serverPluginDirectory = file("/Users/edavalos/Documents/Minecraft Servers/ContourMC/plugins")
+val serverPluginDirectory = file("path/to/serverPluginsFolder...")
 
 plugins {
     java
