@@ -1,4 +1,4 @@
-val serverPluginDirectory = file("path/to/serverPluginsFolder...")
+val serverPluginDirectory = file(findProperty("serverPluginDirectory") ?: "path/to/serverPluginsFolder...")
 
 plugins {
     java
