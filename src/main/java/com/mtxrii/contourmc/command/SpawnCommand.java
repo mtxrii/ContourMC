@@ -2,6 +2,8 @@ package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.exception.SpawnpointArgumentException;
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
@@ -24,15 +26,23 @@ public final class SpawnCommand {
             @Argument("name") final String name
     ) {
         if (!(sender.source() instanceof Player player)) {
-            sender.source().sendMessage("[Error] You must be a player to run this command.");
+            new Message(
+                    MessagePrefix.SPAWN,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
             return;
         }
 
         try {
             this.spawnpointService.saveNewSpawnpoint(name, player.getLocation());
-            player.sendMessage("[Spawn] Spawn '" + name + "' saved successfully.");
+            new Message(
+                    MessagePrefix.SPAWN,
+                    "Spawn {} saved successfully.",
+                    name
+            ).sendTo(player);
         } catch (SpawnpointArgumentException e) {
-            player.sendMessage(e.getMessage());
+            e.sendTo(player);
         }
     }
 
@@ -43,9 +53,13 @@ public final class SpawnCommand {
     ) {
         try {
             this.spawnpointService.deleteSpawnpoint(name);
-            sender.source().sendMessage("[Spawn] Spawn '" + name + "' deleted successfully.");
+            new Message(
+                    MessagePrefix.SPAWN,
+                    "Spawn {} deleted successfully.",
+                    name
+            ).sendTo(sender);
         } catch (SpawnpointArgumentException e) {
-            sender.source().sendMessage(e.getMessage());
+            e.sendTo(sender);
         }
     }
 
@@ -55,10 +69,17 @@ public final class SpawnCommand {
     ) {
         Set<String> spawnpointNames = this.spawnpointService.spawnpoints();
         if (spawnpointNames.isEmpty()) {
-            sender.source().sendMessage("[Spawn] No spawns found.");
+            new Message(
+                    MessagePrefix.SPAWN,
+                    "No spawns found."
+            ).sendTo(sender);
             return;
         }
-        sender.source().sendMessage("[Spawn] Available spawns: " + String.join(", ", spawnpointNames));
+        new Message(
+                MessagePrefix.SPAWN,
+                "Available spawns: {}.",
+                String.join(", ", spawnpointNames)
+        ).sendTo(sender);
     }
 
     @Command("spawn [name]")
@@ -67,14 +88,22 @@ public final class SpawnCommand {
             @Argument("name") String name
     ) {
         if (!(sender.source() instanceof Player player)) {
-            sender.source().sendMessage("[Error] You must be a player to run this command.");
+            new Message(
+                    MessagePrefix.SPAWN,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
             return;
         }
 
         if (name == null) {
             Set<String> spawnpointNames = this.spawnpointService.spawnpoints();
             if (spawnpointNames.isEmpty()) {
-                sender.source().sendMessage("[Spawn] No spawns available to teleport to.");
+                new Message(
+                        MessagePrefix.SPAWN,
+                        true,
+                        "No spawns available to teleport to."
+                ).sendTo(sender);
                 return;
             }
 
@@ -88,7 +117,11 @@ public final class SpawnCommand {
 
         try {
             this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
-            player.sendMessage("[Spawn] Teleported to " + name);
+            new Message(
+                    MessagePrefix.SPAWN,
+                    "Teleported to {}.",
+                    name
+            ).sendTo(player);
         } catch (SpawnpointArgumentException e) {
             player.sendMessage(e.getMessage());
         }

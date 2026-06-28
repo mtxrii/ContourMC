@@ -2,6 +2,8 @@ package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.exception.KitArgumentException;
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
@@ -26,10 +28,18 @@ public final class KitCommand {
     ) {
         Set<String> kitNames = this.kitService.kitNames();
         if (kitNames.isEmpty()) {
-            sender.source().sendMessage("[Kit] No kits found.");
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "No kits found."
+            ).sendTo(sender);
             return;
         }
-        sender.source().sendMessage("[Kit] Available kits: " + String.join(", ", kitNames));
+        new Message(
+                MessagePrefix.KIT,
+                "Available kits: {}.",
+                String.join(", ", kitNames)
+        ).sendTo(sender);
     }
 
     @Command("kit equip <kitName>")
@@ -38,15 +48,23 @@ public final class KitCommand {
             @Argument(value = "kitName", suggestions = "kits") final String kitName
     ) {
         if (!(sender.source() instanceof Player player)) {
-            sender.source().sendMessage("[Error] You must be a player to run this command.");
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
             return;
         }
 
         try {
             this.kitService.equipKit(kitName, player);
-            player.sendMessage("[Kit] Kit '" + kitName + "' equipped successfully.");
+            new Message(
+                    MessagePrefix.KIT,
+                    "Kit {} equipped successfully",
+                    kitName
+            ).sendTo(player);
         } catch (KitArgumentException e) {
-            player.sendMessage(e.getMessage());
+            e.sendTo(player);
         }
     }
 
@@ -56,15 +74,23 @@ public final class KitCommand {
             @Argument("kitName") final String kitName
     ) {
         if (!(sender.source() instanceof Player player)) {
-            sender.source().sendMessage("[Error] You must be a player to run this command.");
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
             return;
         }
 
         try {
             this.kitService.saveNewKit(kitName, player.getInventory());
-            player.sendMessage("[Kit] Kit '" + kitName + "' saved successfully.");
+            new Message(
+                    MessagePrefix.KIT,
+                    "Kit {} saved successfully",
+                    kitName
+            ).sendTo(player);
         } catch (KitArgumentException e) {
-            player.sendMessage(e.getMessage());
+            e.sendTo(player);
         }
     }
 
@@ -75,9 +101,13 @@ public final class KitCommand {
     ) {
         try {
             this.kitService.deleteKit(kitName);
-            sender.source().sendMessage("[Kit] Kit '" + kitName + "' deleted successfully.");
+            new Message(
+                    MessagePrefix.KIT,
+                    "Kit {} deleted successfully",
+                    kitName
+            ).sendTo(sender);
         } catch (KitArgumentException e) {
-            sender.source().sendMessage(e.getMessage());
+            e.sendTo(sender);
         }
     }
 

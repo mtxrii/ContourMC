@@ -1,5 +1,7 @@
 package com.mtxrii.contourmc.command;
 
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -43,35 +45,63 @@ public final class EnvironmentCommand {
         try {
             newCondition = ConditionArgument.valueOf(condition.toUpperCase());
         } catch (IllegalArgumentException e) {
-            sender.source().sendMessage("[Error] Invalid condition.");
+            new Message(
+                    MessagePrefix.ENV,
+                    true,
+                    "Invalid condition."
+            ).sendTo(sender);
             return;
         }
 
         switch (newCondition) {
             case DAY -> {
                 targetWorld.setTime(TIME_DAY);
-                sender.source().sendMessage("[Env] Set time in " + targetWorld.getName() + " to " + TIME_DAY + " (" + convertGameTimeToString(TIME_DAY) + ").");
+                new Message(
+                        MessagePrefix.ENV,
+                        "Set time in {} to {} ({}).",
+                        targetWorld.getName(),
+                        String.valueOf(TIME_DAY),
+                        convertGameTimeToString(TIME_DAY)
+                ).sendTo(sender);
             }
             case NIGHT -> {
                 targetWorld.setTime(TIME_NIGHT);
-                sender.source().sendMessage("[Env] Set time in " + targetWorld.getName() + " to " + TIME_NIGHT + " (" + convertGameTimeToString(TIME_NIGHT) + ").");
+                new Message(
+                        MessagePrefix.ENV,
+                        "Set time in {} to {} ({}).",
+                        targetWorld.getName(),
+                        String.valueOf(TIME_NIGHT),
+                        convertGameTimeToString(TIME_NIGHT)
+                ).sendTo(sender);
             }
             case SUN -> {
                 targetWorld.setStorm(false);
                 targetWorld.setThundering(false);
                 targetWorld.setWeatherDuration(WEATHER_DURATION_CLEAR);
-                sender.source().sendMessage("[Env] Set weather in " + targetWorld.getName() + " to clear.");
+                new Message(
+                        MessagePrefix.ENV,
+                        "Set weather in {} to clear.",
+                        targetWorld.getName()
+                ).sendTo(sender);
             }
             case RAIN -> {
                 targetWorld.setStorm(true);
                 targetWorld.setWeatherDuration(WEATHER_DURATION_RAIN);
-                sender.source().sendMessage("[Env] Set weather in " + targetWorld.getName() + " to rain.");
+                new Message(
+                        MessagePrefix.ENV,
+                        "Set weather in {} to rain.",
+                        targetWorld.getName()
+                ).sendTo(sender);
             }
             case THUNDER -> {
                 targetWorld.setStorm(true);
                 targetWorld.setThundering(true);
                 targetWorld.setThunderDuration(WEATHER_DURATION_RAIN);
-                sender.source().sendMessage("[Env] Set weather in " + targetWorld.getName() + " to thunder.");
+                new Message(
+                        MessagePrefix.ENV,
+                        "Set weather in {} to thunder.",
+                        targetWorld.getName()
+                ).sendTo(sender);
             }
         }
     }

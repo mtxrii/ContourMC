@@ -1,8 +1,24 @@
 package com.mtxrii.contourmc.exception;
 
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
+import org.bukkit.entity.Player;
+import org.incendo.cloud.paper.util.sender.Source;
+
 public class KitArgumentException extends IllegalArgumentException {
+    private final Message message;
 
     public KitArgumentException(String message) {
-        super("[Kit] " + message);
+        final Message errMsg = new Message(MessagePrefix.KIT, true, message);
+        super(errMsg.getMessage());
+        this.message = errMsg;
+    }
+
+    public void sendTo(Source sender) {
+        this.message.sendTo(sender);
+    }
+
+    public void sendTo(Player player) {
+        this.message.sendTo(player);
     }
 }

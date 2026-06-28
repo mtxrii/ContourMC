@@ -3,6 +3,8 @@ package com.mtxrii.contourmc.service;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.KitsConfiguration;
 import com.mtxrii.contourmc.exception.KitArgumentException;
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.util.Base64Util;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.Material;
@@ -51,7 +53,11 @@ public class KitService {
         try {
             kitContents = Base64Util.inventoryFromBase64(kitBase64);
         } catch (IOException | ClassNotFoundException e) {
-            playerEntity.sendMessage("[Error] kits are momentarily unavailable. Please try again later.");
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "Feature is momentarily unavailable. Please try again later."
+            ).sendTo(playerEntity);
             throw new RuntimeException(e);
         }
 
