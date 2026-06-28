@@ -6,7 +6,7 @@ public enum MessagePrefix {
     public String getFormatted() {
         int messagePrefixLength = this.name().length();
         String padding = " ".repeat(prefixLength() - messagePrefixLength);
-        return this.name() + padding + " | ";
+        return this.name() + padding + " &9&l| ";
     }
 
     private static int prefixLength() {

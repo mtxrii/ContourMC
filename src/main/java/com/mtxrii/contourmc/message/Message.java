@@ -1,5 +1,7 @@
 package com.mtxrii.contourmc.message;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.util.sender.Source;
@@ -10,23 +12,17 @@ import java.util.regex.Pattern;
 public class Message {
     private static final String TEMPLATE_VAR = "{}";
 
-    private final MessagePrefix prefix;
     private final String message;
-    private final boolean error;
 
     public Message(MessagePrefix prefix, boolean error, String template, String... args) {
-        this.prefix = prefix;
-        this.message = prefix.getFormatted() + fillOutMessageTemplate(template, args);
-        this.error = error;
+        this.message = (error ? "&4&l" : "&3&l") + prefix.getFormatted() + fillOutMessageTemplate(error, template, args);
     }
 
     public Message(MessagePrefix prefix, String template, String... args) {
-        this.prefix = prefix;
-        this.message = prefix.getFormatted() + fillOutMessageTemplate(template, args);
-        this.error = false;
+        this(prefix, false, template, args);
     }
 
-    private static String fillOutMessageTemplate(final String template, final String[] args) {
+    private static String fillOutMessageTemplate(final boolean error, final String template, final String[] args) {
         int varCount = countMatches(template, TEMPLATE_VAR);
         int argCount = args.length;
         if (varCount != argCount) {
@@ -36,8 +32,15 @@ public class Message {
         }
 
         String message = template;
+        if (error) {
+            message = "&c" + message;
+        } else {
+            message = "&b" + message;
+        }
+
         for (String arg : args) {
-            message = message.replaceFirst(Pattern.quote(TEMPLATE_VAR), arg);
+            String coloredArg = "&7" + arg + (error ? "&c" : "&b");
+            message = message.replaceFirst(Pattern.quote(TEMPLATE_VAR), coloredArg);
         }
         return message;
     }
@@ -56,15 +59,18 @@ public class Message {
     }
 
     public void sendTo(Source sender) {
-        sender.source().sendMessage(this.message);
+        Component msg = LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
+        sender.source().sendMessage(msg);
     }
 
     public void sendTo(Player player) {
-        player.sendMessage(this.message);
+        Component msg = LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
+        player.sendMessage(msg);
     }
 
     public void sendTo(HumanEntity humanEntity) {
-        humanEntity.sendMessage(this.message);
+        Component msg = LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
+        humanEntity.sendMessage(msg);
     }
 
     public String getMessage() {

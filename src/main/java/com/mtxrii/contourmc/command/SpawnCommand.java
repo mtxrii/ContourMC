@@ -123,7 +123,7 @@ public final class SpawnCommand {
                     name
             ).sendTo(player);
         } catch (SpawnpointArgumentException e) {
-            player.sendMessage(e.getMessage());
+            e.sendTo(player);
         }
     }
 }
