@@ -1,0 +1,74 @@
+[versions]
+# jvm
+java = "26"
+
+# minecraft
+minecraft = "26.1.2"
+paper-api = "26.1.2.build.+"
+
+# plugins
+plugin-shadow = "9.4.2"
+plugin-paperweight = "2.0.0-beta.21"
+plugin-run-paper = "3.0.2"
+plugin-resource-factory = "1.3.1"
+
+plugin-modringth-worldedit = "yDUBafTJ"
+plugin-modringth-worldguard = "pI4UHLJL"
+plugin-modringth-multiverse = "y7jO3wci"
+
+# generic
+lib-jetbains-annotations = "26.1.0"
+lib-lombok = "1.18.46"
+lib-guice = "7.0.0"
+
+lib-classgraph = "4.8.184"
+
+lib-platform = "1.0.0-SNAPSHOT"
+
+# cloud
+lib-cloud-core = "2.0.0"
+lib-cloud-platform = "2.0.0-SNAPSHOT"
+
+# testing
+lib-tests-junit = "6.1.0"
+lib-tests-assertj = "3.27.7"
+
+# misc
+dep-configurate = "4.2.0"
+
+
+[libraries]
+# generic
+jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "lib-jetbains-annotations" }
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lib-lombok" }
+google-guice = { group = "com.google.inject", name = "guice", version.ref = "lib-guice" }
+
+# testing
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "lib-tests-junit" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "lib-tests-junit" }
+junit-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "lib-tests-junit" }
+assertj = { group = "org.assertj", name = "assertj-core", version.ref = "lib-tests-assertj" }
+
+# misc
+configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "dep-configurate" }
+configurate-json = { group = "org.spongepowered", name = "configurate-jackson", version.ref = "dep-configurate" }
+configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "dep-configurate" }
+
+classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "lib-classgraph" }
+
+platform-core = { group = "com.sxtanna.platform", name = "platform-core", version.ref = "lib-platform" }
+platform-paper = { group = "com.sxtanna.platform", name = "platform-paper", version.ref = "lib-platform" }
+
+cloud-annotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "lib-cloud-core" }
+cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "lib-cloud-platform" }
+cloud-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "lib-cloud-platform" }
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "plugin-shadow" }
+paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "plugin-paperweight" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "plugin-run-paper" }
+resource-factory = { id = "xyz.jpenilla.resource-factory-paper-convention", version.ref = "plugin-resource-factory" }
+
+modrinth-worldedit = { id = "worldedit", version.ref = "plugin-modringth-worldedit" }
+modrinth-worldguard = { id = "worldguard", version.ref = "plugin-modringth-worldguard" }
+modrinth-multiverse = { id = "multiverse-core", version.ref = "plugin-modringth-multiverse" }
