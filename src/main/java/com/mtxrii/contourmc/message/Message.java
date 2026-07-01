@@ -31,12 +31,7 @@ public class Message {
             );
         }
 
-        String message = template;
-        if (error) {
-            message = "&c" + message;
-        } else {
-            message = "&b" + message;
-        }
+        String message = (error ? "&c" : "&b") + template;
 
         for (String arg : args) {
             String coloredArg = "&7" + arg + (error ? "&c" : "&b");

@@ -1,7 +1,7 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
-import com.mtxrii.contourmc.exception.SpawnpointArgumentException;
+import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.SpawnpointService;
@@ -41,7 +41,7 @@ public final class SpawnCommand {
                     "Spawn {} saved successfully.",
                     name
             ).sendTo(player);
-        } catch (SpawnpointArgumentException e) {
+        } catch (CommandArgumentException e) {
             e.sendTo(player);
         }
     }
@@ -58,7 +58,7 @@ public final class SpawnCommand {
                     "Spawn {} deleted successfully.",
                     name
             ).sendTo(sender);
-        } catch (SpawnpointArgumentException e) {
+        } catch (CommandArgumentException e) {
             e.sendTo(sender);
         }
     }
@@ -122,7 +122,7 @@ public final class SpawnCommand {
                     "Teleported to {}.",
                     name
             ).sendTo(player);
-        } catch (SpawnpointArgumentException e) {
+        } catch (CommandArgumentException e) {
             e.sendTo(player);
         }
     }

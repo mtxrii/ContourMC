@@ -1,7 +1,8 @@
 package com.mtxrii.contourmc.service;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.SpawnpointsConfiguration;
-import com.mtxrii.contourmc.exception.SpawnpointArgumentException;
+import com.mtxrii.contourmc.exception.CommandArgumentException;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import com.sxtanna.platform.archetype.Component;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -39,9 +40,10 @@ public class SpawnpointService {
     public void saveNewSpawnpoint(
             @NotNull String spawnpointName,
             @NotNull Location spawnpointLocation
-    ) throws SpawnpointArgumentException {
+    ) throws CommandArgumentException {
         if (this.spawnpointsConfig.spawnpoints.containsKey(spawnpointName)) {
-            throw new SpawnpointArgumentException(
+            throw new CommandArgumentException(
+                    MessagePrefix.SPAWN,
                     "Spawn point already exists with this name. Either delete it first or choose a different name."
             );
         }
@@ -60,9 +62,9 @@ public class SpawnpointService {
 
     public void deleteSpawnpoint(
             @NotNull String spawnpointName
-    ) throws SpawnpointArgumentException {
+    ) throws CommandArgumentException {
         if (!this.spawnpointsConfig.spawnpoints.containsKey(spawnpointName)) {
-            throw new SpawnpointArgumentException("No spawn point exists with this name.");
+            throw new CommandArgumentException(MessagePrefix.SPAWN, "No spawn point exists with this name.");
         }
 
         this.spawnpointsConfig.spawnpoints.remove(spawnpointName);
@@ -72,15 +74,15 @@ public class SpawnpointService {
     public void teleportLivingEntityToSpawnpoint(
             @NotNull String spawnpointName,
             @NonNull LivingEntity entity
-    ) throws SpawnpointArgumentException {
+    ) throws CommandArgumentException {
         if (!this.spawnpointsConfig.spawnpoints.containsKey(spawnpointName)) {
-            throw new SpawnpointArgumentException("No spawn point exists with this name.");
+            throw new CommandArgumentException(MessagePrefix.SPAWN, "No spawn point exists with this name.");
         }
 
         SpawnpointsConfiguration.Spawnpoint spawnpoint = this.spawnpointsConfig.spawnpoints.get(spawnpointName);
         World world = Bukkit.getWorld(spawnpoint.world);
         if (world == null) {
-            throw new SpawnpointArgumentException("The world for this spawn point is not loaded.");
+            throw new CommandArgumentException(MessagePrefix.SPAWN, "The world for this spawn point is not loaded.");
         }
 
         Location spawnpointLocation = new Location(

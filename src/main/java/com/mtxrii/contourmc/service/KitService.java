@@ -2,7 +2,7 @@ package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.KitsConfiguration;
-import com.mtxrii.contourmc.exception.KitArgumentException;
+import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.util.Base64Util;
@@ -43,10 +43,10 @@ public class KitService {
     public void equipKit(
             @NotNull String kitName,
             @NotNull HumanEntity playerEntity
-    ) throws KitArgumentException {
+    ) throws CommandArgumentException {
         String kitBase64 = this.kitsConfig.kits.get(kitName);
         if (kitBase64 == null) {
-            throw new KitArgumentException("Kit not found");
+            throw new CommandArgumentException(MessagePrefix.KIT, "Kit not found");
         }
 
         ItemStack[] kitContents;
@@ -70,9 +70,10 @@ public class KitService {
     public void saveNewKit(
             @NotNull String kitName,
             @NotNull PlayerInventory kitHolderInventory
-    ) throws KitArgumentException {
+    ) throws CommandArgumentException {
         if (this.kitsConfig.kits.containsKey(kitName)) {
-            throw new KitArgumentException(
+            throw new CommandArgumentException(
+                    MessagePrefix.KIT,
                     "Kit already exists with this name. Either delete it first or choose a different name."
             );
         }
@@ -90,9 +91,9 @@ public class KitService {
 
     public void deleteKit(
             @NotNull String kitName
-    ) throws KitArgumentException {
+    ) throws CommandArgumentException {
         if (!this.kitsConfig.kits.containsKey(kitName)) {
-            throw new KitArgumentException("No kit exists with this name.");
+            throw new CommandArgumentException(MessagePrefix.KIT, "No kit exists with this name.");
         }
 
         this.kitsConfig.kits.remove(kitName);

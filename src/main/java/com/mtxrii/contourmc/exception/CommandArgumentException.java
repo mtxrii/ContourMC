@@ -5,11 +5,11 @@ import com.mtxrii.contourmc.message.MessagePrefix;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.util.sender.Source;
 
-public class SpawnpointArgumentException extends IllegalArgumentException {
+public class CommandArgumentException extends IllegalArgumentException {
     private final Message message;
 
-    public SpawnpointArgumentException(String message) {
-        final Message errMsg = new Message(MessagePrefix.SPAWN, true, message);
+    public CommandArgumentException(MessagePrefix prefix, String message) {
+        final Message errMsg = new Message(prefix, true, message);
         super(errMsg.getMessage());
         this.message = errMsg;
     }

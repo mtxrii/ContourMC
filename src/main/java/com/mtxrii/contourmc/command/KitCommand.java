@@ -1,7 +1,7 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
-import com.mtxrii.contourmc.exception.KitArgumentException;
+import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
@@ -63,7 +63,7 @@ public final class KitCommand {
                     "Kit {} equipped successfully",
                     kitName
             ).sendTo(player);
-        } catch (KitArgumentException e) {
+        } catch (CommandArgumentException e) {
             e.sendTo(player);
         }
     }
@@ -89,7 +89,7 @@ public final class KitCommand {
                     "Kit {} saved successfully",
                     kitName
             ).sendTo(player);
-        } catch (KitArgumentException e) {
+        } catch (CommandArgumentException e) {
             e.sendTo(player);
         }
     }
@@ -106,7 +106,7 @@ public final class KitCommand {
                     "Kit {} deleted successfully",
                     kitName
             ).sendTo(sender);
-        } catch (KitArgumentException e) {
+        } catch (CommandArgumentException e) {
             e.sendTo(sender);
         }
     }
