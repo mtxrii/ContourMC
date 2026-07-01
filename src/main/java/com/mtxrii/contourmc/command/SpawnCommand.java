@@ -1,7 +1,6 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
-import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.SpawnpointService;
@@ -34,16 +33,12 @@ public final class SpawnCommand {
             return;
         }
 
-        try {
-            this.spawnpointService.saveNewSpawnpoint(name, player.getLocation());
-            new Message(
-                    MessagePrefix.SPAWN,
-                    "Spawn {} saved successfully.",
-                    name
-            ).sendTo(player);
-        } catch (CommandArgumentException e) {
-            e.sendTo(player);
-        }
+        this.spawnpointService.saveNewSpawnpoint(name, player.getLocation());
+        new Message(
+                MessagePrefix.SPAWN,
+                "Spawn {} saved successfully.",
+                name
+        ).sendTo(player);
     }
 
     @Command("deletespawn|delspawn <name>")
@@ -51,16 +46,12 @@ public final class SpawnCommand {
             @NotNull final Source sender,
             @Argument("name") final String name
     ) {
-        try {
-            this.spawnpointService.deleteSpawnpoint(name);
-            new Message(
-                    MessagePrefix.SPAWN,
-                    "Spawn {} deleted successfully.",
-                    name
-            ).sendTo(sender);
-        } catch (CommandArgumentException e) {
-            e.sendTo(sender);
-        }
+        this.spawnpointService.deleteSpawnpoint(name);
+        new Message(
+                MessagePrefix.SPAWN,
+                "Spawn {} deleted successfully.",
+                name
+        ).sendTo(sender);
     }
 
     @Command("spawns|listspawns")
@@ -115,15 +106,11 @@ public final class SpawnCommand {
             name = it.next();
         }
 
-        try {
-            this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
-            new Message(
-                    MessagePrefix.SPAWN,
-                    "Teleported to {}.",
-                    name
-            ).sendTo(player);
-        } catch (CommandArgumentException e) {
-            e.sendTo(player);
-        }
+        this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
+        new Message(
+                MessagePrefix.SPAWN,
+                "Teleported to {}.",
+                name
+        ).sendTo(player);
     }
 }

@@ -1,7 +1,6 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
-import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
@@ -56,16 +55,12 @@ public final class KitCommand {
             return;
         }
 
-        try {
-            this.kitService.equipKit(kitName, player);
-            new Message(
-                    MessagePrefix.KIT,
-                    "Kit {} equipped successfully",
-                    kitName
-            ).sendTo(player);
-        } catch (CommandArgumentException e) {
-            e.sendTo(player);
-        }
+        this.kitService.equipKit(kitName, player);
+        new Message(
+                MessagePrefix.KIT,
+                "Kit {} equipped successfully",
+                kitName
+        ).sendTo(player);
     }
 
     @Command("kit save <kitName>")
@@ -82,16 +77,12 @@ public final class KitCommand {
             return;
         }
 
-        try {
-            this.kitService.saveNewKit(kitName, player.getInventory());
-            new Message(
-                    MessagePrefix.KIT,
-                    "Kit {} saved successfully",
-                    kitName
-            ).sendTo(player);
-        } catch (CommandArgumentException e) {
-            e.sendTo(player);
-        }
+        this.kitService.saveNewKit(kitName, player.getInventory());
+        new Message(
+                MessagePrefix.KIT,
+                "Kit {} saved successfully",
+                kitName
+        ).sendTo(player);
     }
 
     @Command("kit delete <kitName>")
@@ -99,16 +90,12 @@ public final class KitCommand {
             @NotNull final Source sender,
             @Argument(value = "kitName", suggestions = "kits") final String kitName
     ) {
-        try {
-            this.kitService.deleteKit(kitName);
-            new Message(
-                    MessagePrefix.KIT,
-                    "Kit {} deleted successfully",
-                    kitName
-            ).sendTo(sender);
-        } catch (CommandArgumentException e) {
-            e.sendTo(sender);
-        }
+        this.kitService.deleteKit(kitName);
+        new Message(
+                MessagePrefix.KIT,
+                "Kit {} deleted successfully",
+                kitName
+        ).sendTo(sender);
     }
 
     @Suggestions("kits")
