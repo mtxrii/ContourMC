@@ -54,21 +54,22 @@ public class Message {
     }
 
     public void sendTo(Source sender) {
-        Component msg = LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
-        sender.source().sendMessage(msg);
+        sender.source().sendMessage(this.getMessageComponent());
     }
 
     public void sendTo(Player player) {
-        Component msg = LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
-        player.sendMessage(msg);
+        player.sendMessage(this.getMessageComponent());
     }
 
     public void sendTo(HumanEntity humanEntity) {
-        Component msg = LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
-        humanEntity.sendMessage(msg);
+        humanEntity.sendMessage(this.getMessageComponent());
     }
 
     public String getMessage() {
         return this.message;
+    }
+
+    public Component getMessageComponent() {
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
     }
 }

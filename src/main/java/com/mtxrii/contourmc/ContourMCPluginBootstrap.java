@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc;
 
 import com.google.inject.Singleton;
+import com.mtxrii.contourmc.exception.CommandArgumentException;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -9,6 +10,8 @@ import io.papermc.paper.plugin.bootstrap.PluginProviderContext;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.annotations.processing.CommandContainer;
+import org.incendo.cloud.exception.ArgumentParseException;
+import org.incendo.cloud.exception.CommandExecutionException;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.injection.GuiceInjectionService;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
@@ -88,12 +91,26 @@ final class ContourMCPluginBootstrap extends PlatformPaperPluginBoostrap<Contour
         this.commandManager = manager;
         this.annotationParser = annotationParser;
 
+        final MinecraftExceptionHandler.MessageFactory<Source, ArgumentParseException> defaultArgumentParsingHandler =
+              MinecraftExceptionHandler.createDefaultArgumentParsingHandler();
+
+        final MinecraftExceptionHandler.MessageFactory<Source, CommandExecutionException> defaultCommandExecutionHandler =
+              MinecraftExceptionHandler.createDefaultCommandExecutionHandler();
+
         MinecraftExceptionHandler.create(Source::source)
                                  .defaultInvalidSyntaxHandler()
                                  .defaultInvalidSenderHandler()
                                  .defaultNoPermissionHandler()
-                                 .defaultArgumentParsingHandler()
-                                 .defaultCommandExecutionHandler()
+                                 .handler(CommandArgumentException.class,
+                                         (_, ctx) -> ctx.exception().getMessageComponent())
+                                 .handler(ArgumentParseException.class,
+                                         (formatter, ctx) -> ctx.exception().getCause() instanceof CommandArgumentException arg ?
+                                                 arg.getMessageComponent() :
+                                                 defaultArgumentParsingHandler.message(formatter, ctx))
+                                 .handler(CommandExecutionException.class,
+                                         (formatter, ctx) -> ctx.exception().getCause() instanceof CommandArgumentException arg ?
+                                                 arg.getMessageComponent() :
+                                                 defaultCommandExecutionHandler.message(formatter, ctx))
                                  .registerTo(manager);
 
         manager.captionRegistry().registerProvider(MinecraftHelp.defaultCaptionsProvider());

@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.exception;
 
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.util.sender.Source;
 
@@ -20,5 +21,9 @@ public class CommandArgumentException extends IllegalArgumentException {
 
     public void sendTo(Player player) {
         this.message.sendTo(player);
+    }
+
+    public Component getMessageComponent() {
+        return this.message.getMessageComponent();
     }
 }
