@@ -1,6 +1,8 @@
 package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Player;
@@ -22,8 +24,13 @@ public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        Message deathMessage;
         Player victim = event.getPlayer();
         Player killer = victim.getKiller();
+        if (killer != null) {
+            deathMessage = new Message(MessagePrefix.GAME, "{} was killed by {}", victim.getName(), killer.getName());
+
+        }
 
         event.setShowDeathMessages(false);
 
