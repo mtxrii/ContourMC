@@ -1,7 +1,7 @@
 package com.mtxrii.contourmc.message;
 
 public enum MessagePrefix {
-    INFO, KIT, SPAWN, ENV;
+    INFO, KIT, SPAWN, ENV, GAME;
 
     public String getFormatted() {
         int messagePrefixLength = this.name().length();
