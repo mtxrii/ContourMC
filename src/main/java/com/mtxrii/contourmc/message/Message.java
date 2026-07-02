@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.message;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.util.sender.Source;
@@ -67,6 +68,10 @@ public class Message {
 
     public void sendTo(HumanEntity humanEntity) {
         humanEntity.sendMessage(this.getMessageComponent());
+    }
+
+    public void sendToAll() {
+        Bukkit.broadcast(this.getMessageComponent());
     }
 
     public String getMessage() {
