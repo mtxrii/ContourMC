@@ -1,9 +1,13 @@
 package com.mtxrii.contourmc.message;
 
 public enum MessagePrefix {
-    INFO, KIT, SPAWN, ENV, GAME;
+    BLANK, INFO, KIT, SPAWN, ENV, GAME;
 
     public String getFormatted() {
+        if (this == BLANK) {
+            return "";
+        }
+
         int messagePrefixLength = this.name().length();
         String padding = " ".repeat(prefixLength() - messagePrefixLength);
         return this.name() + padding + " &9&l| ";
