@@ -22,6 +22,10 @@ public class Message {
         this(prefix, false, template, args);
     }
 
+    private Message(String message) {
+        this.message = message;
+    }
+
     private static String fillOutMessageTemplate(final boolean error, final String template, final String[] args) {
         int varCount = countMatches(template, TEMPLATE_VAR);
         int argCount = args.length;
@@ -71,5 +75,10 @@ public class Message {
 
     public Component getMessageComponent() {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(this.message);
+    }
+
+    public Message append(Message message) {
+        String messageStr =  this.message + message.getMessage();
+        return new Message(messageStr);
     }
 }
