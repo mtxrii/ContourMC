@@ -14,12 +14,17 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 
 @Component
 public class SpawnpointService {
     private final JacksonConfigurationLoader configLoader;
     private final SpawnpointsConfiguration spawnpointsConfig;
+    private final Logger pluginLogger;
 
     @Inject
     public SpawnpointService(Plugin plugin) {
@@ -31,6 +36,7 @@ public class SpawnpointService {
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
+        this.pluginLogger = plugin.getLogger();
     }
 
     public Set<String> spawnpoints() {
@@ -94,6 +100,22 @@ public class SpawnpointService {
                 spawnpoint.pitch
         );
         entity.teleport(spawnpointLocation);
+    }
+
+    public void teleportLivingEntityToRandomSpawnpoint(
+            @NonNull LivingEntity entity
+    ) {
+        final Set<String> spawnpointNames = this.spawnpoints();
+        if (spawnpointNames.isEmpty()) {
+            this.pluginLogger.warning("Failed to teleport " + entity.getName() + " to a random spawnpoint as there are none saved.");
+            return;
+        }
+
+        final ArrayList<String> shuffled = new ArrayList<>(spawnpointNames);
+        Collections.shuffle(shuffled);
+        String spawnpointName = shuffled.get(ThreadLocalRandom.current().nextInt(spawnpointNames.size()));
+
+        this.teleportLivingEntityToSpawnpoint(spawnpointName, entity);
     }
 
     private void saveConfig() {
