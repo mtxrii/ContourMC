@@ -39,4 +39,8 @@ public class PlayerDeathListener implements Listener {
             this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(victim);
         });
     }
+
+    private static String formatEnumName(Enum<?> enumVal) {
+        return enumVal.name().toLowerCase().replace('_', ' ');
+    }
 }
