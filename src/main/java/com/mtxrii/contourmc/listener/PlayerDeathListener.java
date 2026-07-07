@@ -14,7 +14,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.projectiles.ProjectileSource;
 
 @Component
 public class PlayerDeathListener implements Listener {
@@ -29,41 +28,8 @@ public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Message deathMessage;
         Player victim = event.getPlayer();
-        Player killer = victim.getKiller();
-        if (killer != null) {
-            deathMessage = new Message(MessagePrefix.GAME, "{} was killed by {}", victim.getName(), killer.getName());
-
-        } else {
-            deathMessage = new Message(MessagePrefix.GAME, "{} has died", victim.getName());
-
-            EntityDamageEvent lastDamageCause = victim.getLastDamageCause();
-            if (lastDamageCause != null) {
-                EntityDamageEvent.DamageCause cause = lastDamageCause.getCause();
-                deathMessage = deathMessage.append(new Message(MessagePrefix.BLANK, " from {}", formatEnumName(cause)));
-
-                if (lastDamageCause instanceof EntityDamageByEntityEvent damageByEntity) {
-                    Entity damager = damageByEntity.getDamager();
-                    deathMessage = new Message(MessagePrefix.GAME, "{} was killed by {}", victim.getName(), formatEnumName(damager.getType()));
-
-                    if (damager instanceof Projectile projectile) {
-                        Message shooterLabel = null;
-                        ProjectileSource shooter = projectile.getShooter();
-                        if (shooter instanceof Player shooterPlayer) {
-                            shooterLabel = new Message(MessagePrefix.BLANK, " by {}", shooterPlayer.getName());
-                        } else if (shooter instanceof Entity shooterEntity) {
-                            shooterLabel = new Message(MessagePrefix.BLANK, " by {}", formatEnumName(shooterEntity.getType()));
-                        }
-                        deathMessage = new Message(MessagePrefix.GAME, "{} was shot", victim.getName());
-
-                        if (shooterLabel != null) {
-                            deathMessage = deathMessage.append(shooterLabel);
-                        }
-                    }
-                }
-            }
-        }
+        Message deathMessage = generateDeathMessage(victim, victim.getKiller());
 
         event.setShowDeathMessages(false);
         deathMessage.sendToAll();
@@ -76,5 +42,39 @@ public class PlayerDeathListener implements Listener {
 
     private static String formatEnumName(Enum<?> enumVal) {
         return enumVal.name().toLowerCase().replace('_', ' ');
+    }
+
+    private static Message generateDeathMessage(Player victim, Player killer) {
+        if (killer != null) {
+            return new Message(MessagePrefix.GAME, "{} was killed by {}", victim.getName(), killer.getName());
+        }
+
+        Message deathMessage = new Message(MessagePrefix.GAME, "{} has died", victim.getName());
+
+        EntityDamageEvent lastDamageCause = victim.getLastDamageCause();
+        if (lastDamageCause == null) {
+            return deathMessage;
+        }
+
+        if (!(lastDamageCause instanceof EntityDamageByEntityEvent damageByEntity)) {
+            return deathMessage.append(new Message(MessagePrefix.BLANK, " from {}", formatEnumName(lastDamageCause.getCause())));
+        }
+
+        final Entity damager = damageByEntity.getDamager();
+        if (!(damager instanceof Projectile projectile)) {
+            return new Message(MessagePrefix.GAME, "{} was killed by a {}", victim.getName(), formatEnumName(damager.getType()));
+        }
+
+        final String shooterLabel = switch (projectile.getShooter()) {
+            case Player shooterPlayer -> shooterPlayer.getName();
+            case Entity shooterEntity -> formatEnumName(shooterEntity.getType());
+            case null, default -> null;
+        };
+
+        deathMessage = new Message(MessagePrefix.GAME, "{} was shot", victim.getName());
+        if (shooterLabel != null) {
+            deathMessage = deathMessage.append(new Message(MessagePrefix.BLANK, " by {}", shooterLabel));
+        }
+        return deathMessage;
     }
 }
