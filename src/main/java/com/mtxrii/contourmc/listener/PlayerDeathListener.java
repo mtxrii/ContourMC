@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.SpawnpointService;
+import com.mtxrii.contourmc.util.TextUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -46,10 +47,6 @@ public class PlayerDeathListener implements Listener {
         this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(event.getPlayer());
     }
 
-    private static String formatEnumName(Enum<?> enumVal) {
-        return enumVal.name().toLowerCase().replace('_', ' ');
-    }
-
     private static Message generateDeathMessage(Player victim, Player killer) {
         if (killer != null) {
             return new Message(MessagePrefix.GAME, "{} was killed by {}", victim.getName(), killer.getName());
@@ -63,17 +60,17 @@ public class PlayerDeathListener implements Listener {
         }
 
         if (!(lastDamageCause instanceof EntityDamageByEntityEvent damageByEntity)) {
-            return deathMessage.append(new Message(MessagePrefix.BLANK, " from {}", formatEnumName(lastDamageCause.getCause())));
+            return deathMessage.append(new Message(MessagePrefix.BLANK, " from {}", TextUtil.formatEnumName(lastDamageCause.getCause())));
         }
 
         final Entity damager = damageByEntity.getDamager();
         if (!(damager instanceof Projectile projectile)) {
-            return new Message(MessagePrefix.GAME, "{} was killed by a {}", victim.getName(), formatEnumName(damager.getType()));
+            return new Message(MessagePrefix.GAME, "{} was killed by a {}", victim.getName(), TextUtil.formatEnumName(damager.getType()));
         }
 
         final String shooterLabel = switch (projectile.getShooter()) {
             case Player shooterPlayer -> shooterPlayer.getName();
-            case Entity shooterEntity -> formatEnumName(shooterEntity.getType());
+            case Entity shooterEntity -> TextUtil.formatEnumName(shooterEntity.getType());
             case null, default -> null;
         };
 
