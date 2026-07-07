@@ -13,7 +13,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 @Component
 public class PlayerDeathListener implements Listener {
@@ -36,8 +38,12 @@ public class PlayerDeathListener implements Listener {
 
         this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
             victim.spigot().respawn();
-            this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(victim);
         });
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(@NotNull final PlayerRespawnEvent event) {
+        this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(event.getPlayer());
     }
 
     private static String formatEnumName(Enum<?> enumVal) {
