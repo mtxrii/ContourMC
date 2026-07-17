@@ -56,7 +56,7 @@ final class ContourMCPluginBootstrap extends PlatformPaperPluginBoostrap<Contour
 
     @Override
     public @NotNull PlatformPaperModule<ContourMCPlugin> createPlatformModule(@NotNull final AtomicReference<ContourMCPlugin> pluginRef) {
-        return new PlatformPaperModule<>(ContourMCPlugin.class, pluginRef::get);
+        return new PlatformPaperModule<>(ContourMCPlugin.class, pluginRef::get, () -> this);
     }
 
     @Override
