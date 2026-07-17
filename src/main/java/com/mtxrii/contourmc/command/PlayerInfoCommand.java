@@ -47,11 +47,12 @@ public final class PlayerInfoCommand {
 
         new Message(
                 MessagePrefix.INFO,
-                "{}:\nRank: {}\nLocation: {}\nHealth: {}",
+                "{}:\nRank: {}\nLocation: {}\nHealth: {}\nJoined: {}",
                 player.getName(),
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 locationStr,
-                healthStr
+                healthStr,
+                TextUtil.formatTimestamp(player.getFirstPlayed())
         ).sendTo(sender);
     }
 
