@@ -1,7 +1,13 @@
 package com.mtxrii.contourmc.message;
 
 public enum MessagePrefix {
-    BLANK, INFO, KIT, SPAWN, ENV, GAME;
+    BLANK,
+    INFO,
+    KIT,
+    SPAWN,
+    ENV,
+    GAME,
+    RANK;
 
     public String getFormatted() {
         if (this == BLANK) {
