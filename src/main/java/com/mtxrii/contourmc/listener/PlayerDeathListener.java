@@ -33,9 +33,7 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getPlayer();
         Message deathMessage = generateDeathMessage(victim, victim.getKiller());
-
-        event.setShowDeathMessages(false);
-        deathMessage.sendToAll();
+        event.deathMessage(deathMessage.getMessageComponent());
 
         this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
             victim.spigot().respawn();
