@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.config.RanksConfiguration;
 import com.sxtanna.platform.archetype.Component;
@@ -12,6 +13,7 @@ import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 import java.util.UUID;
 
 @Component
+@Singleton
 public class RankService {
     private final JacksonConfigurationLoader configLoader;
     private final RanksConfiguration ranksConfig;

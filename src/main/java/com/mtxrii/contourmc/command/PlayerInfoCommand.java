@@ -25,7 +25,7 @@ public final class PlayerInfoCommand {
     @Inject private RankService rankService;
 
     @Command("playerinfo <player>")
-    public void setRank(
+    public void playerInfo(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
     ) {
@@ -49,7 +49,6 @@ public final class PlayerInfoCommand {
                 MessagePrefix.INFO,
                 "{}:\nRank: {}\nLocation: {}\nHealth: {}",
                 player.getName(),
-                // @TODO: Fix ranks not updating automatically
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 locationStr,
                 healthStr
