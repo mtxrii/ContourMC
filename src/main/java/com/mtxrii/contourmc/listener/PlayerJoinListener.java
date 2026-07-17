@@ -1,8 +1,10 @@
 package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Player;
@@ -13,13 +15,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /// On join:
 /// - Send custom join message
 /// - Teleport player to random spawnpoint
+/// - If player has no rank, set their rank to default
 @Component
 public class PlayerJoinListener implements Listener {
     private SpawnpointService spawnpointService;
+    private RankService rankService;
 
     @Inject
-    public PlayerJoinListener(SpawnpointService spawnpointService) {
+    public PlayerJoinListener(
+            SpawnpointService spawnpointService,
+            RankService rankService
+    ) {
         this.spawnpointService = spawnpointService;
+        this.rankService = rankService;
     }
 
     @EventHandler
@@ -31,5 +39,9 @@ public class PlayerJoinListener implements Listener {
         event.joinMessage(joinMsg.getMessageComponent());
 
         this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(event.getPlayer());
+
+        if (this.rankService.getRank(player.getUniqueId()) == null) {
+            this.rankService.setRank(player.getUniqueId(), Rank.PLAYER);
+        }
     }
 }
