@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/// On join:
+/// - Send custom join message
 @Component
 public class PlayerJoinListener implements Listener {
 

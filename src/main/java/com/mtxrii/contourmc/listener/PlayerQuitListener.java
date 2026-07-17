@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/// On quit:
+/// - Send custom quit message
 @Component
 public class PlayerQuitListener implements Listener {
 

@@ -16,6 +16,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
 
+/// On death:
+/// - Generate custom death message
+/// - Auto-respawn player
 @Component
 public class PlayerDeathListener implements Listener {
     private Plugin plugin;

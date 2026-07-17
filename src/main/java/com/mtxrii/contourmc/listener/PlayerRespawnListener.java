@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+/// On respawn:
+/// - Teleport player to random spawnpoint
 @Component
 public class PlayerRespawnListener implements Listener {
     private SpawnpointService spawnpointService;
