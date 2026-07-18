@@ -4,7 +4,9 @@ import com.google.inject.Inject;
 import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
+import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CommandContainer
@@ -26,6 +29,7 @@ public final class RankCommands {
     private static Message getRanksMessage = null;
 
     @Inject private RankService rankService;
+    @Inject private PlayerRegistryService playerRegistryService;
 
     @Command("setrank <player> <rank>")
     public void setRank(
@@ -44,23 +48,39 @@ public final class RankCommands {
             return;
         }
 
-        // @TODO: Add support for offline players
         Player targetPlayer = Bukkit.getPlayer(playerName);
+        UUID targetPlayerId;
+        String targetPlayerName;
         if (targetPlayer == null) {
-            new Message(
-                    MessagePrefix.RANK,
-                    true,
-                    "No player found with name {}",
-                    playerName
-            ).sendTo(sender);
-            return;
+            String offlinePlayerName = SearchUtil.findClosestMatch(
+                    playerName,
+                    this.playerRegistryService.getAllPlayerNames()
+            );
+
+            if (offlinePlayerName == null) {
+                new Message(
+                        MessagePrefix.RANK,
+                        true,
+                        "No player found with name {}",
+                        playerName
+                ).sendTo(sender);
+                return;
+            }
+
+            var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(offlinePlayerName);
+            targetPlayerId = offlinePlayerData.uniqueId;
+            targetPlayerName = offlinePlayerData.name;
+
+        } else {
+            targetPlayerId = targetPlayer.getUniqueId();
+            targetPlayerName = targetPlayer.getName();
         }
 
-        this.rankService.setRank(targetPlayer.getUniqueId(), newRank);
+        this.rankService.setRank(targetPlayerId, newRank);
         new Message(
                 MessagePrefix.RANK,
                 "Set {} rank to {}",
-                targetPlayer.getName() + "'s",
+                targetPlayerName + "'s",
                 TextUtil.formatEnumName(newRank)
         ).sendTo(sender);
         new Message(
@@ -98,7 +118,7 @@ public final class RankCommands {
     }
 
     @Command("ranks")
-    public void getRanks(
+    public void ranks(
             @NotNull final Source sender
     ) {
         if (getRanksMessage != null) {
