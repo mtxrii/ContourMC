@@ -52,6 +52,14 @@ public class PlayerRegistryService {
         // Do nothing for existing player with same name
     }
 
+    public void logoutPlayer(@NotNull Player player) {
+        var playerData = this.getPlayerDataById(player.getUniqueId());
+        assert playerData != null;
+
+        playerData.lastOnline = Instant.now();
+        this.saveConfig();
+    }
+
     private PlayerRegistryConfiguration.PlayerData getPlayerDataById(UUID playerId) {
         for (var playerData : this.playerRegistryConfig.playerRegistry.values()) {
             if (playerData.uniqueId.equals(playerId)) {
