@@ -68,6 +68,14 @@ public class PlayerRegistryService {
         this.saveConfig();
     }
 
+    public String[] getAllPlayerNames() {
+        return this.playerRegistryConfig.playerRegistry.keySet().toArray(String[]::new);
+    }
+
+    public PlayerRegistryConfiguration.PlayerData getPlayerDataByName(String playerName) {
+        return this.playerRegistryConfig.playerRegistry.get(playerName);
+    }
+
     private PlayerRegistryConfiguration.PlayerData getPlayerDataById(UUID playerId) {
         for (var playerData : this.playerRegistryConfig.playerRegistry.values()) {
             if (playerData.uniqueId.equals(playerId)) {
