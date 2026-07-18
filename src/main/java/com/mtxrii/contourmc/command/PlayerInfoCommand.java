@@ -3,7 +3,9 @@ package com.mtxrii.contourmc.command;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
+import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
@@ -23,37 +25,35 @@ import java.util.stream.Collectors;
 @CommandContainer
 public final class PlayerInfoCommand {
     @Inject private RankService rankService;
+    @Inject private PlayerRegistryService playerRegistryService;
 
     @Command("playerinfo <player>")
     public void playerInfo(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
     ) {
-        // @TODO: Add support for offline players
+        Message response;
         Player player = Bukkit.getPlayer(playerName);
         if (player == null) {
-            new Message(
-                    MessagePrefix.INFO,
-                    true,
-                    "Player not found"
-            ).sendTo(sender);
-            return;
+            String offlinePlayerName = SearchUtil.findClosestMatch(
+                    playerName,
+                    this.playerRegistryService.getAllPlayerNames()
+            );
+
+            if (offlinePlayerName == null) {
+                new Message(
+                        MessagePrefix.INFO,
+                        true,
+                        "Player not found"
+                ).sendTo(sender);
+                return;
+            }
+
+            response = this.compileMsgOfflinePlayer(offlinePlayerName);
+        } else {
+            response = this.compileMsgOnlinePlayer(player);
         }
-
-        String locationStr = TextUtil.formatLocation(player.getLocation());
-        // @TODO: Truncate player.getHealth() double to 1 decimal place
-        String healthStr = '(' + String.valueOf(player.getHealth()) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
-        // @TODO: Save players' kits and include them here
-
-        new Message(
-                MessagePrefix.INFO,
-                "{}:\nRank: {}\nLocation: {}\nHealth: {}\nJoined: {}",
-                player.getName(),
-                TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
-                locationStr,
-                healthStr,
-                TextUtil.formatTimestamp(player.getFirstPlayed())
-        ).sendTo(sender);
+        response.sendTo(sender);
     }
 
     @Suggestions("onlinePlayers")
@@ -65,5 +65,27 @@ public final class PlayerInfoCommand {
                      .stream()
                      .map(Player::getName)
                      .collect(Collectors.toSet());
+    }
+
+    private Message compileMsgOnlinePlayer(Player player) {
+        String locationStr = TextUtil.formatLocation(player.getLocation());
+        // @TODO: Truncate player.getHealth() double to 1 decimal place
+        String healthStr = '(' + String.valueOf(player.getHealth()) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
+        // @TODO: Save players' kits and include them here
+
+        return new Message(
+                MessagePrefix.INFO,
+                "{}:\nRank: {}\nLocation: {}\nHealth: {}\nJoined: {}",
+                player.getName(),
+                TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
+                locationStr,
+                healthStr,
+                TextUtil.formatTimestamp(player.getFirstPlayed())
+        );
+    }
+
+    private Message compileMsgOfflinePlayer(String playerName) {
+        // @TODO: Implement this
+        return null;
     }
 }
