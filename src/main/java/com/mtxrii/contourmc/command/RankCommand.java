@@ -68,6 +68,33 @@ public final class RankCommand {
         ).sendTo(targetPlayer);
     }
 
+    @Command("getrank <player>")
+    public void getRank(
+            @NotNull final Source sender,
+            @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
+    ) {
+        // @TODO: Add support for offline players
+        // @TODO: Make shared method for this block
+        Player targetPlayer = Bukkit.getPlayer(playerName);
+        if (targetPlayer == null) {
+            new Message(
+                    MessagePrefix.RANK,
+                    true,
+                    "No player found with name {}",
+                    playerName
+            ).sendTo(sender);
+            return;
+        }
+
+        Rank rank = this.rankService.getRank(targetPlayer.getUniqueId());
+        new Message(
+                MessagePrefix.RANK,
+                "{} is rank {}",
+                targetPlayer.getName(),
+                TextUtil.formatEnumName(rank)
+        ).sendTo(sender);
+    }
+
     @Suggestions("onlinePlayers")
     public @NotNull Set<String> suggestOnlinePlayers(
             @NotNull final CommandContext<Source> context,
