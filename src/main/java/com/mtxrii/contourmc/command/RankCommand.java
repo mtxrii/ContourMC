@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 @CommandContainer
 public final class RankCommand {
+    private static Message getRanksMessage = null;
+
     @Inject private RankService rankService;
 
     @Command("setrank <player> <rank>")
@@ -99,6 +101,11 @@ public final class RankCommand {
     public void getRanks(
             @NotNull final Source sender
     ) {
+        if (getRanksMessage != null) {
+            getRanksMessage.sendTo(sender);
+            return;
+        }
+
         String[] rankNames = new String[Rank.values().length];
         StringBuilder messageTemplate = new StringBuilder("Available ranks: ");
         Rank[] ranks = Rank.values();
@@ -112,11 +119,13 @@ public final class RankCommand {
             }
         }
 
-        new Message(
+        Message ranksListMsg = new Message(
                 MessagePrefix.RANK,
                 messageTemplate.toString(),
                 rankNames
-        ).sendTo(sender);
+        );
+        ranksListMsg.sendTo(sender);
+        getRanksMessage = ranksListMsg;
     }
 
     @Suggestions("onlinePlayers")
