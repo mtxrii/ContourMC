@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 @CommandContainer
-public final class KitCommand {
+public final class KitCommands {
     @Inject
     private KitService kitService;
 

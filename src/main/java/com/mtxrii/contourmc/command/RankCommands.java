@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @CommandContainer
-public final class RankCommand {
+public final class RankCommands {
     private static Message getRanksMessage = null;
 
     @Inject private RankService rankService;

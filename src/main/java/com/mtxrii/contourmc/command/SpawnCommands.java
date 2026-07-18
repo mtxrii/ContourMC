@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @CommandContainer
-public final class SpawnCommand {
+public final class SpawnCommands {
     @Inject private SpawnpointService spawnpointService;
 
     @Command("setspawn <name>")
