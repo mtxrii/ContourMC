@@ -19,6 +19,9 @@ public class PlayerRegistryConfiguration {
         public UUID uniqueId;
 
         @Setting
+        public String name;
+
+        @Setting
         public Instant lastOnline;
     }
 }
