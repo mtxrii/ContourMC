@@ -95,6 +95,30 @@ public final class RankCommand {
         ).sendTo(sender);
     }
 
+    @Command("ranks")
+    public void getRanks(
+            @NotNull final Source sender
+    ) {
+        String[] rankNames = new String[Rank.values().length];
+        StringBuilder messageTemplate = new StringBuilder("Available ranks: ");
+        Rank[] ranks = Rank.values();
+        for (int i = 0; i < ranks.length; i++) {
+            Rank rank = ranks[i];
+            rankNames[i] = TextUtil.formatEnumName(rank);
+
+            messageTemplate.append("{}");
+            if (i != ranks.length - 1) {
+                messageTemplate.append(", ");
+            }
+        }
+
+        new Message(
+                MessagePrefix.RANK,
+                messageTemplate.toString(),
+                rankNames
+        ).sendTo(sender);
+    }
+
     @Suggestions("onlinePlayers")
     public @NotNull Set<String> suggestOnlinePlayers(
             @NotNull final CommandContext<Source> context,
