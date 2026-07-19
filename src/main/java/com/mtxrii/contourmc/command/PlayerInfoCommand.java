@@ -109,7 +109,7 @@ public final class PlayerInfoCommand {
                 offlinePlayerData.name,
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
-                offlinePlayerData.lastOnline.toString(), // @TODO: Format instant to string
+                TextUtil.formatInstant(offlinePlayerData.lastOnline),
                 offlinePlayerData.pastNames.isEmpty() ? "None" : String.join(", ", offlinePlayerData.pastNames)
         );
     }
