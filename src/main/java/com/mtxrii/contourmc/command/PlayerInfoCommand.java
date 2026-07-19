@@ -73,19 +73,38 @@ public final class PlayerInfoCommand {
         String healthStr = '(' + String.valueOf(player.getHealth()) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
         // @TODO: Save players' kits and include them here
 
+        String messageTemplate = "{}:" +
+                "\nOnline: {}" +
+                "\nRank: {}" +
+                "\nLocation: {}" +
+                "\nHealth: {}" +
+                "\nJoinDate: {}";
         return new Message(
                 MessagePrefix.INFO,
-                "{}:\nRank: {}\nLocation: {}\nHealth: {}\nJoined: {}",
+                messageTemplate,
                 player.getName(),
+                String.valueOf(true),
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 locationStr,
                 healthStr,
+                // @TODO: Save initial join date
                 TextUtil.formatTimestamp(player.getFirstPlayed())
         );
     }
 
     private Message compileMsgOfflinePlayer(String playerName) {
-        // @TODO: Implement this
-        return null;
+        var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(playerName);
+        String messageTemplate = "{}:" +
+                "\nOnline: {}" +
+                "\nRank: {}" +
+                "\nLastOnline: {}";
+        return new Message(
+                MessagePrefix.INFO,
+                messageTemplate,
+                offlinePlayerData.name,
+                String.valueOf(false),
+                TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
+                offlinePlayerData.lastOnline.toString() // @TODO: Format instant to string
+        );
     }
 }
