@@ -1,4 +1,5 @@
 package com.mtxrii.contourmc.service;
+
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.SpawnpointsConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
@@ -9,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
@@ -16,12 +18,17 @@ import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 @Component
 public class SpawnpointService {
+    private static Map<UUID, String> spawnpointPlayerNamesMap;
+
     private final JacksonConfigurationLoader configLoader;
     private final SpawnpointsConfiguration spawnpointsConfig;
     private final Logger pluginLogger;
@@ -37,6 +44,7 @@ public class SpawnpointService {
             throw new RuntimeException(e);
         }
         this.pluginLogger = plugin.getLogger();
+        this.spawnpointPlayerNamesMap = new HashMap<>();
     }
 
     public Set<String> spawnpoints() {
@@ -100,6 +108,10 @@ public class SpawnpointService {
                 spawnpoint.pitch
         );
         entity.teleport(spawnpointLocation);
+
+        if (entity instanceof Player player) {
+            spawnpointPlayerNamesMap.put(player.getUniqueId(), spawnpointName);
+        }
     }
 
     public void teleportLivingEntityToRandomSpawnpoint(
@@ -116,6 +128,11 @@ public class SpawnpointService {
         String spawnpointName = shuffled.get(ThreadLocalRandom.current().nextInt(spawnpointNames.size()));
 
         this.teleportLivingEntityToSpawnpoint(spawnpointName, entity);
+    }
+
+    public String getLastSpawnpointForPlayer(UUID playerId) {
+        String lastSpawnpointName = spawnpointPlayerNamesMap.get(playerId);
+        return lastSpawnpointName == null ? "default" : lastSpawnpointName;
     }
 
     private void saveConfig() {

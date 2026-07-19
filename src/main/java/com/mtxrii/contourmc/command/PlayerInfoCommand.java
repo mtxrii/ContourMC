@@ -5,6 +5,7 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
+import com.mtxrii.contourmc.service.SpawnpointService;
 import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public final class PlayerInfoCommand {
     @Inject private RankService rankService;
     @Inject private PlayerRegistryService playerRegistryService;
+    @Inject private SpawnpointService spawnpointService;
 
     @Command("playerinfo <player>")
     public void playerInfo(
@@ -78,6 +80,7 @@ public final class PlayerInfoCommand {
                 "\nOnline: {}" +
                 "\nRank: {}" +
                 "\nLocation: {}" +
+                "\nLast spawn: {}" +
                 "\nHealth: {}" +
                 "\nJoin Date: {}" +
                 "\nPast Names: {}";
@@ -88,6 +91,7 @@ public final class PlayerInfoCommand {
                 String.valueOf(true),
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 locationStr,
+                this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
                 TextUtil.formatInstant(playerData.firstOnline),
                 // @TODO: Make util method for auto-adding array's length of template param tokens (See RankCommand.ranks)
