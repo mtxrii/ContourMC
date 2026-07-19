@@ -6,6 +6,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @ConfigSerializable
@@ -26,5 +27,8 @@ public class PlayerRegistryConfiguration {
 
         @Setting
         public Instant lastOnline;
+
+        @Setting
+        public Set<String> pastNames;
     }
 }

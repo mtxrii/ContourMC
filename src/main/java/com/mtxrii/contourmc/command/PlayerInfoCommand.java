@@ -72,13 +72,15 @@ public final class PlayerInfoCommand {
         // @TODO: Truncate player.getHealth() double to 1 decimal place
         String healthStr = '(' + String.valueOf(player.getHealth()) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
         // @TODO: Save players' kits and include them here
+        var playerData = this.playerRegistryService.getPlayerDataByName(player.getName());
 
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
                 "\nRank: {}" +
                 "\nLocation: {}" +
                 "\nHealth: {}" +
-                "\nJoinDate: {}";
+                "\nJoin Date: {}" +
+                "\nPast Names: {}";
         return new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
@@ -88,7 +90,9 @@ public final class PlayerInfoCommand {
                 locationStr,
                 healthStr,
                 // @TODO: Save initial join date
-                TextUtil.formatTimestamp(player.getFirstPlayed())
+                TextUtil.formatTimestamp(player.getFirstPlayed()),
+                // @TODO: Make util method for auto-adding array's length of template param tokens (See RankCommand.ranks)
+                playerData.pastNames.isEmpty() ? "None" : String.join(", ", playerData.pastNames)
         );
     }
 
@@ -97,14 +101,16 @@ public final class PlayerInfoCommand {
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
                 "\nRank: {}" +
-                "\nLastOnline: {}";
+                "\nLastOnline: {}" +
+                "\nPast Names: {}";
         return new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
                 offlinePlayerData.name,
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
-                offlinePlayerData.lastOnline.toString() // @TODO: Format instant to string
+                offlinePlayerData.lastOnline.toString(), // @TODO: Format instant to string
+                offlinePlayerData.pastNames.isEmpty() ? "None" : String.join(", ", offlinePlayerData.pastNames)
         );
     }
 }

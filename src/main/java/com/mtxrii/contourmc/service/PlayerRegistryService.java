@@ -53,6 +53,7 @@ public class PlayerRegistryService {
         String oldPlayerName = playerData.name;
         if (!oldPlayerName.equals(currentPlayerName)) {
             this.pluginLogger.info("Player name changed: " + oldPlayerName + " -> " + currentPlayerName + " (" + player.getUniqueId() + ")");
+            playerData.pastNames.add(oldPlayerName);
             this.playerRegistryConfig.playerRegistry.remove(oldPlayerName);
             this.playerRegistryConfig.playerRegistry.put(currentPlayerName, playerData);
             this.saveConfig();
