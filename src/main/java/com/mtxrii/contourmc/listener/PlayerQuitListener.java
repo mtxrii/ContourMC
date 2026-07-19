@@ -1,7 +1,9 @@
 package com.mtxrii.contourmc.listener;
 
+import com.google.inject.Inject;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,11 +14,21 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /// - Send custom quit message
 @Component
 public class PlayerQuitListener implements Listener {
+    private final PlayerRegistryService playerRegistryService;
+
+    @Inject
+    public PlayerQuitListener(
+            PlayerRegistryService playerRegistryService
+    ) {
+        this.playerRegistryService = playerRegistryService;
+    }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         String playerName = player.getName();
+
+        this.playerRegistryService.logoutPlayer(player);
 
         Message quitMsg = new Message(MessagePrefix.GAME, "{} has left", playerName);
         event.quitMessage(quitMsg.getMessageComponent());

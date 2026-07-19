@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.sxtanna.platform.archetype.Component;
@@ -20,20 +21,25 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoinListener implements Listener {
     private SpawnpointService spawnpointService;
     private RankService rankService;
+    private PlayerRegistryService playerRegistryService;
 
     @Inject
     public PlayerJoinListener(
             SpawnpointService spawnpointService,
-            RankService rankService
+            RankService rankService,
+            PlayerRegistryService playerRegistryService
     ) {
         this.spawnpointService = spawnpointService;
         this.rankService = rankService;
+        this.playerRegistryService = playerRegistryService;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         String playerName = player.getName();
+
+        this.playerRegistryService.loginPlayer(player);
 
         Message joinMsg = new Message(MessagePrefix.GAME, "{} has joined", playerName);
         event.joinMessage(joinMsg.getMessageComponent());
