@@ -22,6 +22,9 @@ public class PlayerRegistryConfiguration {
         public String name;
 
         @Setting
+        public Instant firstOnline;
+
+        @Setting
         public Instant lastOnline;
     }
 }

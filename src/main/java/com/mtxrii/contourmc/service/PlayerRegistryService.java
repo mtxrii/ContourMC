@@ -42,6 +42,7 @@ public class PlayerRegistryService {
             var newPlayerData = new PlayerRegistryConfiguration.PlayerData();
             newPlayerData.uniqueId = player.getUniqueId();
             newPlayerData.name = currentPlayerName;
+            newPlayerData.firstOnline = Instant.now();
             newPlayerData.lastOnline = Instant.now();
             this.playerRegistryConfig.playerRegistry.put(currentPlayerName, newPlayerData);
             this.saveConfig();
