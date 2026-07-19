@@ -89,8 +89,7 @@ public final class PlayerInfoCommand {
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 locationStr,
                 healthStr,
-                // @TODO: Save initial join date
-                TextUtil.formatTimestamp(player.getFirstPlayed()),
+                TextUtil.formatInstant(playerData.firstOnline),
                 // @TODO: Make util method for auto-adding array's length of template param tokens (See RankCommand.ranks)
                 playerData.pastNames.isEmpty() ? "None" : String.join(", ", playerData.pastNames)
         );
