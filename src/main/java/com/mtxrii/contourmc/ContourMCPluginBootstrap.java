@@ -1,13 +1,17 @@
 package com.mtxrii.contourmc;
 
 import com.google.inject.Singleton;
+import com.mtxrii.contourmc.command.annotation.RequireRank;
+import com.mtxrii.contourmc.command.meta.CommandMetaKeys;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.exception.InsufficientPermissionException;
+import com.mtxrii.contourmc.service.RankService;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.bootstrap.PluginProviderContext;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.annotations.processing.CommandContainer;
@@ -38,6 +42,7 @@ final class ContourMCPluginBootstrap extends PlatformPaperPluginBoostrap<Contour
     private final Collection<Object> commandClassInstances = new ArrayList<>();
     private PaperCommandManager.Bootstrapped<Source> commandManager;
     private AnnotationParser<Source> annotationParser;
+    private RankService rankService;
 
     @Override
     public void bootstrap(@NotNull final BootstrapContext context) {
@@ -64,6 +69,8 @@ final class ContourMCPluginBootstrap extends PlatformPaperPluginBoostrap<Contour
     public JavaPlugin createPlugin(@NotNull final PluginProviderContext context) {
         final PlatformPaperPlugin plugin = ((PlatformPaperPlugin) super.createPlugin(context));
 
+        this.rankService = plugin.getPlatform().getInjector().getInstance(RankService.class);
+
         this.commandManager.parameterInjectorRegistry()
                            .registerInjectionService(GuiceInjectionService.create(plugin.getPlatform().getInjector()));
 
@@ -88,6 +95,33 @@ final class ContourMCPluginBootstrap extends PlatformPaperPluginBoostrap<Contour
                                                                                     .buildBootstrapped(context);
 
         final AnnotationParser<Source> annotationParser = new AnnotationParser<>(manager, Source.class);
+
+        annotationParser.registerBuilderModifier(
+                RequireRank.class,
+                (annotation, builder) -> builder.meta(CommandMetaKeys.REQUIRED_RANK, annotation)
+        );
+
+        manager.registerCommandPreProcessor(preprocessingContext -> {
+            final RequireRank requiredRank = preprocessingContext.commandContext()
+                    .command()
+                    .commandMeta()
+                    .get(CommandMetaKeys.REQUIRED_RANK);
+
+            final Source sender = preprocessingContext.commandContext().sender();
+
+            if (!(sender.source() instanceof Player player)) {
+                if (requiredRank.allowConsole()) {
+                    return;
+                }
+
+                throw new InsufficientPermissionException(requiredRank.prefix());
+            }
+
+            this.rankService.requireRank(requiredRank.prefix(), requiredRank.value(), player);
+        });
+
+        this.commandManager = manager;
+        this.annotationParser = annotationParser;
 
         this.commandManager = manager;
         this.annotationParser = annotationParser;
