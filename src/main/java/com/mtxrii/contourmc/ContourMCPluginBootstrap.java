@@ -2,6 +2,7 @@ package com.mtxrii.contourmc;
 
 import com.google.inject.Singleton;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
+import com.mtxrii.contourmc.exception.InsufficientPermissionException;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -102,6 +103,8 @@ final class ContourMCPluginBootstrap extends PlatformPaperPluginBoostrap<Contour
                                  .defaultInvalidSenderHandler()
                                  .defaultNoPermissionHandler()
                                  .handler(CommandArgumentException.class,
+                                         (_, ctx) -> ctx.exception().getMessageComponent())
+                                 .handler(InsufficientPermissionException.class,
                                          (_, ctx) -> ctx.exception().getMessageComponent())
                                  .handler(ArgumentParseException.class,
                                          (formatter, ctx) -> ctx.exception().getCause() instanceof CommandArgumentException arg ?

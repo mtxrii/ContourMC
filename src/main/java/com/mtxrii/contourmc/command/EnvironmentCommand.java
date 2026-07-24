@@ -1,7 +1,10 @@
 package com.mtxrii.contourmc.command;
 
+import com.google.inject.Inject;
+import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.RankService;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -11,6 +14,7 @@ import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
+import org.incendo.cloud.paper.util.sender.PlayerSource;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,13 +35,17 @@ public final class EnvironmentCommand {
 
     private static Set<String> conditionArgs = null;
 
+    @Inject private RankService rankService;
+
     @Command("environment|env <condition>")
     public void environment(
             @NotNull final Source sender,
             @Argument(value = "condition", suggestions = "conditions") final String condition
     ) {
         World targetWorld = Bukkit.getServer().getWorlds().getFirst();
-        if (sender instanceof Player player) {
+        if (sender instanceof PlayerSource playerSource) {
+            Player player = playerSource.source();
+            this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
             targetWorld = player.getWorld();
         }
 

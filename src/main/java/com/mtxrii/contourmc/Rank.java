@@ -12,4 +12,8 @@ public enum Rank {
             return null;
         }
     }
+
+    public boolean isAtLeast(Rank requiredRank) {
+        return this.ordinal() >= requiredRank.ordinal();
+    }
 }
