@@ -63,10 +63,12 @@ public class PlayerRegistryService {
     }
 
     public void logoutPlayer(@NotNull Player player) {
-        var playerData = this.getPlayerDataById(player.getUniqueId());
+        var playerData = this.getPlayerDataByName(player.getName());
         assert playerData != null;
 
         playerData.lastOnline = Instant.now().toString();
+
+        this.playerRegistryConfig.playerRegistry.put(player.getName(), playerData);
         this.saveConfig();
     }
 
