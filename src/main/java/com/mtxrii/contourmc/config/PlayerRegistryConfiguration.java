@@ -22,11 +22,13 @@ public class PlayerRegistryConfiguration {
         @Setting
         public String name;
 
+        /// Stored as a {@code java.time.Instant} string representation
         @Setting
-        public Instant firstOnline;
+        public String firstOnline;
 
+        /// Stored as a {@code java.time.Instant} string representation
         @Setting
-        public Instant lastOnline;
+        public String lastOnline;
 
         @Setting
         public Set<String> pastNames;

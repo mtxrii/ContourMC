@@ -20,6 +20,7 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -93,7 +94,7 @@ public final class PlayerInfoCommand {
                 locationStr,
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
-                TextUtil.formatInstant(playerData.firstOnline),
+                TextUtil.formatInstant(Instant.parse(playerData.firstOnline)),
                 // @TODO: Make util method for auto-adding array's length of template param tokens (See RankCommand.ranks)
                 playerData.pastNames.isEmpty() ? "None" : String.join(", ", playerData.pastNames)
         );
@@ -112,7 +113,7 @@ public final class PlayerInfoCommand {
                 offlinePlayerData.name,
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
-                TextUtil.formatInstant(offlinePlayerData.lastOnline),
+                TextUtil.formatInstant(Instant.parse(offlinePlayerData.lastOnline)),
                 offlinePlayerData.pastNames.isEmpty() ? "None" : String.join(", ", offlinePlayerData.pastNames)
         );
     }

@@ -42,8 +42,8 @@ public class PlayerRegistryService {
             var newPlayerData = new PlayerRegistryConfiguration.PlayerData();
             newPlayerData.uniqueId = player.getUniqueId();
             newPlayerData.name = currentPlayerName;
-            newPlayerData.firstOnline = Instant.now();
-            newPlayerData.lastOnline = Instant.now();
+            newPlayerData.firstOnline = Instant.now().toString();
+            newPlayerData.lastOnline = Instant.now().toString();
             this.playerRegistryConfig.playerRegistry.put(currentPlayerName, newPlayerData);
             this.saveConfig();
             return;
@@ -66,7 +66,7 @@ public class PlayerRegistryService {
         var playerData = this.getPlayerDataById(player.getUniqueId());
         assert playerData != null;
 
-        playerData.lastOnline = Instant.now();
+        playerData.lastOnline = Instant.now().toString();
         this.saveConfig();
     }
 
