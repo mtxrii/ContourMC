@@ -1,9 +1,11 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
+import com.mtxrii.contourmc.service.RankService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
@@ -18,8 +20,8 @@ import java.util.Set;
 
 @CommandContainer
 public final class KitCommands {
-    @Inject
-    private KitService kitService;
+    @Inject private KitService kitService;
+    @Inject private RankService rankService;
 
     @Command("kit list")
     public void listKits(
@@ -76,6 +78,7 @@ public final class KitCommands {
             ).sendTo(sender);
             return;
         }
+        this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
 
         this.kitService.saveNewKit(kitName, player.getInventory());
         new Message(
@@ -90,6 +93,10 @@ public final class KitCommands {
             @NotNull final Source sender,
             @Argument(value = "kitName", suggestions = "kits") final String kitName
     ) {
+        if (sender.source() instanceof Player player) {
+            this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+        }
+
         this.kitService.deleteKit(kitName);
         new Message(
                 MessagePrefix.KIT,

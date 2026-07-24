@@ -1,8 +1,10 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
@@ -18,6 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @CommandContainer
 public final class SpawnCommands {
     @Inject private SpawnpointService spawnpointService;
+    @Inject private RankService rankService;
 
     @Command("setspawn <name>")
     public void setNewSpawn(
@@ -32,6 +35,7 @@ public final class SpawnCommands {
             ).sendTo(sender);
             return;
         }
+        this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
 
         this.spawnpointService.saveNewSpawnpoint(name, player.getLocation());
         new Message(
@@ -46,6 +50,10 @@ public final class SpawnCommands {
             @NotNull final Source sender,
             @Argument("name") final String name
     ) {
+        if (sender.source() instanceof Player player) {
+            this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+        }
+
         this.spawnpointService.deleteSpawnpoint(name);
         new Message(
                 MessagePrefix.SPAWN,

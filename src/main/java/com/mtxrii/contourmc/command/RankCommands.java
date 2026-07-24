@@ -37,6 +37,10 @@ public final class RankCommands {
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,
             @Argument(value = "rank", suggestions = "ranks") final String rankName
     ) {
+        if (sender.source() instanceof Player player) {
+            this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+        }
+
         Rank newRank = Rank.get(rankName);
         if (newRank == null) {
             new Message(
