@@ -44,6 +44,7 @@ public class PlayerRegistryService {
             newPlayerData.name = currentPlayerName;
             newPlayerData.firstOnline = Instant.now().toString();
             newPlayerData.lastOnline = Instant.now().toString();
+            newPlayerData.currentKit = "NONE";
             this.playerRegistryConfig.playerRegistry.put(currentPlayerName, newPlayerData);
             this.saveConfig();
             return;
@@ -78,6 +79,19 @@ public class PlayerRegistryService {
 
     public PlayerRegistryConfiguration.PlayerData getPlayerDataByName(String playerName) {
         return this.playerRegistryConfig.playerRegistry.get(playerName);
+    }
+
+    public void setCurrentKit(UUID playerId, String kitName) {
+        var playerData = this.getPlayerDataById(playerId);
+        assert playerData != null;
+        playerData.currentKit = kitName;
+        this.saveConfig();
+    }
+
+    public String getCurrentKit(UUID playerId) {
+        var playerData = this.getPlayerDataById(playerId);
+        assert playerData != null;
+        return playerData.currentKit;
     }
 
     private PlayerRegistryConfiguration.PlayerData getPlayerDataById(UUID playerId) {

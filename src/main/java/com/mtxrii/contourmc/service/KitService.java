@@ -23,9 +23,13 @@ import java.util.Set;
 public class KitService {
     private final JacksonConfigurationLoader configLoader;
     private final KitsConfiguration kitsConfig;
+    private final PlayerRegistryService playerRegistryService;
 
     @Inject
-    public KitService(Plugin plugin) {
+    public KitService(
+            Plugin plugin,
+            PlayerRegistryService playerRegistryService
+    ) {
         this.configLoader = JacksonConfigurationLoader.builder()
                 .path(plugin.getDataPath().resolve("kits.json"))
                 .build();
@@ -34,6 +38,7 @@ public class KitService {
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
+        this.playerRegistryService = playerRegistryService;
     }
 
     public Set<String> kitNames() {
@@ -65,6 +70,8 @@ public class KitService {
             ItemStack kitItemStack = kitContents[i] != null ? kitContents[i] : new ItemStack(Material.AIR);
             playerEntity.getInventory().setItem(i, kitItemStack);
         }
+
+        this.playerRegistryService.setCurrentKit(playerEntity.getUniqueId(), kitName);
     }
 
     public void saveNewKit(

@@ -3,7 +3,6 @@ package com.mtxrii.contourmc.config;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,5 +31,8 @@ public class PlayerRegistryConfiguration {
 
         @Setting
         public Set<String> pastNames;
+
+        @Setting
+        public String currentKit;
     }
 }

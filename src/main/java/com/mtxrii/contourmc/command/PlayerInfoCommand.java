@@ -75,7 +75,6 @@ public final class PlayerInfoCommand {
         String locationStr = TextUtil.formatLocation(player.getLocation());
         // @TODO: Truncate player.getHealth() double to 1 decimal place
         String healthStr = '(' + String.valueOf(player.getHealth()) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
-        // @TODO: Save players' kits and include them here
         var playerData = this.playerRegistryService.getPlayerDataByName(player.getName());
 
         String messageTemplate = "{}:" +
@@ -85,6 +84,7 @@ public final class PlayerInfoCommand {
                 "\nLast spawn: {}" +
                 "\nHealth: {}" +
                 "\nJoin Date: {}" +
+                "\nCurrent kit: {}" +
                 "\nPast Names: {}";
         return new Message(
                 MessagePrefix.INFO,
@@ -96,6 +96,7 @@ public final class PlayerInfoCommand {
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
                 TextUtil.formatInstant(Instant.parse(playerData.firstOnline)),
+                this.playerRegistryService.getCurrentKit(player.getUniqueId()),
                 formatPastNames(playerData)
         );
     }
