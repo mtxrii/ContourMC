@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.config.PlayerRegistryConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
@@ -95,8 +96,7 @@ public final class PlayerInfoCommand {
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
                 TextUtil.formatInstant(Instant.parse(playerData.firstOnline)),
-                // @TODO: Make util method for auto-adding array's length of template param tokens (See RankCommand.ranks)
-                playerData.pastNames.isEmpty() ? "None" : String.join(", ", playerData.pastNames)
+                formatPastNames(playerData)
         );
     }
 
@@ -114,7 +114,14 @@ public final class PlayerInfoCommand {
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
                 TextUtil.formatInstant(Instant.parse(offlinePlayerData.lastOnline)),
-                offlinePlayerData.pastNames.isEmpty() ? "None" : String.join(", ", offlinePlayerData.pastNames)
+                formatPastNames(offlinePlayerData)
         );
+    }
+
+    private static String formatPastNames(PlayerRegistryConfiguration.PlayerData playerData) {
+        if (playerData == null) {
+            return "None";
+        }
+        return String.join(", ", playerData.pastNames);
     }
 }
