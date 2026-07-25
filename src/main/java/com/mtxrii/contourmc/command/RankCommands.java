@@ -8,6 +8,7 @@ import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
@@ -52,33 +53,14 @@ public final class RankCommands {
             return;
         }
 
-        Player targetPlayer = Bukkit.getPlayer(playerName);
-        UUID targetPlayerId;
-        String targetPlayerName;
-        if (targetPlayer == null) {
-            String offlinePlayerName = SearchUtil.findClosestMatch(
-                    playerName,
-                    this.playerRegistryService.getAllPlayerNames()
-            );
-
-            if (offlinePlayerName == null) {
-                new Message(
-                        MessagePrefix.RANK,
-                        true,
-                        "No player found with name {}",
-                        playerName
-                ).sendTo(sender);
-                return;
-            }
-
-            var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(offlinePlayerName);
-            targetPlayerId = offlinePlayerData.uniqueId;
-            targetPlayerName = offlinePlayerData.name;
-
-        } else {
-            targetPlayerId = targetPlayer.getUniqueId();
-            targetPlayerName = targetPlayer.getName();
+        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        if (parsedPlayerName == null) {
+            getNoPlayerFoundMessage(playerName).sendTo(sender);
+            return;
         }
+
+        UUID targetPlayerId = parsedPlayerName.getLeft();
+        String targetPlayerName = parsedPlayerName.getRight();
 
         this.rankService.setRank(targetPlayerId, newRank);
         new Message(
@@ -87,11 +69,15 @@ public final class RankCommands {
                 targetPlayerName + "'s",
                 TextUtil.formatEnumName(newRank)
         ).sendTo(sender);
-        new Message(
-                MessagePrefix.RANK,
-                "Your rank has been set to {}",
-                TextUtil.formatEnumName(newRank)
-        ).sendTo(targetPlayer);
+
+        Player targetPlayer = Bukkit.getPlayer(playerName);
+        if (targetPlayer != null) {
+            new Message(
+                    MessagePrefix.RANK,
+                    "Your rank has been set to {}",
+                    TextUtil.formatEnumName(newRank)
+            ).sendTo(targetPlayer);
+        }
     }
 
     @Command("getrank <player>")
@@ -99,34 +85,14 @@ public final class RankCommands {
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
     ) {
-        // @TODO: Make shared method for this block
-        Player targetPlayer = Bukkit.getPlayer(playerName);
-        UUID targetPlayerId;
-        String targetPlayerName;
-        if (targetPlayer == null) {
-            String offlinePlayerName = SearchUtil.findClosestMatch(
-                    playerName,
-                    this.playerRegistryService.getAllPlayerNames()
-            );
-
-            if (offlinePlayerName == null) {
-                new Message(
-                        MessagePrefix.RANK,
-                        true,
-                        "No player found with name {}",
-                        playerName
-                ).sendTo(sender);
-                return;
-            }
-
-            var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(offlinePlayerName);
-            targetPlayerId = offlinePlayerData.uniqueId;
-            targetPlayerName = offlinePlayerData.name;
-
-        } else {
-            targetPlayerId = targetPlayer.getUniqueId();
-            targetPlayerName = targetPlayer.getName();
+        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        if (parsedPlayerName == null) {
+            getNoPlayerFoundMessage(playerName).sendTo(sender);
+            return;
         }
+
+        UUID targetPlayerId = parsedPlayerName.getLeft();
+        String targetPlayerName = parsedPlayerName.getRight();
 
         Rank rank = this.rankService.getRank(targetPlayerId);
         new Message(
@@ -187,5 +153,40 @@ public final class RankCommands {
         return Arrays.stream(Rank.values())
                      .map(rank -> rank.name().toLowerCase())
                      .collect(Collectors.toSet());
+    }
+
+    private Pair<UUID, String> parsePlayerName(String playerName) {
+        Player targetPlayer = Bukkit.getPlayer(playerName);
+        UUID targetPlayerId;
+        String targetPlayerName;
+        if (targetPlayer == null) {
+            String offlinePlayerName = SearchUtil.findClosestMatch(
+                    playerName,
+                    this.playerRegistryService.getAllPlayerNames()
+            );
+
+            if (offlinePlayerName == null) {
+                return null;
+            }
+
+            var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(offlinePlayerName);
+            targetPlayerId = offlinePlayerData.uniqueId;
+            targetPlayerName = offlinePlayerData.name;
+
+        } else {
+            targetPlayerId = targetPlayer.getUniqueId();
+            targetPlayerName = targetPlayer.getName();
+        }
+
+        return Pair.of(targetPlayerId, targetPlayerName);
+    }
+
+    private static Message getNoPlayerFoundMessage(String playerName) {
+        return new Message(
+                MessagePrefix.RANK,
+                true,
+                "No player found with name {}",
+                playerName
+        );
     }
 }
