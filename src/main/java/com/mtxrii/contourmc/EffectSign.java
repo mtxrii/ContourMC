@@ -4,27 +4,21 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public enum EffectSign {
-    TEST("[test]", "&8&l[&7Test&8&l]", "Testing sign functionality"),
-    HEAL("[heal]", "&8&l[&7Heal&8&l]", "You've been healed"),
-    SPAWN("[spawn]", "&8&l[&7Spawn&8&l]", "You've been healed"),
-    KIT("[kit]", "&8&l[&7Kit&8&l]", "Equipped kit {}");
+    TEST("[test]", "&8&l[&7Test&8&l]"),
+    HEAL("[heal]", "&8&l[&7Heal&8&l]"),
+    SPAWN("[spawn]", "&8&l[&7Spawn&8&l]"),
+    KIT("[kit]", "&8&l[&7Kit&8&l]");
 
     private final String inputSignText;
     private final String formattedSignText;
-    private final String clickSignMessage;
 
-    EffectSign(String inputSignText, String formattedSignText, String clickSignMessage) {
+    EffectSign(String inputSignText, String formattedSignText) {
         this.inputSignText = inputSignText;
         this.formattedSignText = formattedSignText;
-        this.clickSignMessage = clickSignMessage;
     }
 
     public Component getFormattedSignTextComponent() {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(this.formattedSignText);
-    }
-
-    public String getSignClickMessage() {
-        return this.clickSignMessage;
     }
 
     public static EffectSign getSignFromInput(String input) {
