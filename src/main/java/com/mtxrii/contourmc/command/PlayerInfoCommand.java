@@ -22,6 +22,7 @@ import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,7 +75,8 @@ public final class PlayerInfoCommand {
     private Message compileMsgOnlinePlayer(Player player) {
         String locationStr = TextUtil.formatLocation(player.getLocation());
         double playerCurrentHealth = Math.round(player.getHealth() * 10.0) / 10.0;
-        String healthStr = '(' + String.valueOf(playerCurrentHealth) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
+        double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
+        String healthStr = '(' + String.valueOf(playerCurrentHealth) + '/' + playerMaxHealth + ')';
         var playerData = this.playerRegistryService.getPlayerDataByName(player.getName());
 
         String messageTemplate = "{}:" +
