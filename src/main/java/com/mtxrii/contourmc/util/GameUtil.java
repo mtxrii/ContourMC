@@ -2,6 +2,9 @@ package com.mtxrii.contourmc.util;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -20,8 +23,17 @@ public final class GameUtil {
             Material.CRIMSON_SIGN, Material.CRIMSON_WALL_SIGN, Material.CRIMSON_HANGING_SIGN, Material.CRIMSON_WALL_HANGING_SIGN,
             Material.WARPED_SIGN, Material.WARPED_WALL_SIGN, Material.WARPED_HANGING_SIGN, Material.WARPED_WALL_HANGING_SIGN
     );
+    private static final double PLAYER_MAX_HEALTH = 20.0;
+    private static final int PLAYER_MAX_FOOD = 20;
 
     public static boolean isSign(Material material) {
         return SIGN_TYPES.contains(material);
+    }
+
+    public static void healPlayer(Player player) {
+        AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.MAX_HEALTH);
+        double playerMaxHealth = (maxHealthAttribute == null) ? PLAYER_MAX_HEALTH : maxHealthAttribute.getValue();
+        player.setHealth(playerMaxHealth);
+        player.setFoodLevel(PLAYER_MAX_FOOD);
     }
 }
