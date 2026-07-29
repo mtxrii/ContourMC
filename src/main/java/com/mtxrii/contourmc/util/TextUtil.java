@@ -9,8 +9,6 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public final class TextUtil {
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("MMM d, yyyy 'at' h:mm a").withZone(ZoneId.systemDefault());
     private static final DateTimeFormatter INSTANT_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z").withZone(ZoneId.systemDefault());
 
@@ -28,10 +26,6 @@ public final class TextUtil {
                         + ')';
         String worldName = location.getWorld().getName();
         return coords + " " + worldName;
-    }
-
-    public static String formatTimestamp(long timestamp) {
-        return DATE_FORMATTER.format(Instant.ofEpochMilli(timestamp));
     }
 
     public static String formatInstant(Instant instant) {
