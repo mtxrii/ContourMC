@@ -106,7 +106,8 @@ public final class PlayerInfoCommand {
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
                 "\nRank: {}" +
-                "\nLastOnline: {}" +
+                "\nLast Online: {}" +
+                "\nLast kit: {}" +
                 "\nPast Names: {}";
         return new Message(
                 MessagePrefix.INFO,
@@ -115,6 +116,7 @@ public final class PlayerInfoCommand {
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
                 TextUtil.formatInstant(Instant.parse(offlinePlayerData.lastOnline)),
+                offlinePlayerData.currentKit,
                 formatPastNames(offlinePlayerData)
         );
     }
