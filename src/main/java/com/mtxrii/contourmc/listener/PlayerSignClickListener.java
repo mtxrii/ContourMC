@@ -7,8 +7,6 @@ import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
 import com.mtxrii.contourmc.util.GameUtil;
 import com.sxtanna.platform.archetype.Component;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -58,11 +56,11 @@ public class PlayerSignClickListener implements Listener {
             }
 
             case HEAL -> {
-                // @TODO: Move heal player method to GameUtil
-                AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.MAX_HEALTH);
-                double playerMaxHealth = (maxHealthAttribute == null) ? 20.0 : maxHealthAttribute.getValue();
-                player.setHealth(playerMaxHealth);
-                player.setFoodLevel(20);
+                GameUtil.healPlayer(player);
+                new Message(
+                        MessagePrefix.GAME,
+                        "You've been healed"
+                ).sendTo(player);
             }
 
             case KIT -> {
