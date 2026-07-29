@@ -73,8 +73,8 @@ public final class PlayerInfoCommand {
 
     private Message compileMsgOnlinePlayer(Player player) {
         String locationStr = TextUtil.formatLocation(player.getLocation());
-        // @TODO: Truncate player.getHealth() double to 1 decimal place
-        String healthStr = '(' + String.valueOf(player.getHealth()) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
+        double playerCurrentHealth = Math.round(player.getHealth() * 10.0) / 10.0;
+        String healthStr = '(' + String.valueOf(playerCurrentHealth) + '/' + player.getAttribute(Attribute.MAX_HEALTH).getValue() + ')';
         var playerData = this.playerRegistryService.getPlayerDataByName(player.getName());
 
         String messageTemplate = "{}:" +
