@@ -16,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -30,17 +29,14 @@ import java.util.concurrent.ThreadLocalRandom;
 ///   - Respawn player
 @Component
 public class PlayerSignClickListener implements Listener {
-    private Plugin plugin;
     private KitService kitService;
     private SpawnpointService spawnpointService;
 
     @Inject
     public PlayerSignClickListener(
-            Plugin plugin,
             KitService kitService,
             SpawnpointService spawnpointService
     ) {
-        this.plugin = plugin;
         this.kitService = kitService;
         this.spawnpointService = spawnpointService;
     }
