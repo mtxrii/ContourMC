@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.EffectSign;
+import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
@@ -82,7 +83,16 @@ public class PlayerSignClickListener implements Listener {
                 if (kitName.isEmpty()) {
                     return;
                 }
-                this.kitService.equipKit(kitName, player); // @TODO: Surround with try-catch for CommandArgumentException
+                try {
+                    this.kitService.equipKit(kitName, player);
+                } catch (CommandArgumentException e) {
+                    new Message(
+                            MessagePrefix.KIT,
+                            true,
+                            "This kit is currently unavailable"
+                    ).sendTo(player);
+                    return;
+                }
                 new Message(
                         MessagePrefix.KIT,
                         "Kit {} equipped successfully",
