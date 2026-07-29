@@ -18,12 +18,14 @@ import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Component
 public class KitService {
     private final JacksonConfigurationLoader configLoader;
     private final KitsConfiguration kitsConfig;
     private final PlayerRegistryService playerRegistryService;
+    private final Logger pluginLogger;
 
     @Inject
     public KitService(
@@ -39,6 +41,7 @@ public class KitService {
             throw new RuntimeException(e);
         }
         this.playerRegistryService = playerRegistryService;
+        this.pluginLogger = plugin.getLogger();
     }
 
     public Set<String> kitNames() {
@@ -72,6 +75,7 @@ public class KitService {
         }
 
         this.playerRegistryService.setCurrentKit(playerEntity.getUniqueId(), kitName);
+        this.pluginLogger.info(playerEntity.getName() + " equipped kit " + kitName);
     }
 
     public void saveNewKit(
