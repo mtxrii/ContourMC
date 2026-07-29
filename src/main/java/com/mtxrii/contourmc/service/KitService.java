@@ -66,6 +66,7 @@ public class KitService {
                     true,
                     "Feature is momentarily unavailable. Please try again later."
             ).sendTo(playerEntity);
+            this.pluginLogger.severe("Failed to equip kit " + kitName + " for " + playerEntity.getName());
             throw new RuntimeException(e);
         }
 
