@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.service;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.SpawnpointsConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
+import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.sxtanna.platform.archetype.Component;
 import lombok.NonNull;
@@ -111,6 +112,11 @@ public class SpawnpointService {
 
         if (entity instanceof Player player) {
             spawnpointPlayerNamesMap.put(player.getUniqueId(), spawnpointName);
+            new Message(
+                    MessagePrefix.SPAWN,
+                    "Teleported to {}.",
+                    spawnpointName
+            ).sendTo(player);
         }
     }
 

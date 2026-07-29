@@ -115,10 +115,5 @@ public final class SpawnCommands {
         }
 
         this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
-        new Message(
-                MessagePrefix.SPAWN,
-                "Teleported to {}.",
-                name
-        ).sendTo(player);
     }
 }

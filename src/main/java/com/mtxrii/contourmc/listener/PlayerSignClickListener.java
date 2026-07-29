@@ -115,11 +115,6 @@ public class PlayerSignClickListener implements Listener {
                     return;
                 }
                 this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
-                new Message( // @TODO: Move msg to common util somewhere
-                        MessagePrefix.SPAWN,
-                        "Teleported to {}.",
-                        name
-                ).sendTo(player);
             }
         }
     }
