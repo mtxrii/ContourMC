@@ -17,9 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /// On player right-click sign block:
 /// - If text matches kit sign:
@@ -101,16 +99,7 @@ public class PlayerSignClickListener implements Listener {
                 if (spawnpointNames.isEmpty()) {
                     return;
                 }
-                int idx = ThreadLocalRandom.current().nextInt(spawnpointNames.size());
-                Iterator<String> it = spawnpointNames.iterator();
-                for (int i = 0; i < idx; i++) {
-                    it.next();
-                }
-                String name = it.next();
-                if (name == null) {
-                    return;
-                }
-                this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
+                this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(player);
             }
         }
     }
