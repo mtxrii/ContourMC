@@ -5,6 +5,7 @@ import com.mtxrii.contourmc.EffectSign;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
+import com.mtxrii.contourmc.service.SpawnpointService;
 import com.mtxrii.contourmc.util.GameUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.block.Block;
@@ -16,18 +17,31 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+
 /// On player right-click sign block:
 /// - If text matches kit sign:
 ///   - Equip kit
+///   - Heal player
+///   - Run test debug msg
+///   - Respawn player
 @Component
 public class PlayerSignClickListener implements Listener {
     private Plugin plugin;
     private KitService kitService;
+    private SpawnpointService spawnpointService;
 
     @Inject
-    public PlayerSignClickListener(Plugin plugin, KitService kitService) {
+    public PlayerSignClickListener(
+            Plugin plugin,
+            KitService kitService,
+            SpawnpointService spawnpointService
+    ) {
         this.plugin = plugin;
         this.kitService = kitService;
+        this.spawnpointService = spawnpointService;
     }
 
     @EventHandler
@@ -73,6 +87,28 @@ public class PlayerSignClickListener implements Listener {
                         MessagePrefix.KIT,
                         "Kit {} equipped successfully",
                         kitName
+                ).sendTo(player);
+            }
+
+            case SPAWN -> {
+                Set<String> spawnpointNames = this.spawnpointService.spawnpoints();
+                if (spawnpointNames.isEmpty()) {
+                    return;
+                }
+                int idx = ThreadLocalRandom.current().nextInt(spawnpointNames.size());
+                Iterator<String> it = spawnpointNames.iterator();
+                for (int i = 0; i < idx; i++) {
+                    it.next();
+                }
+                String name = it.next();
+                if (name == null) {
+                    return;
+                }
+                this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
+                new Message( // @TODO: Move msg to common util somewhere
+                        MessagePrefix.SPAWN,
+                        "Teleported to {}.",
+                        name
                 ).sendTo(player);
             }
         }

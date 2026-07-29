@@ -6,6 +6,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 public enum EffectSign {
     TEST("[test]", "&8&l[&7Test&8&l]", "Testing sign functionality"),
     HEAL("[heal]", "&8&l[&7Heal&8&l]", "You've been healed"),
+    SPAWN("[spawn]", "&8&l[&7Spawn&8&l]", "You've been healed"),
     KIT("[kit]", "&8&l[&7Kit&8&l]", "Equipped kit {}");
 
     private final String inputSignText;
