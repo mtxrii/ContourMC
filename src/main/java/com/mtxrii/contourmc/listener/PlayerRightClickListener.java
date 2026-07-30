@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.listener;
 
 import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.customitem.CustomItem;
+import com.mtxrii.contourmc.customitem.CustomItemCooldown;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.sxtanna.platform.archetype.Component;
@@ -61,18 +62,18 @@ public class PlayerRightClickListener implements Listener {
         }
         customItem.getEffect().execute(executionLocation);
 
-        if (!ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.containsKey(player.getName())) {
-            ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.put(player.getName(), new HashMap<>());
+        if (!CustomItemCooldown.COOLDOWN_MAP.containsKey(player.getName())) {
+            CustomItemCooldown.COOLDOWN_MAP.put(player.getName(), new HashMap<>());
         }
-        ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.get(player.getName()).put(customItem, new Date());
+        CustomItemCooldown.COOLDOWN_MAP.get(player.getName()).put(customItem, new Date());
     }
 
     private static long getCooldownSecondsLeft(String playerName, CustomItem customItem) {
-        if (!ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.containsKey(playerName)
-            || !ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.get(playerName).containsKey(customItem)) {
+        if (!CustomItemCooldown.COOLDOWN_MAP.containsKey(playerName)
+            || !CustomItemCooldown.COOLDOWN_MAP.get(playerName).containsKey(customItem)) {
             return 0;
         }
-        Date lastUse = ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.get(playerName).get(customItem);
+        Date lastUse = CustomItemCooldown.COOLDOWN_MAP.get(playerName).get(customItem);
         long millisecondsSinceLastUse = (new Date()).getTime() - lastUse.getTime();
         long minutesSinceLastUse = TimeUnit.MILLISECONDS.toSeconds(millisecondsSinceLastUse);
         return customItem.getCooldownSeconds() - minutesSinceLastUse;
