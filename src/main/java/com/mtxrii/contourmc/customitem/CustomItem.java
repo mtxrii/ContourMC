@@ -2,8 +2,10 @@ package com.mtxrii.contourmc.customitem;
 
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.util.ItemUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 public enum CustomItem {
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", targetLocation -> {
@@ -24,9 +26,9 @@ public enum CustomItem {
         return this.effect;
     }
 
-    public static CustomItem getCustomItem(Material material, String itemDisplayName) {
+    public static CustomItem getCustomItem(Material material, ItemStack itemHeld) {
         for (CustomItem item : CustomItem.values()) {
-            if (material == item.material && item.itemDisplayName.equals(itemDisplayName)) {
+            if (material == item.material && ItemUtil.hasExactPlainName(itemHeld, item.itemDisplayName)) {
                 return item;
             }
         }
