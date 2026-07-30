@@ -1,5 +1,6 @@
 package com.mtxrii.contourmc.listener;
 
+import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.customitem.CustomItem;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
@@ -16,14 +17,12 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /// On player right-click with custom item:
 /// - Run custom item effect
 @Component
 public class PlayerRightClickListener implements Listener {
-    private static final Map<String, Map<CustomItem, Date>> COOLDOWN_MAP = new HashMap();
 
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
@@ -62,17 +61,18 @@ public class PlayerRightClickListener implements Listener {
         }
         customItem.getEffect().execute(executionLocation);
 
-        if (!COOLDOWN_MAP.containsKey(player.getName())) {
-            COOLDOWN_MAP.put(player.getName(), new HashMap<>());
+        if (!ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.containsKey(player.getName())) {
+            ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.put(player.getName(), new HashMap<>());
         }
-        COOLDOWN_MAP.get(player.getName()).put(customItem, new Date());
+        ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.get(player.getName()).put(customItem, new Date());
     }
 
     private static long getCooldownSecondsLeft(String playerName, CustomItem customItem) {
-        if (!COOLDOWN_MAP.containsKey(playerName) || !COOLDOWN_MAP.get(playerName).containsKey(customItem)) {
+        if (!ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.containsKey(playerName)
+            || !ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.get(playerName).containsKey(customItem)) {
             return 0;
         }
-        Date lastUse = COOLDOWN_MAP.get(playerName).get(customItem);
+        Date lastUse = ContourMCPlugin.CUSTOM_ITEM_USAGE_COOLDOWN_MAP.get(playerName).get(customItem);
         long millisecondsSinceLastUse = (new Date()).getTime() - lastUse.getTime();
         long minutesSinceLastUse = TimeUnit.MILLISECONDS.toSeconds(millisecondsSinceLastUse);
         return customItem.getCooldownSeconds() - minutesSinceLastUse;
