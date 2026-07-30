@@ -9,6 +9,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum CustomItem {
+    LIGHTNING_STICK(Material.BREEZE_ROD, "Smite Stick", targetLocation -> {
+        targetLocation.getWorld().strikeLightningEffect(targetLocation);
+    }),
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", targetLocation -> {
         new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation)).sendToAll();
     });
