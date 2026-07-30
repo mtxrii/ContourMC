@@ -18,13 +18,18 @@ import org.jetbrains.annotations.NotNull;
 
 @CommandContainer
 public final class ClearItemNameFormattingCommand {
+    private static final Message COMMAND_COMPLETED_MSG = new Message(
+            MessagePrefix.GAME,
+            "Main hand item name formatting cleared."
+    );
+
     @Inject private RankService rankService;
 
     @Command("clearItemNameFormatting")
     public void clearItemNameFormatting(@NotNull final Source sender) {
         if (!(sender.source() instanceof Player player)) {
             new Message(
-                    MessagePrefix.SPAWN,
+                    MessagePrefix.GAME,
                     true,
                     "You must be a player to run this command."
             ).sendTo(sender);
@@ -34,21 +39,25 @@ public final class ClearItemNameFormattingCommand {
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType().isAir()) {
+            COMMAND_COMPLETED_MSG.sendTo(player);
             return;
         }
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
+            COMMAND_COMPLETED_MSG.sendTo(player);
             return;
         }
 
         Component displayName = meta.displayName();
         if (displayName == null) {
+            COMMAND_COMPLETED_MSG.sendTo(player);
             return;
         }
 
         String plainText = PlainTextComponentSerializer.plainText().serialize(displayName);
         meta.displayName(Component.text(plainText).decoration(TextDecoration.ITALIC, false));
         item.setItemMeta(meta);
+        COMMAND_COMPLETED_MSG.sendTo(player);
     }
 }
