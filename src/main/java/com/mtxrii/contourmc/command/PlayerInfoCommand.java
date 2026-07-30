@@ -73,7 +73,6 @@ public final class PlayerInfoCommand {
     }
 
     private Message compileMsgOnlinePlayer(Player player) {
-        String locationStr = TextUtil.formatLocation(player.getLocation());
         double playerCurrentHealth = Math.round(player.getHealth() * 10.0) / 10.0;
         double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
         String healthStr = '(' + String.valueOf(playerCurrentHealth) + '/' + playerMaxHealth + ')';
@@ -94,7 +93,7 @@ public final class PlayerInfoCommand {
                 player.getName(),
                 String.valueOf(true),
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
-                locationStr,
+                TextUtil.formatLocation(player.getLocation()),
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
                 TextUtil.formatInstant(Instant.parse(playerData.firstOnline)),
