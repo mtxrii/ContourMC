@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum CustomItem {
-    LIGHTNING_STICK(Material.BREEZE_ROD, "Smite Stick", targetLocation -> {
+    LIGHTNING_STICK(Material.BREEZE_ROD, "Smite Stick", 5, targetLocation -> {
         targetLocation.getWorld().strikeLightningEffect(targetLocation);
     }),
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", targetLocation -> {
@@ -18,11 +18,20 @@ public enum CustomItem {
 
     private final Material material;
     private final String itemDisplayName;
+    @Getter private final int cooldownSeconds;
     @Getter private final CustomItemEffect effect;
+
+    CustomItem(Material material, String itemDisplayName, int cooldownSeconds, CustomItemEffect effect) {
+        this.material = material;
+        this.itemDisplayName = itemDisplayName;
+        this.cooldownSeconds = cooldownSeconds;
+        this.effect = effect;
+    }
 
     CustomItem(Material material, String itemDisplayName, CustomItemEffect effect) {
         this.material = material;
         this.itemDisplayName = itemDisplayName;
+        this.cooldownSeconds = 0;
         this.effect = effect;
     }
 
