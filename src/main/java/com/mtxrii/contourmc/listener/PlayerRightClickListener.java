@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 /// On player right-click with custom item:
@@ -17,19 +18,25 @@ public class PlayerRightClickListener implements Listener {
 
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
         Player player = event.getPlayer();
         ItemStack mainHandItem = player.getInventory().getItemInMainHand();
-        CustomItem customItem = CustomItem.getCustomItem(mainHandItem.getType(), mainHandItem.getItemMeta().getDisplayName());
+        CustomItem customItem = CustomItem.getCustomItem(mainHandItem.getType(), mainHandItem);
         if (customItem == null) {
             return;
         }
 
         event.setCancelled(true);
-        Block targetBlock = player.getTargetBlock(null, 350);
-        customItem.getEffect().execute(targetBlock.getLocation());
+        Block targetBlock = player.getTargetBlockExact(350);
+        if (targetBlock != null) {
+            customItem.getEffect().execute(targetBlock.getLocation());
+        }
     }
 }
