@@ -6,8 +6,11 @@ import com.sxtanna.platform.paper.PlatformPaperPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public final class ContourMCPlugin extends PlatformPaperPlugin {
+    public static ContourMCPlugin pluginClass;
+
     public ContourMCPlugin(@NotNull final Platform platform) {
         super(platform);
+        pluginClass = this;
     }
 
     @Override
