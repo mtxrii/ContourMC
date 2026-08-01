@@ -51,6 +51,23 @@ public enum CustomItem {
         }
     }),
 
+    AURA_COLLECTOR(Material.DIAMOND_PICKAXE, "Aura Collector", (ignoreTargetLocation, player) -> {
+        final double PULL_RADIUS = 10.0;
+        final double PULL_STRENGTH = 0.35;
+        Location playerLocation = player.getLocation();
+        for (org.bukkit.entity.Player targetPlayer : playerLocation.getNearbyPlayers(PULL_RADIUS)) {
+            if (targetPlayer.equals(player)) {
+                continue;
+            }
+
+            Vector pullDirection = playerLocation.toVector()
+                                                 .subtract(targetPlayer.getLocation().toVector())
+                                                 .normalize()
+                                                 .multiply(PULL_STRENGTH);
+            targetPlayer.setVelocity(targetPlayer.getVelocity().add(pullDirection));
+        }
+    }),
+
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, ignoredUser) -> {
         new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation)).sendToAll();
     });
