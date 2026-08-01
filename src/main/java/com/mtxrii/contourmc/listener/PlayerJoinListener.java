@@ -19,9 +19,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /// - If player has no rank, set their rank to default
 @Component
 public class PlayerJoinListener implements Listener {
-    private SpawnpointService spawnpointService;
-    private RankService rankService;
-    private PlayerRegistryService playerRegistryService;
+    private final SpawnpointService spawnpointService;
+    private final RankService rankService;
+    private final PlayerRegistryService playerRegistryService;
 
     @Inject
     public PlayerJoinListener(
