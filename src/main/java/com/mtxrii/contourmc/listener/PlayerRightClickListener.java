@@ -1,6 +1,5 @@
 package com.mtxrii.contourmc.listener;
 
-import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.customitem.CustomItem;
 import com.mtxrii.contourmc.customitem.CustomItemCooldown;
 import com.mtxrii.contourmc.message.Message;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /// On player right-click with custom item:
 /// - Run custom item effect
@@ -50,7 +48,7 @@ public class PlayerRightClickListener implements Listener {
     }
 
     private void runEffectWithCooldown(Player player, CustomItem customItem, Location executionLocation) {
-        long cooldownSecondsLeft = getCooldownSecondsLeft(player.getName(), customItem);
+        long cooldownSecondsLeft = CustomItemCooldown.getCooldownSecondsLeft(player.getName(), customItem);
         if (cooldownSecondsLeft > 0) {
             new Message(
                     MessagePrefix.GAME,
@@ -66,16 +64,5 @@ public class PlayerRightClickListener implements Listener {
             CustomItemCooldown.COOLDOWN_MAP.put(player.getName(), new HashMap<>());
         }
         CustomItemCooldown.COOLDOWN_MAP.get(player.getName()).put(customItem, new Date());
-    }
-
-    private static long getCooldownSecondsLeft(String playerName, CustomItem customItem) {
-        if (!CustomItemCooldown.COOLDOWN_MAP.containsKey(playerName)
-            || !CustomItemCooldown.COOLDOWN_MAP.get(playerName).containsKey(customItem)) {
-            return 0;
-        }
-        Date lastUse = CustomItemCooldown.COOLDOWN_MAP.get(playerName).get(customItem);
-        long millisecondsSinceLastUse = (new Date()).getTime() - lastUse.getTime();
-        long minutesSinceLastUse = TimeUnit.MILLISECONDS.toSeconds(millisecondsSinceLastUse);
-        return customItem.getCooldownSeconds() - minutesSinceLastUse;
     }
 }

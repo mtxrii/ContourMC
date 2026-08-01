@@ -12,6 +12,17 @@ public final class CustomItemCooldown {
     public static final Map<String, Map<CustomItem, Date>> COOLDOWN_MAP = new HashMap<>();
     private static final long COOLDOWN_EXPIRY_MILLIS = TimeUnit.MINUTES.toMillis(1);
 
+    public static long getCooldownSecondsLeft(String playerName, CustomItem customItem) {
+        if (!COOLDOWN_MAP.containsKey(playerName)
+                || !COOLDOWN_MAP.get(playerName).containsKey(customItem)) {
+            return 0;
+        }
+        Date lastUse = COOLDOWN_MAP.get(playerName).get(customItem);
+        long millisecondsSinceLastUse = (new Date()).getTime() - lastUse.getTime();
+        long minutesSinceLastUse = TimeUnit.MILLISECONDS.toSeconds(millisecondsSinceLastUse);
+        return customItem.getCooldownSeconds() - minutesSinceLastUse;
+    }
+
     public static void cleanupExpiredCooldowns() {
         final long now = System.currentTimeMillis();
 
