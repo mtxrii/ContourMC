@@ -10,12 +10,17 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.processing.CommandContainer;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @CommandContainer
 public final class SpawnCommands {
@@ -48,7 +53,7 @@ public final class SpawnCommands {
     @Command("deletespawn|delspawn <name>")
     public void deleteSpawn(
             @NotNull final Source sender,
-            @Argument("name") final String name
+            @Argument(value = "name", suggestions = "spawns") final String name
     ) {
         if (sender.source() instanceof Player player) {
             this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
@@ -84,7 +89,7 @@ public final class SpawnCommands {
     @Command("spawn [name]")
     public void tpToSpawn(
             @NotNull final Source sender,
-            @Argument("name") String name
+            @Argument(value = "name", suggestions = "spawns") String name
     ) {
         if (!(sender.source() instanceof Player player)) {
             new Message(
@@ -115,5 +120,13 @@ public final class SpawnCommands {
         }
 
         this.spawnpointService.teleportLivingEntityToSpawnpoint(name, player);
+    }
+
+    @Suggestions("spawns")
+    public @NotNull Set<String> suggestRanks(
+            @NotNull final CommandContext<Source> context,
+            @NotNull final CommandInput input
+    ) {
+        return this.spawnpointService.spawnpoints();
     }
 }
