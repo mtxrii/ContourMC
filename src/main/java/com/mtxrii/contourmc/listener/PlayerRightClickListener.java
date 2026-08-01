@@ -45,6 +45,7 @@ public class PlayerRightClickListener implements Listener {
         Block targetBlock = player.getTargetBlockExact(350);
         if (targetBlock != null) {
             this.runEffectWithCooldown(player, customItem, targetBlock.getLocation());
+            event.setCancelled(true);
         }
     }
 

@@ -40,7 +40,10 @@ public class PlayerSignClickListener implements Listener {
         this.spawnpointService = spawnpointService;
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(
+            priority = EventPriority.NORMAL,
+            ignoreCancelled = true
+    )
     public void onPlayerRightClickSign(PlayerInteractEvent event) {
         Action action = event.getAction();
         Block clickedBlock = event.getClickedBlock();
