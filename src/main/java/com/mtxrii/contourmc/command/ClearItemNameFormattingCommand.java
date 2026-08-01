@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.command;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.RankService;
 import net.kyori.adventure.text.Component;
@@ -18,11 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 @CommandContainer
 public final class ClearItemNameFormattingCommand {
-    private static final Message COMMAND_COMPLETED_MSG = new Message(
-            MessagePrefix.GAME,
-            "Main hand item name formatting cleared."
-    );
-
     @Inject private RankService rankService;
 
     @Command("clearItemNameFormatting")
@@ -39,25 +35,25 @@ public final class ClearItemNameFormattingCommand {
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType().isAir()) {
-            COMMAND_COMPLETED_MSG.sendTo(player);
+            MessageConst.CLEAR_ITEM_NAME_COMMAND_COMPLETED_MSG.sendTo(player);
             return;
         }
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
-            COMMAND_COMPLETED_MSG.sendTo(player);
+            MessageConst.CLEAR_ITEM_NAME_COMMAND_COMPLETED_MSG.sendTo(player);
             return;
         }
 
         Component displayName = meta.displayName();
         if (displayName == null) {
-            COMMAND_COMPLETED_MSG.sendTo(player);
+            MessageConst.CLEAR_ITEM_NAME_COMMAND_COMPLETED_MSG.sendTo(player);
             return;
         }
 
         String plainText = PlainTextComponentSerializer.plainText().serialize(displayName);
         meta.displayName(Component.text(plainText).decoration(TextDecoration.ITALIC, false));
         item.setItemMeta(meta);
-        COMMAND_COMPLETED_MSG.sendTo(player);
+        MessageConst.CLEAR_ITEM_NAME_COMMAND_COMPLETED_MSG.sendTo(player);
     }
 }
