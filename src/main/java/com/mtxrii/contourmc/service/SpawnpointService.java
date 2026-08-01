@@ -18,7 +18,6 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -122,29 +121,21 @@ public class SpawnpointService {
     public void teleportLivingEntityToRandomSpawnpoint(
             @NonNull LivingEntity entity
     ) {
-        final Set<String> spawnpointNames = this.spawnpoints();
-        if (spawnpointNames.isEmpty()) {
+        String spawnpointName = this.getRandomSpawnpointName();
+        if (spawnpointName == null) {
             this.pluginLogger.warning("Failed to teleport " + entity.getName() + " to a random spawnpoint as there are none saved.");
             return;
         }
-
-        final ArrayList<String> shuffled = new ArrayList<>(spawnpointNames);
-        Collections.shuffle(shuffled);
-        String spawnpointName = shuffled.get(ThreadLocalRandom.current().nextInt(spawnpointNames.size()));
 
         this.teleportLivingEntityToSpawnpoint(spawnpointName, entity);
     }
 
     public Location getRandomSpawnpointLocation() {
-        final Set<String> spawnpointNames = this.spawnpoints();
-        if (spawnpointNames.isEmpty()) {
+        String spawnpointName = this.getRandomSpawnpointName();
+        if (spawnpointName == null) {
             this.pluginLogger.warning("Failed to find a random spawnpoint as there are none saved.");
             return null;
         }
-
-        final ArrayList<String> shuffled = new ArrayList<>(spawnpointNames);
-        Collections.shuffle(shuffled);
-        String spawnpointName = shuffled.get(ThreadLocalRandom.current().nextInt(spawnpointNames.size()));
 
         SpawnpointsConfiguration.Spawnpoint spawnpoint = this.spawnpointsConfig.spawnpoints.get(spawnpointName);
         if (spawnpoint == null) {
@@ -171,6 +162,16 @@ public class SpawnpointService {
     public String getLastSpawnpointForPlayer(UUID playerId) {
         String lastSpawnpointName = this.spawnpointPlayerNamesMap.get(playerId);
         return lastSpawnpointName == null ? "default" : lastSpawnpointName;
+    }
+
+    private String getRandomSpawnpointName() {
+        final Set<String> spawnpointNames = this.spawnpoints();
+        if (spawnpointNames.isEmpty()) {
+            return null;
+        }
+
+        final ArrayList<String> spawnpointNameList = new ArrayList<>(spawnpointNames);
+        return spawnpointNameList.get(ThreadLocalRandom.current().nextInt(spawnpointNameList.size()));
     }
 
     private void saveConfig() {
