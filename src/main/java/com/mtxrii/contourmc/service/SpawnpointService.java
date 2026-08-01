@@ -28,8 +28,7 @@ import java.util.logging.Logger;
 
 @Component
 public class SpawnpointService {
-    private static Map<UUID, String> spawnpointPlayerNamesMap;
-
+    private final Map<UUID, String> spawnpointPlayerNamesMap;
     private final JacksonConfigurationLoader configLoader;
     private final SpawnpointsConfiguration spawnpointsConfig;
     private final Logger pluginLogger;
@@ -111,7 +110,7 @@ public class SpawnpointService {
         entity.teleport(spawnpointLocation);
 
         if (entity instanceof Player player) {
-            spawnpointPlayerNamesMap.put(player.getUniqueId(), spawnpointName);
+            this.spawnpointPlayerNamesMap.put(player.getUniqueId(), spawnpointName);
             new Message(
                     MessagePrefix.SPAWN,
                     "Teleported to {}.",
@@ -137,7 +136,7 @@ public class SpawnpointService {
     }
 
     public String getLastSpawnpointForPlayer(UUID playerId) {
-        String lastSpawnpointName = spawnpointPlayerNamesMap.get(playerId);
+        String lastSpawnpointName = this.spawnpointPlayerNamesMap.get(playerId);
         return lastSpawnpointName == null ? "default" : lastSpawnpointName;
     }
 
