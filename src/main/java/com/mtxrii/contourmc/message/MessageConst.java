@@ -15,4 +15,10 @@ public final class MessageConst {
             true,
             "Feature is momentarily unavailable. Please try again later."
     );
+
+    public static final Message NO_SPAWNS_STORED = new Message(
+            MessagePrefix.SPAWN,
+            true,
+            "No spawns available to teleport to."
+    );
 }

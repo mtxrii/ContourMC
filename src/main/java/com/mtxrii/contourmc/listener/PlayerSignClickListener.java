@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mtxrii.contourmc.EffectSign;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
 import com.mtxrii.contourmc.service.SpawnpointService;
@@ -101,6 +102,7 @@ public class PlayerSignClickListener implements Listener {
             case SPAWN -> {
                 Set<String> spawnpointNames = this.spawnpointService.spawnpoints();
                 if (spawnpointNames.isEmpty()) {
+                    MessageConst.NO_SPAWNS_STORED.sendTo(player);
                     return;
                 }
                 this.spawnpointService.teleportLivingEntityToRandomSpawnpoint(player);

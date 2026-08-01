@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.command;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SpawnpointService;
@@ -103,11 +104,7 @@ public final class SpawnCommands {
         if (name == null) {
             Set<String> spawnpointNames = this.spawnpointService.spawnpoints();
             if (spawnpointNames.isEmpty()) {
-                new Message(
-                        MessagePrefix.SPAWN,
-                        true,
-                        "No spawns available to teleport to."
-                ).sendTo(sender);
+                MessageConst.NO_SPAWNS_STORED.sendTo(sender);
                 return;
             }
 
