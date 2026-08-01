@@ -135,6 +135,39 @@ public class SpawnpointService {
         this.teleportLivingEntityToSpawnpoint(spawnpointName, entity);
     }
 
+    public Location getRandomSpawnpointLocation() {
+        final Set<String> spawnpointNames = this.spawnpoints();
+        if (spawnpointNames.isEmpty()) {
+            this.pluginLogger.warning("Failed to find a random spawnpoint as there are none saved.");
+            return null;
+        }
+
+        final ArrayList<String> shuffled = new ArrayList<>(spawnpointNames);
+        Collections.shuffle(shuffled);
+        String spawnpointName = shuffled.get(ThreadLocalRandom.current().nextInt(spawnpointNames.size()));
+
+        SpawnpointsConfiguration.Spawnpoint spawnpoint = this.spawnpointsConfig.spawnpoints.get(spawnpointName);
+        if (spawnpoint == null) {
+            this.pluginLogger.warning("Failed to find random spawnpoint '" + spawnpointName + "' as it no longer exists.");
+            return null;
+        }
+
+        World world = Bukkit.getWorld(spawnpoint.world);
+        if (world == null) {
+            this.pluginLogger.warning("Failed to find random spawnpoint '" + spawnpointName + "' as world '" + spawnpoint.world + "' is not loaded.");
+            return null;
+        }
+
+        return new Location(
+                world,
+                spawnpoint.x,
+                spawnpoint.y,
+                spawnpoint.z,
+                spawnpoint.yaw,
+                spawnpoint.pitch
+        );
+    }
+
     public String getLastSpawnpointForPlayer(UUID playerId) {
         String lastSpawnpointName = this.spawnpointPlayerNamesMap.get(playerId);
         return lastSpawnpointName == null ? "default" : lastSpawnpointName;
