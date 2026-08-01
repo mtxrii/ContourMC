@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @UtilityClass
 public final class CustomItemCooldown {
-    public static final Map<String, Map<CustomItem, Date>> COOLDOWN_MAP = new HashMap();
+    public static final Map<String, Map<CustomItem, Date>> COOLDOWN_MAP = new HashMap<>();
     private static final long COOLDOWN_EXPIRY_MILLIS = TimeUnit.MINUTES.toMillis(1);
 
     public static void cleanupExpiredCooldowns() {
