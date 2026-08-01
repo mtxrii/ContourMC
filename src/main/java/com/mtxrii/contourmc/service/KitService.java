@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.KitsConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.util.Base64Util;
 import com.sxtanna.platform.archetype.Component;
@@ -61,11 +62,7 @@ public class KitService {
         try {
             kitContents = Base64Util.inventoryFromBase64(kitBase64);
         } catch (IOException | ClassNotFoundException e) {
-            new Message(
-                    MessagePrefix.KIT,
-                    true,
-                    "Feature is momentarily unavailable. Please try again later."
-            ).sendTo(playerEntity);
+            MessageConst.FEATURE_IS_UNAVAILABLE.sendTo(playerEntity);
             this.pluginLogger.severe("Failed to equip kit " + kitName + " for " + playerEntity.getName());
             throw new RuntimeException(e);
         }

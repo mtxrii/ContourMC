@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.particle;
 
 import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -184,11 +185,7 @@ public class ParticleSpawn {
             );
             if (this.forOnePlayerOnly) {
                 assert this.player != null;
-                new Message(
-                        MessagePrefix.GAME,
-                        true,
-                        "Feature is momentarily unavailable. Please try again later."
-                ).sendTo(this.player);
+                MessageConst.FEATURE_IS_UNAVAILABLE.sendTo(this.player);
             }
             return;
         }
