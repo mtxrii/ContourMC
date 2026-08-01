@@ -1,9 +1,7 @@
 package com.mtxrii.contourmc.particle;
 
 import com.mtxrii.contourmc.ContourMCPlugin;
-import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessageConst;
-import com.mtxrii.contourmc.message.MessagePrefix;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
