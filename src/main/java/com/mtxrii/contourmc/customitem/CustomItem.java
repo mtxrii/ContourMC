@@ -10,10 +10,10 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 
 public enum CustomItem {
-    LIGHTNING_STICK(Material.BREEZE_ROD, "Smite Stick", 5, targetLocation -> {
+    LIGHTNING_STICK(Material.BREEZE_ROD, "Smite Stick", 5, (targetLocation, ignoredUser) -> {
         targetLocation.getWorld().strikeLightningEffect(targetLocation);
     }),
-    TNT_PLANTER_SEED(Material.PUMPKIN_SEEDS, "TNT Seeds", 10, targetLocation -> {
+    TNT_PLANTER_SEED(Material.PUMPKIN_SEEDS, "TNT Seeds", 10, (targetLocation, ignoredUser) -> {
         targetLocation.getWorld().spawn(
                 targetLocation,
                 TNTPrimed.class,
@@ -23,7 +23,7 @@ public enum CustomItem {
                 }
         );
     }),
-    DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", targetLocation -> {
+    DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, ignoredUser) -> {
         new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation)).sendToAll();
     });
 
