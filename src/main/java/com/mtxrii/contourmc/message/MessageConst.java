@@ -21,4 +21,9 @@ public final class MessageConst {
             true,
             "No spawns available to teleport to."
     );
+
+    public static final Message SANCTION_MSG_BORDER = new Message(
+            MessagePrefix.BLANK,
+            "&c&l██████████████████████████████&b"
+    );
 }
