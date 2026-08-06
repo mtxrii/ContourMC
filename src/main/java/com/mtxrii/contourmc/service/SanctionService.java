@@ -15,6 +15,7 @@ public class SanctionService {
                 MessagePrefix.BLANK,
                 """
                 
+                
                 &b&lYou've been kicked!
                 
                 {}
@@ -32,6 +33,7 @@ public class SanctionService {
         Message kickMessage = MessageConst.SANCTION_MSG_BORDER.append(new Message(
                 MessagePrefix.BLANK,
                 """
+                
                 
                 &b&lYou've been kicked!
                 

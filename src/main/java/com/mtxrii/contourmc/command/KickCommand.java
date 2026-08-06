@@ -11,8 +11,14 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.processing.CommandContainer;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @CommandContainer
 public final class KickCommand {
@@ -22,7 +28,7 @@ public final class KickCommand {
     @Command("kick <player> [reason]")
     public void kickPlayer(
             @NotNull final Source sender,
-            @Argument(value = "player") final String playerName,
+            @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,
             @Argument(value = "reason") final String reason
     ) {
         if (sender.source() instanceof Player player) {
@@ -44,5 +50,16 @@ public final class KickCommand {
         } else {
             this.sanctionService.kick(target);
         }
+    }
+
+    @Suggestions("onlinePlayers")
+    public @NotNull Set<String> suggestOnlinePlayers(
+            @NotNull final CommandContext<Source> context,
+            @NotNull final CommandInput input
+    ) {
+        return Bukkit.getOnlinePlayers()
+                     .stream()
+                     .map(Player::getName)
+                     .collect(Collectors.toSet());
     }
 }
