@@ -24,6 +24,6 @@ public final class MessageConst {
 
     public static final Message SANCTION_MSG_BORDER = new Message(
             MessagePrefix.BLANK,
-            "&c&l██████████████████████████████&b"
+            "\n&c&l██████████████████████████████&b\n"
     );
 }

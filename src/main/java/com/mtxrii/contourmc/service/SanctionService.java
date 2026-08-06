@@ -15,11 +15,9 @@ public class SanctionService {
                 MessagePrefix.BLANK,
                 """
                 
-                
                 &b&lYou've been kicked!
                 
                 {}
-                
                 
                 
                 """,
@@ -34,9 +32,7 @@ public class SanctionService {
                 MessagePrefix.BLANK,
                 """
                 
-                
                 &b&lYou've been kicked!
-                
                 
                 
                 """
