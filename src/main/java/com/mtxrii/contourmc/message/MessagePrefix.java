@@ -7,6 +7,7 @@ public enum MessagePrefix {
     SPAWN,
     ENV,
     GAME,
+    MOD,
     RANK;
 
     public String getFormatted() {
