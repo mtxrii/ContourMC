@@ -8,6 +8,7 @@ import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SanctionService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.processing.CommandContainer;
@@ -29,7 +30,7 @@ public final class KickCommand {
     public void kickPlayer(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,
-            @Argument(value = "reason") final String reason
+            @Argument(value = "reason") @Greedy final String reason
     ) {
         if (sender.source() instanceof Player player) {
             this.rankService.requireRank(MessagePrefix.MOD, Rank.MEDIATOR, player);

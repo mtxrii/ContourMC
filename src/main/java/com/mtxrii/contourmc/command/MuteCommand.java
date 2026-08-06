@@ -12,6 +12,7 @@ import com.mtxrii.contourmc.util.TimeUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.processing.CommandContainer;
@@ -21,7 +22,6 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,7 +38,7 @@ public final class MuteCommand {
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,
             @Argument(value = "duration") final long duration,
             @Argument(value = "units", suggestions = "timeUnits") final String units,
-            @Argument(value = "reason") final String reason
+            @Argument(value = "reason") @Greedy final String reason
     ) {
         if (sender.source() instanceof Player player) {
             this.rankService.requireRank(MessagePrefix.MOD, Rank.MEDIATOR, player);
