@@ -5,6 +5,7 @@ import com.mtxrii.contourmc.config.SanctionsConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.util.TimeUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -75,7 +76,7 @@ public class SanctionService {
 
         SanctionsConfiguration.Sanction newMute = new SanctionsConfiguration.Sanction();
         newMute.reason = reason;
-        newMute.expiresAt = expiration.toString();
+        newMute.expiresAt = TimeUtil.instantToString(expiration);
         this.sanctionsConfig.mutes.put(playerId, newMute);
 
         String muteLog = "Muted " + playerId + " with reason: '" + reason + "' until " + expiration;

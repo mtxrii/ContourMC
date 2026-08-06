@@ -9,6 +9,7 @@ import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
+import com.mtxrii.contourmc.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -96,7 +97,7 @@ public final class PlayerInfoCommand {
                 TextUtil.formatLocation(player.getLocation()),
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
-                TextUtil.formatInstant(Instant.parse(playerData.firstOnline)),
+                TextUtil.formatInstant(TimeUtil.stringToInstant(playerData.firstOnline)),
                 this.playerRegistryService.getCurrentKit(player.getUniqueId()),
                 formatPastNames(playerData)
         );
@@ -116,7 +117,7 @@ public final class PlayerInfoCommand {
                 offlinePlayerData.name,
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
-                TextUtil.formatInstant(Instant.parse(offlinePlayerData.lastOnline)),
+                TextUtil.formatInstant(TimeUtil.stringToInstant(offlinePlayerData.lastOnline)),
                 offlinePlayerData.currentKit,
                 formatPastNames(offlinePlayerData)
         );

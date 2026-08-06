@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.PlayerRegistryConfiguration;
+import com.mtxrii.contourmc.util.TimeUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -42,8 +43,8 @@ public class PlayerRegistryService {
             var newPlayerData = new PlayerRegistryConfiguration.PlayerData();
             newPlayerData.uniqueId = player.getUniqueId();
             newPlayerData.name = currentPlayerName;
-            newPlayerData.firstOnline = Instant.now().toString();
-            newPlayerData.lastOnline = Instant.now().toString();
+            newPlayerData.firstOnline = TimeUtil.instantToString(Instant.now());
+            newPlayerData.lastOnline = TimeUtil.instantToString(Instant.now());
             newPlayerData.currentKit = "NONE";
             this.playerRegistryConfig.playerRegistry.put(currentPlayerName, newPlayerData);
             this.saveConfig();
@@ -67,7 +68,7 @@ public class PlayerRegistryService {
         var playerData = this.getPlayerDataByName(player.getName());
         assert playerData != null;
 
-        playerData.lastOnline = Instant.now().toString();
+        playerData.lastOnline = TimeUtil.instantToString(Instant.now());
 
         this.playerRegistryConfig.playerRegistry.put(player.getName(), playerData);
         this.saveConfig();
