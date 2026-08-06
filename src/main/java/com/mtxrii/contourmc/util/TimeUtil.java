@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.util;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -58,6 +59,12 @@ public final class TimeUtil {
     }
 
     public static Instant getInstantInTimeFromNow(long timeToAdd, TimeUnit timeUnit) {
-        return Instant.now().plus(timeToAdd, timeUnit.chronoUnit);
+        return switch (timeUnit) {
+            case WEEKS -> Instant.now().plus(Duration.ofDays(timeToAdd * 7));
+            case MONTHS -> Instant.now().plus(Duration.ofHours(Math.round(timeToAdd * 30.5 * 24)));
+            case YEARS -> Instant.now().plus(Duration.ofDays(timeToAdd * 365));
+            case DECADES -> Instant.now().plus(Duration.ofDays(timeToAdd * 365 * 10));
+            default -> Instant.now().plus(timeToAdd, timeUnit.chronoUnit);
+        };
     }
 }
