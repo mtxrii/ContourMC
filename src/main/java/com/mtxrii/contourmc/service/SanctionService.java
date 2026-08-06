@@ -12,10 +12,15 @@ import org.bukkit.plugin.Plugin;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
+import java.time.Instant;
+import java.util.UUID;
+import java.util.logging.Logger;
+
 @Component
 public class SanctionService {
     private final JacksonConfigurationLoader configLoader;
     private final SanctionsConfiguration sanctionsConfig;
+    private final Logger pluginLogger;
 
     @Inject
     public SanctionService(Plugin plugin) {
@@ -27,6 +32,7 @@ public class SanctionService {
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
+        this.pluginLogger = plugin.getLogger();
     }
 
     public void kick(Player target, String reason) {
@@ -44,6 +50,8 @@ public class SanctionService {
         )).append(MessageConst.SANCTION_MSG_BORDER);
 
         target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICK_COMMAND);
+
+        this.pluginLogger.info("Kicked " + target.getName() + " with reason: '" + reason + "'");
     }
 
     public void kick(Player target) {
@@ -58,6 +66,51 @@ public class SanctionService {
         )).append(MessageConst.SANCTION_MSG_BORDER);
 
         target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICK_COMMAND);
+
+        this.pluginLogger.info("Kicked " + target.getName());
+    }
+
+    public void mute(UUID playerId, String reason, Instant expiration) {
+        SanctionsConfiguration.Sanction previousMute = this.sanctionsConfig.mutes.get(playerId);
+
+        SanctionsConfiguration.Sanction newMute = new SanctionsConfiguration.Sanction();
+        newMute.reason = reason;
+        newMute.expiresAt = expiration.toString();
+        this.sanctionsConfig.mutes.put(playerId, newMute);
+
+        String muteLog = "Muted " + playerId + " with reason: '" + reason + "' until " + expiration;
+        if (previousMute != null) {
+            muteLog += " (replaces previously applied mute with reason: '" + previousMute.reason + "')";
+        }
+        this.pluginLogger.info(muteLog);
+    }
+
+    public void unmute(UUID playerId) {
+        SanctionsConfiguration.Sanction currentMute = this.sanctionsConfig.mutes.get(playerId);
+        if (currentMute != null) {
+            this.sanctionsConfig.mutes.remove(playerId);
+
+            this.pluginLogger.info(
+                    "Unmuted " + playerId +
+                    " (previously muted with reason: '" + currentMute.reason + "')"
+            );
+        }
+    }
+
+    public boolean isMuted(UUID playerId) {
+        return this.sanctionsConfig.mutes.containsKey(playerId);
+    }
+
+    public SanctionsConfiguration.Sanction getMute(UUID playerId) {
+        SanctionsConfiguration.Sanction currentMute = this.sanctionsConfig.mutes.get(playerId);
+        if (currentMute == null) {
+            return null;
+        }
+
+        SanctionsConfiguration.Sanction currentMuteCopy = new SanctionsConfiguration.Sanction();
+        currentMuteCopy.reason = currentMute.reason;
+        currentMuteCopy.expiresAt = currentMute.expiresAt;
+        return currentMuteCopy;
     }
 
     private void saveConfig() {
