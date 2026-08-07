@@ -90,6 +90,48 @@ public final class BanCommand {
         this.sanctionService.ban(targetPlayerId, reason, TimeUtil.getInstantInTimeFromNow(duration, timeUnit));
     }
 
+    @Command("unban <player>")
+    public void unbanPlayer(
+            @NotNull final Source sender,
+            @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
+    ) {
+        if (sender.source() instanceof Player player) {
+            this.rankService.requireRank(MessagePrefix.MOD, Rank.MEDIATOR, player);
+        }
+
+        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        if (parsedPlayerName == null) {
+            new Message(
+                    MessagePrefix.MOD,
+                    true,
+                    "No player found with name {}",
+                    playerName
+            ).sendTo(sender);
+            return;
+        }
+        final UUID targetPlayerId = parsedPlayerName.getLeft();
+        final String targetPlayerName = parsedPlayerName.getRight();
+
+        SanctionsConfiguration.Sanction previousBan = this.sanctionService.getBan(targetPlayerId);
+        if (previousBan == null) {
+            new Message(
+                    MessagePrefix.MOD,
+                    true,
+                    "Player {} is not banned",
+                    targetPlayerName
+            ).sendTo(sender);
+            return;
+        }
+
+        this.sanctionService.unban(targetPlayerId);
+        new Message(
+                MessagePrefix.MOD,
+                "Unbanned {}, previously banned with reason: {}",
+                targetPlayerName,
+                previousBan.reason
+        ).sendTo(sender);
+    }
+
     @Suggestions("timeUnits")
     public @NotNull Set<String> suggestTimeUnits(
             @NotNull final CommandContext<Source> context,

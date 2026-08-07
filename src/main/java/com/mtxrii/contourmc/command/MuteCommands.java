@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.Rank;
+import com.mtxrii.contourmc.config.SanctionsConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
@@ -27,7 +28,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CommandContainer
-public final class MuteCommand {
+public final class MuteCommands {
     @Inject private RankService rankService;
     @Inject private SanctionService sanctionService;
     @Inject private PlayerRegistryService playerRegistryService;
@@ -78,6 +79,48 @@ public final class MuteCommand {
         }
 
         this.sanctionService.mute(targetPlayerId, reason, TimeUtil.getInstantInTimeFromNow(duration, timeUnit));
+    }
+
+    @Command("unmute <player>")
+    public void unmutePlayer(
+            @NotNull final Source sender,
+            @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
+    ) {
+        if (sender.source() instanceof Player player) {
+            this.rankService.requireRank(MessagePrefix.MOD, Rank.MEDIATOR, player);
+        }
+
+        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        if (parsedPlayerName == null) {
+            new Message(
+                    MessagePrefix.MOD,
+                    true,
+                    "No player found with name {}",
+                    playerName
+            ).sendTo(sender);
+            return;
+        }
+        final UUID targetPlayerId = parsedPlayerName.getLeft();
+        final String targetPlayerName = parsedPlayerName.getRight();
+
+        SanctionsConfiguration.Sanction previousMute = this.sanctionService.getMute(targetPlayerId);
+        if (previousMute == null) {
+            new Message(
+                    MessagePrefix.MOD,
+                    true,
+                    "Player {} is not muted",
+                    targetPlayerName
+            ).sendTo(sender);
+            return;
+        }
+
+        this.sanctionService.unmute(targetPlayerId);
+        new Message(
+                MessagePrefix.MOD,
+                "Unmuted {}, previously muted with reason: {}",
+                targetPlayerName,
+                previousMute.reason
+        ).sendTo(sender);
     }
 
     // @TODO: Move this to const class
