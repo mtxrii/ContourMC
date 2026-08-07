@@ -11,6 +11,8 @@ import java.util.UUID;
 public class SanctionsConfiguration {
     @Setting public Map<UUID, Sanction> mutes = new LinkedHashMap<>();
 
+    @Setting public Map<UUID, Sanction> bans = new LinkedHashMap<>();
+
     @ConfigSerializable
     public static class Sanction {
         @Setting public String reason;

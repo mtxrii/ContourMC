@@ -116,6 +116,51 @@ public class SanctionService {
         return currentMuteCopy;
     }
 
+    public void ban(UUID playerId, String reason, Instant expiration) {
+        SanctionsConfiguration.Sanction previousBan = this.sanctionsConfig.bans.get(playerId);
+
+        SanctionsConfiguration.Sanction newBan = new SanctionsConfiguration.Sanction();
+        newBan.reason = reason;
+        newBan.expiresAt = TimeUtil.instantToString(expiration);
+        this.sanctionsConfig.bans.put(playerId, newBan);
+        this.saveConfig();
+
+        String banLog = "Banned " + playerId + " with reason: '" + reason + "' until " + expiration;
+        if (previousBan != null) {
+            banLog += " (replaces previously applied ban with reason: '" + previousBan.reason + "')";
+        }
+        this.pluginLogger.info(banLog);
+    }
+
+    public void unban(UUID playerId) {
+        SanctionsConfiguration.Sanction currentBan = this.sanctionsConfig.bans.get(playerId);
+        if (currentBan != null) {
+            this.sanctionsConfig.bans.remove(playerId);
+
+            this.pluginLogger.info(
+                    "Unbanned " + playerId +
+                    " (previously banned with reason: '" + currentBan.reason + "')"
+            );
+            this.saveConfig();
+        }
+    }
+
+    public boolean isBanned(UUID playerId) {
+        return this.sanctionsConfig.bans.containsKey(playerId);
+    }
+
+    public SanctionsConfiguration.Sanction getBan(UUID playerId) {
+        SanctionsConfiguration.Sanction currentBan = this.sanctionsConfig.bans.get(playerId);
+        if (currentBan == null) {
+            return null;
+        }
+
+        SanctionsConfiguration.Sanction currentBanCopy = new SanctionsConfiguration.Sanction();
+        currentBanCopy.reason = currentBan.reason;
+        currentBanCopy.expiresAt = currentBan.expiresAt;
+        return currentBanCopy;
+    }
+
     private void saveConfig() {
         try {
             this.configLoader.save(this.configLoader.createNode().set(this.sanctionsConfig));
