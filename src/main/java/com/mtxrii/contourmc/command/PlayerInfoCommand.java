@@ -1,11 +1,13 @@
 package com.mtxrii.contourmc.command;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.config.PlayerRegistryConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
+import com.mtxrii.contourmc.service.SanctionService;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
@@ -22,7 +24,6 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public final class PlayerInfoCommand {
     @Inject private RankService rankService;
     @Inject private PlayerRegistryService playerRegistryService;
     @Inject private SpawnpointService spawnpointService;
+    @Inject private SanctionService sanctionService;
 
     @Command("playerinfo <player>")
     public void playerInfo(
@@ -39,6 +41,7 @@ public final class PlayerInfoCommand {
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
     ) {
         Message response;
+        boolean canSenderSeePrivateInfo = this.canSenderSeePrivateInfo(sender);
         Player player = Bukkit.getPlayer(playerName);
         if (player == null) {
             String offlinePlayerName = SearchUtil.findClosestMatch(
@@ -55,9 +58,9 @@ public final class PlayerInfoCommand {
                 return;
             }
 
-            response = this.compileMsgOfflinePlayer(offlinePlayerName);
+            response = this.compileMsgOfflinePlayer(offlinePlayerName, canSenderSeePrivateInfo);
         } else {
-            response = this.compileMsgOnlinePlayer(player);
+            response = this.compileMsgOnlinePlayer(player, canSenderSeePrivateInfo);
         }
         response.sendTo(sender);
     }
@@ -73,7 +76,14 @@ public final class PlayerInfoCommand {
                      .collect(Collectors.toSet());
     }
 
-    private Message compileMsgOnlinePlayer(Player player) {
+    private boolean canSenderSeePrivateInfo(Source sender) {
+        if (sender.source() instanceof Player player) {
+            return this.rankService.getRank(player.getUniqueId()).isAtLeast(Rank.MEDIATOR);
+        }
+        return true;
+    }
+
+    private Message compileMsgOnlinePlayer(Player player, boolean showPrivateInfo) {
         double playerCurrentHealth = Math.round(player.getHealth() * 10.0) / 10.0;
         double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
         String healthStr = '(' + String.valueOf(playerCurrentHealth) + '/' + playerMaxHealth + ')';
@@ -88,7 +98,7 @@ public final class PlayerInfoCommand {
                 "\nJoin Date: {}" +
                 "\nCurrent kit: {}" +
                 "\nPast Names: {}";
-        return new Message(
+        Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
                 player.getName(),
@@ -101,9 +111,24 @@ public final class PlayerInfoCommand {
                 this.playerRegistryService.getCurrentKit(player.getUniqueId()),
                 formatPastNames(playerData)
         );
+
+        if (showPrivateInfo) {
+            boolean isMuted = this.sanctionService.isMuted(player.getUniqueId());
+            response = response.append(new Message(
+                    MessagePrefix.BLANK,
+                    "\nMuted: {}" +
+                    "\nMutedReason: {}" +
+                    "\nMutedUntil: {}",
+                    String.valueOf(isMuted),
+                    isMuted ? this.sanctionService.getMute(player.getUniqueId()).reason : "NOT MUTED",
+                    isMuted ? this.sanctionService.getMute(player.getUniqueId()).expiresAt : "NOT MUTED"
+            ));
+        }
+
+        return response;
     }
 
-    private Message compileMsgOfflinePlayer(String playerName) {
+    private Message compileMsgOfflinePlayer(String playerName, boolean showPrivateInfo) {
         var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(playerName);
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
@@ -111,7 +136,7 @@ public final class PlayerInfoCommand {
                 "\nLast Online: {}" +
                 "\nLast kit: {}" +
                 "\nPast Names: {}";
-        return new Message(
+        Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
                 offlinePlayerData.name,
@@ -121,6 +146,20 @@ public final class PlayerInfoCommand {
                 offlinePlayerData.currentKit,
                 formatPastNames(offlinePlayerData)
         );
+
+        if (showPrivateInfo) {
+            boolean isMuted = this.sanctionService.isMuted(offlinePlayerData.uniqueId);
+            response = response.append(new Message(
+                    MessagePrefix.BLANK,
+                    "\nMuted: {}" +
+                    "\nMutedReason: {}" +
+                    "\nMutedUntil: {}",
+                    String.valueOf(isMuted),
+                    isMuted ? this.sanctionService.getMute(offlinePlayerData.uniqueId).reason : "NOT MUTED",
+                    isMuted ? this.sanctionService.getMute(offlinePlayerData.uniqueId).expiresAt : "NOT MUTED"
+            ));
+        }
+        return response;
     }
 
     private static String formatPastNames(PlayerRegistryConfiguration.PlayerData playerData) {

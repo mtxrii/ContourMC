@@ -78,6 +78,7 @@ public class SanctionService {
         newMute.reason = reason;
         newMute.expiresAt = TimeUtil.instantToString(expiration);
         this.sanctionsConfig.mutes.put(playerId, newMute);
+        this.saveConfig();
 
         String muteLog = "Muted " + playerId + " with reason: '" + reason + "' until " + expiration;
         if (previousMute != null) {
@@ -95,6 +96,7 @@ public class SanctionService {
                     "Unmuted " + playerId +
                     " (previously muted with reason: '" + currentMute.reason + "')"
             );
+            this.saveConfig();
         }
     }
 
