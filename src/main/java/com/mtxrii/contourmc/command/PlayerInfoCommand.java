@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.command;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.config.PlayerRegistryConfiguration;
+import com.mtxrii.contourmc.config.SanctionsConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
@@ -115,14 +116,15 @@ public final class PlayerInfoCommand {
         if (showPrivateInfo) {
             boolean isMuted = this.sanctionService.isMuted(player.getUniqueId());
             if (isMuted) {
+                SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(player.getUniqueId());
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nMuted: {}" +
                         "\nMutedReason: {}" +
                         "\nMutedUntil: {}",
                         String.valueOf(true),
-                        this.sanctionService.getMute(player.getUniqueId()).reason,
-                        this.sanctionService.getMute(player.getUniqueId()).expiresAt
+                        mute.reason,
+                        mute.expiresAt
                 ));
             } else {
                 response = response.append(new Message(
@@ -157,15 +159,24 @@ public final class PlayerInfoCommand {
 
         if (showPrivateInfo) {
             boolean isMuted = this.sanctionService.isMuted(offlinePlayerData.uniqueId);
-            response = response.append(new Message(
-                    MessagePrefix.BLANK,
-                    "\nMuted: {}" +
-                    "\nMutedReason: {}" +
-                    "\nMutedUntil: {}",
-                    String.valueOf(isMuted),
-                    isMuted ? this.sanctionService.getMute(offlinePlayerData.uniqueId).reason : "NOT MUTED",
-                    isMuted ? this.sanctionService.getMute(offlinePlayerData.uniqueId).expiresAt : "NOT MUTED"
-            ));
+            if (isMuted) {
+                SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(offlinePlayerData.uniqueId);
+                response = response.append(new Message(
+                        MessagePrefix.BLANK,
+                        "\nMuted: {}" +
+                        "\nMutedReason: {}" +
+                        "\nMutedUntil: {}",
+                        String.valueOf(true),
+                        mute.reason,
+                        mute.expiresAt
+                ));
+            } else {
+                response = response.append(new Message(
+                        MessagePrefix.BLANK,
+                        "\nMuted: {}",
+                        String.valueOf(false)
+                ));
+            }
         }
         return response;
     }
