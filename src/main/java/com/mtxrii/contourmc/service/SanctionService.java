@@ -94,12 +94,12 @@ public class SanctionService {
         SanctionsConfiguration.Sanction currentMute = this.sanctionsConfig.mutes.get(playerId);
         if (currentMute != null) {
             this.sanctionsConfig.mutes.remove(playerId);
+            this.saveConfig();
 
             this.pluginLogger.info(
                     "Unmuted " + playerId +
                     " (previously muted with reason: '" + currentMute.reason + "')"
             );
-            this.saveConfig();
         }
     }
 
@@ -163,12 +163,12 @@ public class SanctionService {
         SanctionsConfiguration.Sanction currentBan = this.sanctionsConfig.bans.get(playerId);
         if (currentBan != null) {
             this.sanctionsConfig.bans.remove(playerId);
+            this.saveConfig();
 
             this.pluginLogger.info(
                     "Unbanned " + playerId +
                     " (previously banned with reason: '" + currentBan.reason + "')"
             );
-            this.saveConfig();
         }
     }
 

@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @CommandContainer
-public final class BanCommand {
+public final class BanCommands {
     @Inject private RankService rankService;
     @Inject private SanctionService sanctionService;
     @Inject private PlayerRegistryService playerRegistryService;
