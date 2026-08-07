@@ -177,6 +177,26 @@ public final class PlayerInfoCommand {
                         String.valueOf(false)
                 ));
             }
+
+            boolean isBanned = this.sanctionService.isBanned(offlinePlayerData.uniqueId);
+            if (isBanned) {
+                SanctionsConfiguration.Sanction ban = this.sanctionService.getBan(offlinePlayerData.uniqueId);
+                response = response.append(new Message(
+                        MessagePrefix.BLANK,
+                        "\nBanned: {}" +
+                        "\nBannedReason: {}" +
+                        "\nBannedUntil: {}",
+                        String.valueOf(true),
+                        ban.reason,
+                        ban.expiresAt
+                ));
+            } else {
+                response = response.append(new Message(
+                        MessagePrefix.BLANK,
+                        "\nBanned: {}",
+                        String.valueOf(false)
+                ));
+            }
         }
         return response;
     }
