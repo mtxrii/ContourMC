@@ -114,15 +114,23 @@ public final class PlayerInfoCommand {
 
         if (showPrivateInfo) {
             boolean isMuted = this.sanctionService.isMuted(player.getUniqueId());
-            response = response.append(new Message(
-                    MessagePrefix.BLANK,
-                    "\nMuted: {}" +
-                    "\nMutedReason: {}" +
-                    "\nMutedUntil: {}",
-                    String.valueOf(isMuted),
-                    isMuted ? this.sanctionService.getMute(player.getUniqueId()).reason : "NOT MUTED",
-                    isMuted ? this.sanctionService.getMute(player.getUniqueId()).expiresAt : "NOT MUTED"
-            ));
+            if (isMuted) {
+                response = response.append(new Message(
+                        MessagePrefix.BLANK,
+                        "\nMuted: {}" +
+                        "\nMutedReason: {}" +
+                        "\nMutedUntil: {}",
+                        String.valueOf(true),
+                        this.sanctionService.getMute(player.getUniqueId()).reason,
+                        this.sanctionService.getMute(player.getUniqueId()).expiresAt
+                ));
+            } else {
+                response = response.append(new Message(
+                        MessagePrefix.BLANK,
+                        "\nMuted: {}",
+                        String.valueOf(false)
+                ));
+            }
         }
 
         return response;
