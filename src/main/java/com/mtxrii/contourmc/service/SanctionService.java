@@ -7,6 +7,7 @@ import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.util.TimeUtil;
 import com.sxtanna.platform.archetype.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.plugin.Plugin;
@@ -21,10 +22,11 @@ import java.util.logging.Logger;
 public class SanctionService {
     private final JacksonConfigurationLoader configLoader;
     private final SanctionsConfiguration sanctionsConfig;
+    private final PlayerRegistryService playerRegistryService;
     private final Logger pluginLogger;
 
     @Inject
-    public SanctionService(Plugin plugin) {
+    public SanctionService(Plugin plugin, PlayerRegistryService playerRegistryService) {
         this.configLoader = JacksonConfigurationLoader.builder()
                                                       .path(plugin.getDataPath().resolve("sanctions.json"))
                                                       .build();
@@ -33,6 +35,7 @@ public class SanctionService {
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
+        this.playerRegistryService = playerRegistryService;
         this.pluginLogger = plugin.getLogger();
     }
 
@@ -124,6 +127,30 @@ public class SanctionService {
         newBan.expiresAt = TimeUtil.instantToString(expiration);
         this.sanctionsConfig.bans.put(playerId, newBan);
         this.saveConfig();
+
+        String targetPlayerName = this.playerRegistryService.getPlayerNameById(playerId);
+        if (targetPlayerName != null) {
+            Player target = Bukkit.getPlayer(targetPlayerName);
+            if (target != null && target.isOnline()) {
+                Message kickMessage = MessageConst.SANCTION_MSG_BORDER.append(new Message(
+                        MessagePrefix.BLANK,
+                        """
+                        
+                        &b&lYou've been banned!
+                        
+                        &bReason: {}
+                        
+                        &bUntil: {}
+                        
+                        
+                        """,
+                        reason,
+                        TimeUtil.instantToString(expiration)
+                )).append(MessageConst.SANCTION_MSG_BORDER);
+
+                target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICK_COMMAND);
+            }
+        }
 
         String banLog = "Banned " + playerId + " with reason: '" + reason + "' until " + expiration;
         if (previousBan != null) {

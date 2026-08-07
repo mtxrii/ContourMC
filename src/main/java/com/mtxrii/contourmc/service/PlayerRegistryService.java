@@ -82,6 +82,12 @@ public class PlayerRegistryService {
         return this.playerRegistryConfig.playerRegistry.get(playerName);
     }
 
+    public String getPlayerNameById(UUID playerId) {
+        PlayerRegistryConfiguration.PlayerData playerData = this.getPlayerDataById(playerId);
+        assert playerData != null;
+        return playerData.name;
+    }
+
     public void setCurrentKit(UUID playerId, String kitName) {
         var playerData = this.getPlayerDataById(playerId);
         assert playerData != null;
