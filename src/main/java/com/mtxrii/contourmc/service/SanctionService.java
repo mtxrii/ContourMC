@@ -121,10 +121,11 @@ public class SanctionService {
 
     public void ban(UUID playerId, String reason, Instant expiration) {
         SanctionsConfiguration.Sanction previousBan = this.sanctionsConfig.bans.get(playerId);
+        String expirationString = TimeUtil.instantToString(expiration);
 
         SanctionsConfiguration.Sanction newBan = new SanctionsConfiguration.Sanction();
         newBan.reason = reason;
-        newBan.expiresAt = TimeUtil.instantToString(expiration);
+        newBan.expiresAt = expirationString;
         this.sanctionsConfig.bans.put(playerId, newBan);
         this.saveConfig();
 
@@ -132,23 +133,8 @@ public class SanctionService {
         if (targetPlayerName != null) {
             Player target = Bukkit.getPlayer(targetPlayerName);
             if (target != null && target.isOnline()) {
-                Message kickMessage = MessageConst.SANCTION_MSG_BORDER.append(new Message(
-                        MessagePrefix.BLANK,
-                        """
-                        
-                        &b&lYou've been banned!
-                        
-                        &bReason: {}
-                        
-                        &bUntil: {}
-                        
-                        
-                        """,
-                        reason,
-                        TimeUtil.instantToString(expiration)
-                )).append(MessageConst.SANCTION_MSG_BORDER);
-
-                target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICK_COMMAND);
+                Message kickMessage = this.getBanMessage(playerId, reason, expirationString);
+                target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.BANNED);
             }
         }
 
@@ -186,6 +172,28 @@ public class SanctionService {
         currentBanCopy.reason = currentBan.reason;
         currentBanCopy.expiresAt = currentBan.expiresAt;
         return currentBanCopy;
+    }
+
+    public Message getBanMessage(UUID playerId, String reason, String expirationString) {
+        if (!this.isBanned(playerId)) {
+            return null;
+        }
+
+        return MessageConst.SANCTION_MSG_BORDER.append(new Message(
+                MessagePrefix.BLANK,
+                """
+                
+                &b&lYou've been banned!
+                
+                &bReason: {}
+                
+                &bUntil: {}
+                
+                
+                """,
+                reason,
+                expirationString
+        )).append(MessageConst.SANCTION_MSG_BORDER);
     }
 
     private void saveConfig() {
