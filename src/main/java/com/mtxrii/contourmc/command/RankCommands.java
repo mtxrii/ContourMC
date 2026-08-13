@@ -55,7 +55,7 @@ public final class RankCommands {
 
         Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
-            getNoPlayerFoundMessage(playerName).sendTo(sender);
+            TextUtil.getNoPlayerFoundMessage(MessagePrefix.RANK, playerName).sendTo(sender);
             return;
         }
 
@@ -87,7 +87,7 @@ public final class RankCommands {
     ) {
         Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
-            getNoPlayerFoundMessage(playerName).sendTo(sender);
+            TextUtil.getNoPlayerFoundMessage(MessagePrefix.RANK, playerName).sendTo(sender);
             return;
         }
 
@@ -173,14 +173,5 @@ public final class RankCommands {
         }
 
         return Pair.of(targetPlayerId, targetPlayerName);
-    }
-
-    private static Message getNoPlayerFoundMessage(String playerName) {
-        return new Message(
-                MessagePrefix.RANK,
-                true,
-                "No player found with name {}",
-                playerName
-        );
     }
 }

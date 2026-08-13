@@ -9,6 +9,7 @@ import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SanctionService;
 import com.mtxrii.contourmc.util.SearchUtil;
+import com.mtxrii.contourmc.util.TextUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -46,12 +47,7 @@ public final class BanCommands {
 
         Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
-            new Message(
-                    MessagePrefix.MOD,
-                    true,
-                    "No player found with name {}",
-                    playerName
-            ).sendTo(sender);
+            TextUtil.getNoPlayerFoundMessage(MessagePrefix.MOD, playerName).sendTo(sender);
             return;
         }
         final UUID targetPlayerId = parsedPlayerName.getLeft();
@@ -101,12 +97,7 @@ public final class BanCommands {
 
         Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
-            new Message(
-                    MessagePrefix.MOD,
-                    true,
-                    "No player found with name {}",
-                    playerName
-            ).sendTo(sender);
+            TextUtil.getNoPlayerFoundMessage(MessagePrefix.MOD, playerName).sendTo(sender);
             return;
         }
         final UUID targetPlayerId = parsedPlayerName.getLeft();

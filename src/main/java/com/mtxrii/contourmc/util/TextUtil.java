@@ -1,6 +1,8 @@
 package com.mtxrii.contourmc.util;
 
 import com.mtxrii.contourmc.Rank;
+import com.mtxrii.contourmc.message.Message;
+import com.mtxrii.contourmc.message.MessagePrefix;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
@@ -38,5 +40,14 @@ public final class TextUtil {
             return "null";
         }
         return INSTANT_FORMATTER.format(instant);
+    }
+
+    public static Message getNoPlayerFoundMessage(MessagePrefix messagePrefix, String playerName) {
+        return new Message(
+                messagePrefix,
+                true,
+                "No player found with name {}",
+                playerName
+        );
     }
 }
