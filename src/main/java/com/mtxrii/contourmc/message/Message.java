@@ -33,12 +33,20 @@ public class Message {
         this.message = (error ? "&4&l" : "&3&l") + prefix.getFormatted() + fillOutMessageTemplate(error, template, args);
     }
 
+    public Message(MessagePrefix prefix, boolean error, String message) {
+        this.message = (error ? "&4&l" : "&3&l") + prefix.getFormatted() + (error ? "&c" : "&b") + message;
+    }
+
     public Message(MessagePrefix prefix, String template, String... args) {
         this(prefix, false, template, args);
     }
 
     public Message(MessagePrefix prefix, String template, MultipartMessageArgument... args) {
         this.message = "&3&l" + prefix.getFormatted() + fillOutMessageTemplate(false, template, args);
+    }
+
+    public Message(MessagePrefix prefix, String message) {
+        this(prefix, false, message);
     }
 
     private Message(String message) {
