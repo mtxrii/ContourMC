@@ -121,7 +121,7 @@ public final class PlayerInfoCommand {
                         "\nMutedUntil: {}",
                         String.valueOf(true),
                         mute.reason,
-                        mute.expiresAt
+                        TimeUtil.formatInstantForPlayer(mute.expiresAt)
                 ));
             } else {
                 response = response.append(new Message(
@@ -165,7 +165,7 @@ public final class PlayerInfoCommand {
                         "\nMutedUntil: {}",
                         String.valueOf(true),
                         mute.reason,
-                        mute.expiresAt
+                        TimeUtil.formatInstantForPlayer(mute.expiresAt)
                 ));
             } else {
                 response = response.append(new Message(
@@ -185,7 +185,7 @@ public final class PlayerInfoCommand {
                         "\nBannedUntil: {}",
                         String.valueOf(true),
                         ban.reason,
-                        ban.expiresAt
+                        TimeUtil.formatInstantForPlayer(ban.expiresAt)
                 ));
             } else {
                 response = response.append(new Message(

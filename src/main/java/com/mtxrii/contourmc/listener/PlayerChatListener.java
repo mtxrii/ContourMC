@@ -5,6 +5,7 @@ import com.mtxrii.contourmc.config.SanctionsConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.SanctionService;
+import com.mtxrii.contourmc.util.TimeUtil;
 import com.sxtanna.platform.archetype.Component;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
@@ -42,7 +43,7 @@ public class PlayerChatListener implements Listener {
                     MessagePrefix.GAME,
                     "You cannot chat while muted!\nReason: {}\nUntil: {}",
                     muteInfo.reason,
-                    muteInfo.expiresAt
+                    TimeUtil.formatInstantForPlayer(muteInfo.expiresAt)
             ).sendTo(player);
             event.setCancelled(true);
 

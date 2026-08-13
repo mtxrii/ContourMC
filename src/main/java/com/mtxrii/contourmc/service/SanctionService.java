@@ -199,7 +199,7 @@ public class SanctionService {
                 
                 """,
                 reason,
-                expirationString
+                TimeUtil.formatInstantForPlayer(expirationString)
         )).append(MessageConst.SANCTION_MSG_BORDER);
     }
 
