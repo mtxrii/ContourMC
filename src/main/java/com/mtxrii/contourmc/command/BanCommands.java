@@ -22,6 +22,7 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -81,7 +82,15 @@ public final class BanCommands {
             ).sendTo(sender);
         }
 
-        this.sanctionService.ban(targetPlayerId, reason, TimeUtil.getInstantInTimeFromNow(duration, timeUnit));
+        Instant unbanAt = TimeUtil.getInstantInTimeFromNow(duration, timeUnit);
+        this.sanctionService.ban(targetPlayerId, reason, unbanAt);
+        new Message(
+                MessagePrefix.MOD,
+                "Banned {} with reason {} until {}",
+                playerName,
+                reason,
+                TimeUtil.formatInstantForPlayer(unbanAt)
+        ).sendTo(sender);
     }
 
     @Command("unban <player>")

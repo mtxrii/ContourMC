@@ -23,6 +23,7 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,7 +73,15 @@ public final class MuteCommands {
             return;
         }
 
-        this.sanctionService.mute(targetPlayerId, reason, TimeUtil.getInstantInTimeFromNow(duration, timeUnit));
+        Instant unmuteAt = TimeUtil.getInstantInTimeFromNow(duration, timeUnit);
+        this.sanctionService.mute(targetPlayerId, reason, unmuteAt);
+        new Message(
+                MessagePrefix.MOD,
+                "Muted {} with reason {} until {}",
+                playerName,
+                reason,
+                TimeUtil.formatInstantForPlayer(unmuteAt)
+        ).sendTo(sender);
     }
 
     @Command("unmute <player>")
