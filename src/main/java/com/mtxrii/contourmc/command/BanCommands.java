@@ -8,11 +8,9 @@ import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SanctionService;
-import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
 import org.apache.commons.lang3.tuple.Pair;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
@@ -45,7 +43,7 @@ public final class BanCommands {
             this.rankService.requireRank(MessagePrefix.MOD, Rank.MEDIATOR, player);
         }
 
-        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        Pair<UUID, String> parsedPlayerName = this.playerRegistryService.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
             TextUtil.getNoPlayerFoundMessage(MessagePrefix.MOD, playerName).sendTo(sender);
             return;
@@ -95,7 +93,7 @@ public final class BanCommands {
             this.rankService.requireRank(MessagePrefix.MOD, Rank.MEDIATOR, player);
         }
 
-        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        Pair<UUID, String> parsedPlayerName = this.playerRegistryService.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
             TextUtil.getNoPlayerFoundMessage(MessagePrefix.MOD, playerName).sendTo(sender);
             return;
@@ -129,32 +127,5 @@ public final class BanCommands {
             @NotNull final CommandInput input
     ) {
         return TimeUtil.TimeUnit.getNormalizedNames();
-    }
-
-    // @TODO: Move this to util class
-    private Pair<UUID, String> parsePlayerName(String playerName) {
-        Player targetPlayer = Bukkit.getPlayer(playerName);
-        UUID targetPlayerId;
-        String targetPlayerName;
-        if (targetPlayer == null) {
-            String offlinePlayerName = SearchUtil.findClosestMatch(
-                    playerName,
-                    this.playerRegistryService.getAllPlayerNames()
-            );
-
-            if (offlinePlayerName == null) {
-                return null;
-            }
-
-            var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(offlinePlayerName);
-            targetPlayerId = offlinePlayerData.uniqueId;
-            targetPlayerName = offlinePlayerData.name;
-
-        } else {
-            targetPlayerId = targetPlayer.getUniqueId();
-            targetPlayerName = targetPlayer.getName();
-        }
-
-        return Pair.of(targetPlayerId, targetPlayerName);
     }
 }

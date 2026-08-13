@@ -2,8 +2,11 @@ package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.PlayerRegistryConfiguration;
+import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
 import com.sxtanna.platform.archetype.Component;
+import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +102,37 @@ public class PlayerRegistryService {
         var playerData = this.getPlayerDataById(playerId);
         assert playerData != null;
         return playerData.currentKit;
+    }
+
+    /// Gets a partial player name and looks it up in online players first then using {@link SearchUtil#findClosestMatch}.
+    ///
+    /// If found, returns a {@code Pair<UUID, String>} with the found player's uuid and full name capitalized correctly.
+    ///
+    /// Otherwise, returns null.
+    public Pair<UUID, String> parsePlayerName(String playerName) {
+        Player targetPlayer = Bukkit.getPlayer(playerName);
+        UUID targetPlayerId;
+        String targetPlayerName;
+        if (targetPlayer == null) {
+            String offlinePlayerName = SearchUtil.findClosestMatch(
+                    playerName,
+                    this.getAllPlayerNames()
+            );
+
+            if (offlinePlayerName == null) {
+                return null;
+            }
+
+            var offlinePlayerData = this.getPlayerDataByName(offlinePlayerName);
+            targetPlayerId = offlinePlayerData.uniqueId;
+            targetPlayerName = offlinePlayerData.name;
+
+        } else {
+            targetPlayerId = targetPlayer.getUniqueId();
+            targetPlayerName = targetPlayer.getName();
+        }
+
+        return Pair.of(targetPlayerId, targetPlayerName);
     }
 
     private PlayerRegistryConfiguration.PlayerData getPlayerDataById(UUID playerId) {

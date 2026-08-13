@@ -6,7 +6,6 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
-import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -53,7 +52,7 @@ public final class RankCommands {
             return;
         }
 
-        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        Pair<UUID, String> parsedPlayerName = this.playerRegistryService.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
             TextUtil.getNoPlayerFoundMessage(MessagePrefix.RANK, playerName).sendTo(sender);
             return;
@@ -85,7 +84,7 @@ public final class RankCommands {
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
     ) {
-        Pair<UUID, String> parsedPlayerName = this.parsePlayerName(playerName);
+        Pair<UUID, String> parsedPlayerName = this.playerRegistryService.parsePlayerName(playerName);
         if (parsedPlayerName == null) {
             TextUtil.getNoPlayerFoundMessage(MessagePrefix.RANK, playerName).sendTo(sender);
             return;
@@ -147,31 +146,5 @@ public final class RankCommands {
         return Arrays.stream(Rank.values())
                      .map(rank -> rank.name().toLowerCase())
                      .collect(Collectors.toSet());
-    }
-
-    private Pair<UUID, String> parsePlayerName(String playerName) {
-        Player targetPlayer = Bukkit.getPlayer(playerName);
-        UUID targetPlayerId;
-        String targetPlayerName;
-        if (targetPlayer == null) {
-            String offlinePlayerName = SearchUtil.findClosestMatch(
-                    playerName,
-                    this.playerRegistryService.getAllPlayerNames()
-            );
-
-            if (offlinePlayerName == null) {
-                return null;
-            }
-
-            var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(offlinePlayerName);
-            targetPlayerId = offlinePlayerData.uniqueId;
-            targetPlayerName = offlinePlayerData.name;
-
-        } else {
-            targetPlayerId = targetPlayer.getUniqueId();
-            targetPlayerName = targetPlayer.getName();
-        }
-
-        return Pair.of(targetPlayerId, targetPlayerName);
     }
 }
