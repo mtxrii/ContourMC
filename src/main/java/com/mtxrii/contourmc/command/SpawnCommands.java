@@ -17,11 +17,9 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @CommandContainer
 public final class SpawnCommands {
@@ -83,7 +81,7 @@ public final class SpawnCommands {
         new Message(
                 MessagePrefix.SPAWN,
                 "Available spawns: {}.",
-                String.join(", ", spawnpointNames) // @TODO: Use Message.multi()
+                Message.multi(spawnpointNames)
         ).sendTo(sender);
     }
 

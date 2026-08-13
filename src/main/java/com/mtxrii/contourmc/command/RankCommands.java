@@ -112,24 +112,17 @@ public final class RankCommands {
             return;
         }
 
-        // @TODO: Use Message.multi()
-        String[] rankNames = new String[Rank.values().length];
-        StringBuilder messageTemplate = new StringBuilder("Available ranks: ");
         Rank[] ranks = Rank.values();
+        String[] rankNames = new String[ranks.length];
         for (int i = 0; i < ranks.length; i++) {
             Rank rank = ranks[i];
             rankNames[i] = TextUtil.formatEnumName(rank);
-
-            messageTemplate.append("{}");
-            if (i != ranks.length - 1) {
-                messageTemplate.append(", ");
-            }
         }
 
         Message ranksListMsg = new Message(
                 MessagePrefix.RANK,
-                messageTemplate.toString(),
-                rankNames
+                "Available ranks: {}",
+                Message.multi(rankNames)
         );
         ranksListMsg.sendTo(sender);
         getRanksMessage = ranksListMsg;
