@@ -8,9 +8,19 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.util.sender.Source;
 
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Message {
+    public static class MultipartMessageArgument {
+        private final List<String> arguments;
+
+        private MultipartMessageArgument(List<String> arguments) {
+            this.arguments = arguments;
+        }
+    }
+
     private static final String TEMPLATE_VAR = "{}";
 
     private final String message;
@@ -19,8 +29,16 @@ public class Message {
         this.message = (error ? "&4&l" : "&3&l") + prefix.getFormatted() + fillOutMessageTemplate(error, template, args);
     }
 
+    public Message(MessagePrefix prefix, boolean error, String template, MultipartMessageArgument... args) {
+        this.message = (error ? "&4&l" : "&3&l") + prefix.getFormatted() + fillOutMessageTemplate(error, template, args);
+    }
+
     public Message(MessagePrefix prefix, String template, String... args) {
         this(prefix, false, template, args);
+    }
+
+    public Message(MessagePrefix prefix, String template, MultipartMessageArgument... args) {
+        this.message = "&3&l" + prefix.getFormatted() + fillOutMessageTemplate(false, template, args);
     }
 
     private Message(String message) {
@@ -40,6 +58,25 @@ public class Message {
 
         for (String arg : args) {
             String coloredArg = "&7" + arg + (error ? "&c" : "&b");
+            message = message.replaceFirst(Pattern.quote(TEMPLATE_VAR), coloredArg);
+        }
+        return message;
+    }
+
+    private static String fillOutMessageTemplate(final boolean error, final String template, final MultipartMessageArgument[] args) {
+        int varCount = countMatches(template, TEMPLATE_VAR);
+        int argCount = args.length;
+        if (varCount != argCount) {
+            throw new InputMismatchException(
+                    "Template had " + varCount + " variables but " + argCount + " arguments were given"
+            );
+        }
+
+        String msgCol = (error ? "&c" : "&b");
+        String message = msgCol + template;
+
+        for (MultipartMessageArgument arg : args) {
+            String coloredArg = "&7" + String.join(msgCol + ", &7", arg.arguments) + msgCol;
             message = message.replaceFirst(Pattern.quote(TEMPLATE_VAR), coloredArg);
         }
         return message;
@@ -85,5 +122,13 @@ public class Message {
     public Message append(Message message) {
         String messageStr =  this.message + message.getMessage();
         return new Message(messageStr);
+    }
+
+    public static MultipartMessageArgument multi(Set<String> arguments) {
+        return new MultipartMessageArgument(arguments.stream().toList());
+    }
+
+    public static MultipartMessageArgument multi(String[] arguments) {
+        return new MultipartMessageArgument(List.of(arguments));
     }
 }

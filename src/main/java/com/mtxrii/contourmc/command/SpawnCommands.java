@@ -83,7 +83,7 @@ public final class SpawnCommands {
         new Message(
                 MessagePrefix.SPAWN,
                 "Available spawns: {}.",
-                String.join(", ", spawnpointNames)
+                String.join(", ", spawnpointNames) // @TODO: Use Message.multi()
         ).sendTo(sender);
     }
 

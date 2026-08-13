@@ -39,7 +39,7 @@ public final class KitCommands {
         new Message(
                 MessagePrefix.KIT,
                 "Available kits: {}.",
-                String.join(", ", kitNames)
+                String.join(", ", kitNames) // @TODO: Use Message.multi()
         ).sendTo(sender);
     }
 

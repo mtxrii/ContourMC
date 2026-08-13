@@ -72,7 +72,7 @@ public final class BanCommands {
                     MessagePrefix.MOD,
                     true,
                     "Time unit not recognized. Should be one of {}",
-                    String.valueOf(TimeUtil.TimeUnit.getNormalizedNames())
+                    String.valueOf(TimeUtil.TimeUnit.getNormalizedNames()) // @TODO: Use Message.multi()
             ).sendTo(sender);
             return;
         }

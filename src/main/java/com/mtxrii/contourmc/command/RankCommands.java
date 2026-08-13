@@ -112,6 +112,7 @@ public final class RankCommands {
             return;
         }
 
+        // @TODO: Use Message.multi()
         String[] rankNames = new String[Rank.values().length];
         StringBuilder messageTemplate = new StringBuilder("Available ranks: ");
         Rank[] ranks = Rank.values();
