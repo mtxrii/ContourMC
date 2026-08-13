@@ -78,7 +78,7 @@ public class SanctionService {
     }
 
     public void mute(UUID playerId, String reason, Instant expiration) {
-        SanctionsConfiguration.Sanction previousMute = this.sanctionsConfig.mutes.get(playerId);
+        SanctionsConfiguration.Sanction previousMute = this.getMute(playerId);
 
         SanctionsConfiguration.Sanction newMute = new SanctionsConfiguration.Sanction();
         newMute.reason = reason;
@@ -94,7 +94,7 @@ public class SanctionService {
     }
 
     public void unmute(UUID playerId) {
-        SanctionsConfiguration.Sanction currentMute = this.sanctionsConfig.mutes.get(playerId);
+        SanctionsConfiguration.Sanction currentMute = this.getMute(playerId);
         if (currentMute != null) {
             this.sanctionsConfig.mutes.remove(playerId);
             this.saveConfig();
@@ -107,10 +107,12 @@ public class SanctionService {
     }
 
     public boolean isMuted(UUID playerId) {
+        this.checkMuteTimeLeft(playerId);
         return this.sanctionsConfig.mutes.containsKey(playerId);
     }
 
     public SanctionsConfiguration.Sanction getMute(UUID playerId) {
+        this.checkMuteTimeLeft(playerId);
         SanctionsConfiguration.Sanction currentMute = this.sanctionsConfig.mutes.get(playerId);
         if (currentMute == null) {
             return null;
@@ -123,7 +125,7 @@ public class SanctionService {
     }
 
     public void ban(UUID playerId, String reason, Instant expiration) {
-        SanctionsConfiguration.Sanction previousBan = this.sanctionsConfig.bans.get(playerId);
+        SanctionsConfiguration.Sanction previousBan = this.getBan(playerId);
         String expirationString = TimeUtil.instantToString(expiration);
 
         SanctionsConfiguration.Sanction newBan = new SanctionsConfiguration.Sanction();
@@ -149,7 +151,7 @@ public class SanctionService {
     }
 
     public void unban(UUID playerId) {
-        SanctionsConfiguration.Sanction currentBan = this.sanctionsConfig.bans.get(playerId);
+        SanctionsConfiguration.Sanction currentBan = this.getBan(playerId);
         if (currentBan != null) {
             this.sanctionsConfig.bans.remove(playerId);
             this.saveConfig();
@@ -162,10 +164,12 @@ public class SanctionService {
     }
 
     public boolean isBanned(UUID playerId) {
+        this.checkBanTimeLeft(playerId);
         return this.sanctionsConfig.bans.containsKey(playerId);
     }
 
     public SanctionsConfiguration.Sanction getBan(UUID playerId) {
+        this.checkBanTimeLeft(playerId);
         SanctionsConfiguration.Sanction currentBan = this.sanctionsConfig.bans.get(playerId);
         if (currentBan == null) {
             return null;
@@ -197,6 +201,32 @@ public class SanctionService {
                 reason,
                 expirationString
         )).append(MessageConst.SANCTION_MSG_BORDER);
+    }
+
+    private void checkMuteTimeLeft(UUID playerId) {
+        SanctionsConfiguration.Sanction currentMute = this.sanctionsConfig.mutes.get(playerId);
+        if (currentMute == null) {
+            return;
+        }
+
+        Instant expiration = TimeUtil.stringToInstant(currentMute.expiresAt);
+        if (Instant.now().isAfter(expiration)) {
+            this.sanctionsConfig.mutes.remove(playerId);
+            this.saveConfig();
+        }
+    }
+
+    private void checkBanTimeLeft(UUID playerId) {
+        SanctionsConfiguration.Sanction currentBan = this.sanctionsConfig.bans.get(playerId);
+        if (currentBan == null) {
+            return;
+        }
+
+        Instant expiration = TimeUtil.stringToInstant(currentBan.expiresAt);
+        if (Instant.now().isAfter(expiration)) {
+            this.sanctionsConfig.bans.remove(playerId);
+            this.saveConfig();
+        }
     }
 
     private void saveConfig() {
