@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public final class TextUtil {
-    private static final DateTimeFormatter INSTANT_FORMATTER =
+    static final DateTimeFormatter INSTANT_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z").withZone(ZoneId.systemDefault());
 
     public static String formatEnumName(Enum<?> enumVal) {

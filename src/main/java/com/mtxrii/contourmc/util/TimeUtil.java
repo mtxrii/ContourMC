@@ -5,8 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Set;
@@ -52,8 +50,6 @@ public final class TimeUtil {
         }
     }
 
-    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static String instantToString(Instant instant) {
         return instant.toString();
     }
@@ -72,9 +68,9 @@ public final class TimeUtil {
         };
     }
 
+    // @TODO: Incorporate the players' timezones given their IPs
     public static String formatInstantForPlayer(Instant instant) {
-        ZoneId userZone = ZoneId.of("America/Los_Angeles");
-        return instant.atZone(userZone).format(DATE_TIME_FORMAT);
+        return TextUtil.INSTANT_FORMATTER.format(instant);
     }
 
     public static String formatInstantForPlayer(String instantString) {
