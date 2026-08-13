@@ -42,6 +42,10 @@ public final class IpTimezoneLookupService implements AutoCloseable {
      * unavailable or has no timezone for that address.
      */
     public Optional<ZoneId> lookup(@NotNull InetAddress address) {
+        if (address.isLoopbackAddress()) {
+            return Optional.of(ZoneId.systemDefault());
+        }
+
         if (this.databaseReader == null) {
             return Optional.empty();
         }
