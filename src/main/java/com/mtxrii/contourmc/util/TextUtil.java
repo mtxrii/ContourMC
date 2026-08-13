@@ -1,6 +1,8 @@
 package com.mtxrii.contourmc.util;
 
+import com.mtxrii.contourmc.Rank;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
 import java.time.Instant;
@@ -13,6 +15,9 @@ public final class TextUtil {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z").withZone(ZoneId.systemDefault());
 
     public static String formatEnumName(Enum<?> enumVal) {
+        if (enumVal.getClass().equals(Rank.class)) {
+            return StringUtils.capitalize(enumVal.name().toLowerCase());
+        }
         return enumVal.name().toLowerCase().replace('_', ' ');
     }
 
