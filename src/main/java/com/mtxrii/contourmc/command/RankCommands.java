@@ -6,6 +6,7 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
+import com.mtxrii.contourmc.util.GameUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -132,10 +133,7 @@ public final class RankCommands {
             @NotNull final CommandContext<Source> context,
             @NotNull final CommandInput input
     ) {
-        return Bukkit.getOnlinePlayers()
-                     .stream()
-                     .map(Player::getName)
-                     .collect(Collectors.toSet());
+        return GameUtil.getOnlinePlayers();
     }
 
     @Suggestions("ranks")

@@ -1,12 +1,15 @@
 package com.mtxrii.contourmc.util;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public final class GameUtil {
@@ -35,5 +38,12 @@ public final class GameUtil {
         double playerMaxHealth = (maxHealthAttribute == null) ? PLAYER_MAX_HEALTH : maxHealthAttribute.getValue();
         player.setHealth(playerMaxHealth);
         player.setFoodLevel(PLAYER_MAX_FOOD);
+    }
+
+    public static Set<String> getOnlinePlayers() {
+        return Bukkit.getOnlinePlayers()
+                     .stream()
+                     .map(Player::getName)
+                     .collect(Collectors.toSet());
     }
 }

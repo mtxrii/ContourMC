@@ -6,6 +6,7 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SanctionService;
+import com.mtxrii.contourmc.util.GameUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
@@ -19,7 +20,6 @@ import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @CommandContainer
 public final class KickCommand {
@@ -58,9 +58,6 @@ public final class KickCommand {
             @NotNull final CommandContext<Source> context,
             @NotNull final CommandInput input
     ) {
-        return Bukkit.getOnlinePlayers()
-                     .stream()
-                     .map(Player::getName)
-                     .collect(Collectors.toSet());
+        return GameUtil.getOnlinePlayers();
     }
 }

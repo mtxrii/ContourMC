@@ -10,6 +10,7 @@ import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SanctionService;
 import com.mtxrii.contourmc.service.SpawnpointService;
+import com.mtxrii.contourmc.util.GameUtil;
 import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @CommandContainer
 public final class PlayerInfoCommand {
@@ -71,10 +71,7 @@ public final class PlayerInfoCommand {
             @NotNull final CommandContext<Source> context,
             @NotNull final CommandInput input
     ) {
-        return Bukkit.getOnlinePlayers()
-                     .stream()
-                     .map(Player::getName)
-                     .collect(Collectors.toSet());
+        return GameUtil.getOnlinePlayers();
     }
 
     private boolean canSenderSeePrivateInfo(Source sender) {

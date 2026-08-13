@@ -8,10 +8,10 @@ import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.service.SanctionService;
+import com.mtxrii.contourmc.util.GameUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
 import org.apache.commons.lang3.tuple.Pair;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @CommandContainer
 public final class MuteCommands {
@@ -113,16 +112,12 @@ public final class MuteCommands {
         ).sendTo(sender);
     }
 
-    // @TODO: Move this to const class
     @Suggestions("onlinePlayers")
     public @NotNull Set<String> suggestOnlinePlayers(
             @NotNull final CommandContext<Source> context,
             @NotNull final CommandInput input
     ) {
-        return Bukkit.getOnlinePlayers()
-                     .stream()
-                     .map(Player::getName)
-                     .collect(Collectors.toSet());
+        return GameUtil.getOnlinePlayers();
     }
 
     @Suggestions("timeUnits")
