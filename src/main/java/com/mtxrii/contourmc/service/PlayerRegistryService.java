@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.mtxrii.contourmc.config.PlayerRegistryConfiguration;
 import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Component
+@Singleton
 public class PlayerRegistryService {
     private final JacksonConfigurationLoader configLoader;
     private final PlayerRegistryConfiguration playerRegistryConfig;
@@ -29,7 +31,8 @@ public class PlayerRegistryService {
                 .path(plugin.getDataPath().resolve("playerRegistry.json"))
                 .build();
         try {
-            this.playerRegistryConfig = this.configLoader.load().get(PlayerRegistryConfiguration.class);
+            PlayerRegistryConfiguration loadedConfig = this.configLoader.load().get(PlayerRegistryConfiguration.class);
+            this.playerRegistryConfig = loadedConfig != null ? loadedConfig : new PlayerRegistryConfiguration();
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }

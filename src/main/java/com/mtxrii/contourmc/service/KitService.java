@@ -1,9 +1,9 @@
 package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.mtxrii.contourmc.config.KitsConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
-import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessageConst;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.util.Base64Util;
@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 @Component
+@Singleton
 public class KitService {
     private final JacksonConfigurationLoader configLoader;
     private final KitsConfiguration kitsConfig;
@@ -37,7 +38,8 @@ public class KitService {
                 .path(plugin.getDataPath().resolve("kits.json"))
                 .build();
         try {
-            this.kitsConfig = this.configLoader.load().get(KitsConfiguration.class);
+            KitsConfiguration loadedConfig = this.configLoader.load().get(KitsConfiguration.class);
+            this.kitsConfig = loadedConfig != null ? loadedConfig : new KitsConfiguration();
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }

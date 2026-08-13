@@ -29,7 +29,8 @@ public class RankService {
                 .path(plugin.getDataPath().resolve("ranks.json"))
                 .build();
         try {
-            this.ranksConfig = this.configLoader.load().get(RanksConfiguration.class);
+            RanksConfiguration loadedConfig = this.configLoader.load().get(RanksConfiguration.class);
+            this.ranksConfig = loadedConfig != null ? loadedConfig : new RanksConfiguration();
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }

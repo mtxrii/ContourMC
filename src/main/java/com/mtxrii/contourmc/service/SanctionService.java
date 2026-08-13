@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.mtxrii.contourmc.config.SanctionsConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessageConst;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Component
+@Singleton
 public class SanctionService {
     private final JacksonConfigurationLoader configLoader;
     private final SanctionsConfiguration sanctionsConfig;
@@ -31,7 +33,8 @@ public class SanctionService {
                                                       .path(plugin.getDataPath().resolve("sanctions.json"))
                                                       .build();
         try {
-            this.sanctionsConfig = this.configLoader.load().get(SanctionsConfiguration.class);
+            SanctionsConfiguration loadedConfig = this.configLoader.load().get(SanctionsConfiguration.class);
+            this.sanctionsConfig = loadedConfig != null ? loadedConfig : new SanctionsConfiguration();
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }

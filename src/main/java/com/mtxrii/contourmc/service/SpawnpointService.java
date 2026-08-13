@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.mtxrii.contourmc.config.SpawnpointsConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
@@ -26,6 +27,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 @Component
+@Singleton
 public class SpawnpointService {
     private final Map<UUID, String> spawnpointPlayerNamesMap;
     private final JacksonConfigurationLoader configLoader;
@@ -38,7 +40,8 @@ public class SpawnpointService {
                 .path(plugin.getDataPath().resolve("spawnpoints.json"))
                 .build();
         try {
-            this.spawnpointsConfig = this.configLoader.load().get(SpawnpointsConfiguration.class);
+            SpawnpointsConfiguration loadedConfig = this.configLoader.load().get(SpawnpointsConfiguration.class);
+            this.spawnpointsConfig = loadedConfig != null ? loadedConfig : new SpawnpointsConfiguration();
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
