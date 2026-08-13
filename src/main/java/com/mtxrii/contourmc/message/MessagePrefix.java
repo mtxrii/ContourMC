@@ -7,6 +7,7 @@ public enum MessagePrefix {
     SPAWN,
     ENV,
     GAME,
+    BUILD,
     MOD,
     RANK;
 
