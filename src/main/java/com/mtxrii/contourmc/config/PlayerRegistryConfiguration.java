@@ -34,5 +34,10 @@ public class PlayerRegistryConfiguration {
 
         @Setting
         public String currentKit;
+
+        /// IANA timezone identifier resolved from the player's most recently seen IP address.
+        /// This is null when the local GeoIP database has no timezone for the address.
+        @Setting
+        public String timezone;
     }
 }

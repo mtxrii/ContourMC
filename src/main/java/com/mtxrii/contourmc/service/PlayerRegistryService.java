@@ -15,6 +15,7 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -24,9 +25,10 @@ public class PlayerRegistryService {
     private final JacksonConfigurationLoader configLoader;
     private final PlayerRegistryConfiguration playerRegistryConfig;
     private final Logger pluginLogger;
+    private final IpTimezoneLookupService ipTimezoneLookupService;
 
     @Inject
-    public PlayerRegistryService(Plugin plugin) {
+    public PlayerRegistryService(Plugin plugin, IpTimezoneLookupService ipTimezoneLookupService) {
         this.configLoader = JacksonConfigurationLoader.builder()
                 .path(plugin.getDataPath().resolve("playerRegistry.json"))
                 .build();
@@ -37,6 +39,7 @@ public class PlayerRegistryService {
             throw new RuntimeException(e);
         }
         this.pluginLogger = plugin.getLogger();
+        this.ipTimezoneLookupService = ipTimezoneLookupService;
     }
 
     public void loginPlayer(@NotNull Player player) {
@@ -52,6 +55,7 @@ public class PlayerRegistryService {
             newPlayerData.firstOnline = TimeUtil.instantToString(Instant.now());
             newPlayerData.lastOnline = TimeUtil.instantToString(Instant.now());
             newPlayerData.currentKit = "NONE";
+            this.updateTimezone(player, newPlayerData);
             this.playerRegistryConfig.playerRegistry.put(currentPlayerName, newPlayerData);
             this.saveConfig();
             return;
@@ -68,6 +72,11 @@ public class PlayerRegistryService {
         }
 
         // Do nothing for existing player with same name
+
+        // Refresh the timezone as IP geolocation can change between sessions.
+        if (this.updateTimezone(player, playerData)) {
+            this.saveConfig();
+        }
     }
 
     public void logoutPlayer(@NotNull Player player) {
@@ -145,6 +154,20 @@ public class PlayerRegistryService {
             }
         }
         return null;
+    }
+
+    private boolean updateTimezone(Player player, PlayerRegistryConfiguration.PlayerData playerData) {
+        if (player.getAddress() == null || player.getAddress().getAddress() == null) {
+            return false;
+        }
+
+        ZoneId timezone = this.ipTimezoneLookupService.lookup(player.getAddress().getAddress()).orElse(null);
+        if (timezone == null || timezone.getId().equals(playerData.timezone)) {
+            return false;
+        }
+
+        playerData.timezone = timezone.getId();
+        return true;
     }
 
     private void saveConfig() {

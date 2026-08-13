@@ -4,7 +4,9 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
+import java.time.DateTimeException;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Set;
@@ -68,7 +70,24 @@ public final class TimeUtil {
         };
     }
 
-    // @TODO: Incorporate the players' timezones given their IPs
+    /** Formats an instant in a player's stored IANA timezone. */
+    public static String formatInstantForPlayer(Instant instant, ZoneId timezone) {
+        return TextUtil.INSTANT_FORMATTER.withZone(timezone).format(instant);
+    }
+
+    /** Formats an instant in a player's stored timezone, falling back to the server timezone. */
+    public static String formatInstantForPlayer(Instant instant, String timezone) {
+        if (timezone == null || timezone.isBlank()) {
+            return formatInstantForPlayer(instant);
+        }
+
+        try {
+            return formatInstantForPlayer(instant, ZoneId.of(timezone));
+        } catch (DateTimeException ignored) {
+            return formatInstantForPlayer(instant);
+        }
+    }
+
     public static String formatInstantForPlayer(Instant instant) {
         return TextUtil.INSTANT_FORMATTER.format(instant);
     }
