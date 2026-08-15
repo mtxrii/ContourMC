@@ -92,6 +92,7 @@ public final class PlayerInfoCommand {
 
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
+                "\nPing: {} ms" +
                 "\nRank: {}" +
                 "\nLocation: {}" +
                 "\nLast spawn: {}" +
@@ -105,6 +106,7 @@ public final class PlayerInfoCommand {
                 messageTemplate,
                 player.getName(),
                 String.valueOf(true),
+                String.valueOf(player.getPing()),
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 TextUtil.formatLocation(player.getLocation()),
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
