@@ -116,6 +116,17 @@ public class PlayerRegistryService {
         return playerData.currentKit;
     }
 
+    public String getTimezone(UUID playerId) {
+        var playerData = this.getPlayerDataById(playerId);
+        assert playerData != null;
+        return playerData.timezone;
+    }
+
+    public String formatInstantForPlayer(Instant instant, UUID playerId) {
+        String timezone = this.getTimezone(playerId);
+        return TimeUtil.formatInstantForPlayer(instant, timezone);
+    }
+
     /// Gets a partial player name and looks it up in online players first then using {@link SearchUtil#findClosestMatch}.
     ///
     /// If found, returns a {@code Pair<UUID, String>} with the found player's uuid and full name capitalized correctly.
