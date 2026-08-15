@@ -87,11 +87,83 @@ public final class GamemodeCommands {
                 targetPlayer.getName(),
                 newGamemode.name()
         ).sendTo(sender);
-        new Message(
-                MessagePrefix.GAME,
-                "Your gamemode has been set to {}",
-                newGamemode.name()
-        ).sendTo(targetPlayer);
+        gmChangeMsg(newGamemode).sendTo(targetPlayer);
+    }
+
+    @Command("gms")
+    @CommandDescription("Sets your gamemode to survival")
+    public void gms(
+            @NotNull final Source sender
+    ) {
+        if (!(sender.source() instanceof Player senderPlayer)) {
+            new Message(
+                    MessagePrefix.GAME,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
+            return;
+        }
+
+        this.rankService.requireRank(MessagePrefix.GAME, Rank.MEDIATOR, senderPlayer);
+        senderPlayer.setGameMode(GameMode.SURVIVAL);
+        gmChangeMsg(GameMode.SURVIVAL).sendTo(senderPlayer);
+    }
+
+    @Command("gma")
+    @CommandDescription("Sets your gamemode to adventure")
+    public void gma(
+            @NotNull final Source sender
+    ) {
+        if (!(sender.source() instanceof Player senderPlayer)) {
+            new Message(
+                    MessagePrefix.GAME,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
+            return;
+        }
+
+        this.rankService.requireRank(MessagePrefix.GAME, Rank.MEDIATOR, senderPlayer);
+        senderPlayer.setGameMode(GameMode.ADVENTURE);
+        gmChangeMsg(GameMode.ADVENTURE).sendTo(senderPlayer);
+    }
+
+    @Command("gmc")
+    @CommandDescription("Sets your gamemode to creative")
+    public void gmc(
+            @NotNull final Source sender
+    ) {
+        if (!(sender.source() instanceof Player senderPlayer)) {
+            new Message(
+                    MessagePrefix.GAME,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
+            return;
+        }
+
+        this.rankService.requireRank(MessagePrefix.GAME, Rank.MEDIATOR, senderPlayer);
+        senderPlayer.setGameMode(GameMode.CREATIVE);
+        gmChangeMsg(GameMode.CREATIVE).sendTo(senderPlayer);
+    }
+
+    @Command("gmsp")
+    @CommandDescription("Sets your gamemode to spectator")
+    public void gmsp(
+            @NotNull final Source sender
+    ) {
+        if (!(sender.source() instanceof Player senderPlayer)) {
+            new Message(
+                    MessagePrefix.GAME,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
+            return;
+        }
+
+        this.rankService.requireRank(MessagePrefix.GAME, Rank.MEDIATOR, senderPlayer);
+        senderPlayer.setGameMode(GameMode.SPECTATOR);
+        gmChangeMsg(GameMode.SPECTATOR).sendTo(senderPlayer);
     }
 
     @Suggestions("gamemodes")
@@ -114,5 +186,13 @@ public final class GamemodeCommands {
         return Arrays.stream(GameMode.values())
                      .map(Enum::name)
                      .collect(Collectors.toSet());
+    }
+
+    private static Message gmChangeMsg(GameMode newGamemode) {
+        return new Message(
+                MessagePrefix.GAME,
+                "Your gamemode has been set to {}",
+                newGamemode.name()
+        );
     }
 }
