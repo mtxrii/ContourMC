@@ -95,6 +95,7 @@ public final class PlayerInfoCommand {
                 "\nHealth: {}" +
                 "\nJoin Date: {}" +
                 "\nCurrent kit: {}" +
+                "\nTimezone: {}" +
                 "\nPast Names: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
@@ -107,6 +108,7 @@ public final class PlayerInfoCommand {
                 healthStr,
                 TextUtil.formatInstant(TimeUtil.stringToInstant(playerData.firstOnline)),
                 this.playerRegistryService.getCurrentKit(player.getUniqueId()),
+                this.playerRegistryService.getTimezone(player.getUniqueId()),
                 formatPastNames(playerData)
         );
 
@@ -142,6 +144,7 @@ public final class PlayerInfoCommand {
                 "\nRank: {}" +
                 "\nLast Online: {}" +
                 "\nLast kit: {}" +
+                "\nTimezone: {}" +
                 "\nPast Names: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
@@ -151,6 +154,7 @@ public final class PlayerInfoCommand {
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
                 TextUtil.formatInstant(TimeUtil.stringToInstant(offlinePlayerData.lastOnline)),
                 offlinePlayerData.currentKit,
+                this.playerRegistryService.getTimezone(offlinePlayerData.uniqueId),
                 formatPastNames(offlinePlayerData)
         );
 
