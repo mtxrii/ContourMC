@@ -16,7 +16,7 @@ public final class SearchUtil {
      *   5. Fuzzy match (Levenshtein, max distance 2)
      *   6. null if nothing is close enough
      */
-    public static String findClosestMatch(String input, String[] candidates) {
+    public static String findClosestPlayerNameMatch(String input, String[] candidates) {
         if (input == null || candidates == null || candidates.length == 0) {
             return null;
         }

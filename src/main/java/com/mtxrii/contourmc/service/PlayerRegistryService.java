@@ -132,7 +132,7 @@ public class PlayerRegistryService {
         return TimeUtil.formatInstantForPlayer(TimeUtil.stringToInstant(instantString), timezone);
     }
 
-    /// Gets a partial player name and looks it up in online players first then using {@link SearchUtil#findClosestMatch}.
+    /// Gets a partial player name and looks it up in online players first then using {@link SearchUtil#findClosestPlayerNameMatch}.
     ///
     /// If found, returns a {@code Pair<UUID, String>} with the found player's uuid and full name capitalized correctly.
     ///
@@ -142,7 +142,7 @@ public class PlayerRegistryService {
         UUID targetPlayerId;
         String targetPlayerName;
         if (targetPlayer == null) {
-            String offlinePlayerName = SearchUtil.findClosestMatch(
+            String offlinePlayerName = SearchUtil.findClosestPlayerNameMatch(
                     playerName,
                     this.getAllPlayerNames()
             );

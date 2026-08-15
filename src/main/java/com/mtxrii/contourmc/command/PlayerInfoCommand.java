@@ -48,7 +48,7 @@ public final class PlayerInfoCommand {
         boolean canSenderSeePrivateInfo = this.canSenderSeePrivateInfo(sender);
         Player player = Bukkit.getPlayer(playerName);
         if (player == null) {
-            String offlinePlayerName = SearchUtil.findClosestMatch(
+            String offlinePlayerName = SearchUtil.findClosestPlayerNameMatch(
                     playerName,
                     this.playerRegistryService.getAllPlayerNames()
             );
