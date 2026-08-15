@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @CommandContainer
 public final class PlayerInfoCommand {
@@ -97,6 +98,7 @@ public final class PlayerInfoCommand {
                 "\nHealth: {}" +
                 "\nJoin Date: {}" +
                 "\nCurrent kit: {}" +
+                "\nTimezone: {}" +
                 "\nPast Names: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
@@ -109,6 +111,7 @@ public final class PlayerInfoCommand {
                 healthStr,
                 TextUtil.formatInstant(TimeUtil.stringToInstant(playerData.firstOnline)),
                 this.playerRegistryService.getCurrentKit(player.getUniqueId()),
+                this.playerRegistryService.getTimezone(player.getUniqueId()),
                 formatPastNames(playerData)
         );
 
@@ -139,27 +142,30 @@ public final class PlayerInfoCommand {
 
     private Message compileMsgOfflinePlayer(String playerName, boolean showPrivateInfo) {
         var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(playerName);
+        UUID offlinePlayerId = offlinePlayerData.uniqueId;
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
                 "\nRank: {}" +
                 "\nLast Online: {}" +
                 "\nLast kit: {}" +
+                "\nTimezone: {}" +
                 "\nPast Names: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
                 offlinePlayerData.name,
                 String.valueOf(false),
-                TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
+                TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerId)),
                 TextUtil.formatInstant(TimeUtil.stringToInstant(offlinePlayerData.lastOnline)),
                 offlinePlayerData.currentKit,
+                this.playerRegistryService.getTimezone(offlinePlayerId),
                 formatPastNames(offlinePlayerData)
         );
 
         if (showPrivateInfo) {
-            boolean isMuted = this.sanctionService.isMuted(offlinePlayerData.uniqueId);
+            boolean isMuted = this.sanctionService.isMuted(offlinePlayerId);
             if (isMuted) {
-                SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(offlinePlayerData.uniqueId);
+                SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(offlinePlayerId);
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nMuted: {}" +
@@ -177,9 +183,9 @@ public final class PlayerInfoCommand {
                 ));
             }
 
-            boolean isBanned = this.sanctionService.isBanned(offlinePlayerData.uniqueId);
+            boolean isBanned = this.sanctionService.isBanned(offlinePlayerId);
             if (isBanned) {
-                SanctionsConfiguration.Sanction ban = this.sanctionService.getBan(offlinePlayerData.uniqueId);
+                SanctionsConfiguration.Sanction ban = this.sanctionService.getBan(offlinePlayerId);
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nBanned: {}" +

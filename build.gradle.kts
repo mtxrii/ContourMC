@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.cloud.extras)
 
     implementation(libs.classgraph)
+    implementation(libs.geoip2)
 
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.lombok)
