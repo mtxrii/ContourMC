@@ -24,6 +24,8 @@ import org.bukkit.plugin.Plugin;
 /// - Auto-respawn player
 @Component
 public class PlayerDeathListener implements Listener {
+    private static final Particle PARTICLE_ON_DEATH = Particle.CHERRY_LEAVES;
+
     private Plugin plugin;
     private SpawnpointService spawnpointService;
 
@@ -40,7 +42,7 @@ public class PlayerDeathListener implements Listener {
         event.deathMessage(deathMessage.getMessageComponent());
 
         ParticleSpawn deathParticles = new ParticleSpawn(
-                Particle.CHERRY_LEAVES,
+                PARTICLE_ON_DEATH,
                 victim.getWorld(),
                 victim.getEyeLocation(),
                 15,
