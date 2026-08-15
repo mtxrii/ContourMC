@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -27,6 +28,7 @@ public final class KickCommand {
     @Inject private SanctionService sanctionService;
 
     @Command("kick <player> [reason]")
+    @CommandDescription("Kicks a player with an optional reason")
     public void kickPlayer(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,

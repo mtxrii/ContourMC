@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -38,6 +39,7 @@ public final class EnvironmentCommand {
     @Inject private RankService rankService;
 
     @Command("environment|env <condition>")
+    @CommandDescription("Sets the environment of your current world to a specified condition")
     public void environment(
             @NotNull final Source sender,
             @Argument(value = "condition", suggestions = "conditions") final String condition

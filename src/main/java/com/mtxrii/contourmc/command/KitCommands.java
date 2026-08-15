@@ -9,6 +9,7 @@ import com.mtxrii.contourmc.service.RankService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -24,6 +25,7 @@ public final class KitCommands {
     @Inject private RankService rankService;
 
     @Command("kit list")
+    @CommandDescription("Lists all available kits")
     public void listKits(
             @NotNull final Source sender
     ) {
@@ -44,6 +46,7 @@ public final class KitCommands {
     }
 
     @Command("kit equip <kitName>")
+    @CommandDescription("Equips a kit")
     public void equipKit(
             @NotNull final Source sender,
             @Argument(value = "kitName", suggestions = "kits") final String kitName
@@ -66,6 +69,7 @@ public final class KitCommands {
     }
 
     @Command("kit save <kitName>")
+    @CommandDescription("Creates a new kit")
     public void saveNewKit(
             @NotNull final Source sender,
             @Argument("kitName") final String kitName
@@ -89,6 +93,7 @@ public final class KitCommands {
     }
 
     @Command("kit delete <kitName>")
+    @CommandDescription("Deletes an existing kit")
     public void deleteKit(
             @NotNull final Source sender,
             @Argument(value = "kitName", suggestions = "kits") final String kitName

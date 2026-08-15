@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,7 @@ public final class PlaceBlockCommands {
     @Inject private RankService rankService;
 
     @Command("placeBlockUnder|placeUnder|pu")
+    @CommandDescription("Places a block under your feet. Even if you're in the air")
     public void placeBlockUnder(
             @NotNull final Source sender
     ) {
@@ -42,6 +44,7 @@ public final class PlaceBlockCommands {
     }
 
     @Command("placeBlockAt|placeAt|pa")
+    @CommandDescription("Places a block at the location your cursor is pointing at")
     public void placeBlockAt(
             @NotNull final Source sender
     ) {

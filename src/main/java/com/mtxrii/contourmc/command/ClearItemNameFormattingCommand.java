@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,7 @@ public final class ClearItemNameFormattingCommand {
     @Inject private RankService rankService;
 
     @Command("clearItemNameFormatting")
+    @CommandDescription("Clears the formatting of the item name in your main hand")
     public void clearItemNameFormatting(@NotNull final Source sender) {
         if (!(sender.source() instanceof Player player)) {
             new Message(

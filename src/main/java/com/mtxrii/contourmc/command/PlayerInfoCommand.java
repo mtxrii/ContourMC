@@ -19,6 +19,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -37,6 +38,7 @@ public final class PlayerInfoCommand {
     @Inject private SanctionService sanctionService;
 
     @Command("playerinfo <player>")
+    @CommandDescription("Gets some information about a player")
     public void playerInfo(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -33,6 +34,7 @@ public final class BanCommands {
     @Inject private PlayerRegistryService playerRegistryService;
 
     @Command("ban <player> <duration> <units> <reason>")
+    @CommandDescription("Bans a player for a specified duration with a given reason")
     public void banPlayer(
             @NotNull final Source sender,
             @Argument(value = "player") final String playerName,
@@ -94,6 +96,7 @@ public final class BanCommands {
     }
 
     @Command("unban <player>")
+    @CommandDescription("Unbans a player")
     public void unbanPlayer(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName

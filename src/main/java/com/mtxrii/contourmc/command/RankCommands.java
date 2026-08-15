@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -33,6 +34,7 @@ public final class RankCommands {
     @Inject private PlayerRegistryService playerRegistryService;
 
     @Command("setrank <player> <rank>")
+    @CommandDescription("Sets a player's rank")
     public void setRank(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,
@@ -81,6 +83,7 @@ public final class RankCommands {
     }
 
     @Command("getrank <player>")
+    @CommandDescription("Gets a player's rank")
     public void getRank(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName
@@ -104,6 +107,7 @@ public final class RankCommands {
     }
 
     @Command("ranks")
+    @CommandDescription("Lists all available ranks")
     public void ranks(
             @NotNull final Source sender
     ) {

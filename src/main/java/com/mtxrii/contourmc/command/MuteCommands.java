@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -35,6 +36,7 @@ public final class MuteCommands {
     @Inject private PlayerRegistryService playerRegistryService;
 
     @Command("mute <player> <duration> <units> <reason>")
+    @CommandDescription("Mutes a player for a specified duration with a given reason")
     public void mutePlayer(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName,
@@ -94,6 +96,7 @@ public final class MuteCommands {
     }
 
     @Command("unmute <player>")
+    @CommandDescription("Unmutes a player")
     public void unmutePlayer(
             @NotNull final Source sender,
             @Argument(value = "player", suggestions = "onlinePlayers") final String playerName

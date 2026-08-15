@@ -10,6 +10,7 @@ import com.mtxrii.contourmc.service.SpawnpointService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.processing.CommandContainer;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -27,6 +28,7 @@ public final class SpawnCommands {
     @Inject private RankService rankService;
 
     @Command("setspawn <name>")
+    @CommandDescription("Sets a new spawnpoint")
     public void setNewSpawn(
             @NotNull final Source sender,
             @Argument("name") final String name
@@ -50,6 +52,7 @@ public final class SpawnCommands {
     }
 
     @Command("deletespawn|delspawn <name>")
+    @CommandDescription("Deletes an existing spawnpoint")
     public void deleteSpawn(
             @NotNull final Source sender,
             @Argument(value = "name", suggestions = "spawns") final String name
@@ -67,6 +70,7 @@ public final class SpawnCommands {
     }
 
     @Command("spawns|listspawns")
+    @CommandDescription("Lists all available spawnpoints")
     public void listSpawns(
             @NotNull final Source sender
     ) {
@@ -86,6 +90,7 @@ public final class SpawnCommands {
     }
 
     @Command("spawn [name]")
+    @CommandDescription("Teleports you to a spawnpoint")
     public void tpToSpawn(
             @NotNull final Source sender,
             @Argument(value = "name", suggestions = "spawns") String name
