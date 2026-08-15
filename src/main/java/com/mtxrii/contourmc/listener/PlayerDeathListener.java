@@ -3,9 +3,11 @@ package com.mtxrii.contourmc.listener;
 import com.google.inject.Inject;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.particle.ParticleSpawn;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.sxtanna.platform.archetype.Component;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -17,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
 
 /// On death:
+/// - Spawn particles
 /// - Generate custom death message
 /// - Auto-respawn player
 @Component
@@ -35,6 +38,15 @@ public class PlayerDeathListener implements Listener {
         Player victim = event.getPlayer();
         Message deathMessage = generateDeathMessage(victim, victim.getKiller());
         event.deathMessage(deathMessage.getMessageComponent());
+
+        ParticleSpawn deathParticles = new ParticleSpawn(
+                Particle.CHERRY_LEAVES,
+                victim.getWorld(),
+                victim.getEyeLocation(),
+                15,
+                1.3
+        );
+        deathParticles.spawn();
 
         this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
             victim.spigot().respawn();
