@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @CommandContainer
 public final class PlayerInfoCommand {
@@ -139,6 +140,7 @@ public final class PlayerInfoCommand {
 
     private Message compileMsgOfflinePlayer(String playerName, boolean showPrivateInfo) {
         var offlinePlayerData = this.playerRegistryService.getPlayerDataByName(playerName);
+        UUID offlinePlayerId = offlinePlayerData.uniqueId;
         String messageTemplate = "{}:" +
                 "\nOnline: {}" +
                 "\nRank: {}" +
@@ -151,17 +153,17 @@ public final class PlayerInfoCommand {
                 messageTemplate,
                 offlinePlayerData.name,
                 String.valueOf(false),
-                TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerData.uniqueId)),
+                TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerId)),
                 TextUtil.formatInstant(TimeUtil.stringToInstant(offlinePlayerData.lastOnline)),
                 offlinePlayerData.currentKit,
-                this.playerRegistryService.getTimezone(offlinePlayerData.uniqueId),
+                this.playerRegistryService.getTimezone(offlinePlayerId),
                 formatPastNames(offlinePlayerData)
         );
 
         if (showPrivateInfo) {
-            boolean isMuted = this.sanctionService.isMuted(offlinePlayerData.uniqueId);
+            boolean isMuted = this.sanctionService.isMuted(offlinePlayerId);
             if (isMuted) {
-                SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(offlinePlayerData.uniqueId);
+                SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(offlinePlayerId);
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nMuted: {}" +
@@ -179,9 +181,9 @@ public final class PlayerInfoCommand {
                 ));
             }
 
-            boolean isBanned = this.sanctionService.isBanned(offlinePlayerData.uniqueId);
+            boolean isBanned = this.sanctionService.isBanned(offlinePlayerId);
             if (isBanned) {
-                SanctionsConfiguration.Sanction ban = this.sanctionService.getBan(offlinePlayerData.uniqueId);
+                SanctionsConfiguration.Sanction ban = this.sanctionService.getBan(offlinePlayerId);
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nBanned: {}" +
