@@ -1,7 +1,10 @@
 package com.mtxrii.contourmc.command;
 
+import com.google.inject.Inject;
+import com.mtxrii.contourmc.Rank;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.RankService;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
@@ -11,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 @CommandContainer
 public class PingCommand {
+    @Inject private RankService rankService;
 
     @Command("ping")
     @CommandDescription("")
@@ -25,6 +29,7 @@ public class PingCommand {
             ).sendTo(sender);
             return;
         }
+        this.rankService.requireRank(MessagePrefix.ENV, Rank.PLAYER, player);
 
         new Message(
                 MessagePrefix.GAME,
