@@ -12,6 +12,7 @@ import com.mtxrii.contourmc.util.GameUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.mtxrii.contourmc.util.TimeUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
@@ -82,6 +83,14 @@ public final class MuteCommands {
                 reason,
                 TimeUtil.formatInstantForPlayer(unmuteAt)
         ).sendTo(sender);
+
+        Player targetOnlinePlayer = Bukkit.getPlayer(targetPlayerName);
+        if (targetOnlinePlayer != null) {
+            new Message(
+                    MessagePrefix.CHAT,
+                    "You've been muted!"
+            ).sendTo(targetOnlinePlayer);
+        }
     }
 
     @Command("unmute <player>")

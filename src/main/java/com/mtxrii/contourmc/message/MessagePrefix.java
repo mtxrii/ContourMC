@@ -9,6 +9,7 @@ public enum MessagePrefix {
     GAME,
     BUILD,
     MOD,
+    CHAT,
     RANK;
 
     public String getFormatted() {
