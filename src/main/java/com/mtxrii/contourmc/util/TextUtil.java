@@ -50,4 +50,8 @@ public final class TextUtil {
                 playerName
         );
     }
+
+    public static boolean isEmpty(String str) {
+        return str == null || str.isBlank();
+    }
 }
