@@ -199,7 +199,7 @@ public class SanctionService {
                 
                 """,
                 reason,
-                TimeUtil.formatInstantForPlayer(expirationString)
+                this.playerRegistryService.formatInstantForPlayer(expirationString, playerId)
         )).append(MessageConst.SANCTION_MSG_BORDER);
     }
 

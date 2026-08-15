@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mtxrii.contourmc.config.SanctionsConfiguration;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.service.PlayerRegistryService;
 import com.mtxrii.contourmc.service.SanctionService;
 import com.mtxrii.contourmc.util.TimeUtil;
 import com.sxtanna.platform.archetype.Component;
@@ -20,14 +21,17 @@ import java.util.logging.Logger;
 @Component
 public class PlayerChatListener implements Listener {
     private final SanctionService sanctionService;
+    private final PlayerRegistryService playerRegistryService;
     private final Logger pluginLogger;
 
     @Inject
     public PlayerChatListener(
             SanctionService sanctionService,
+            PlayerRegistryService playerRegistryService,
             Plugin plugin
     ) {
         this.sanctionService = sanctionService;
+        this.playerRegistryService = playerRegistryService;
         this.pluginLogger = plugin.getLogger();
     }
 
@@ -43,7 +47,7 @@ public class PlayerChatListener implements Listener {
                     MessagePrefix.GAME,
                     "You cannot chat while muted!\nReason: {}\nUntil: {}",
                     muteInfo.reason,
-                    TimeUtil.formatInstantForPlayer(muteInfo.expiresAt)
+                    this.playerRegistryService.formatInstantForPlayer(muteInfo.expiresAt, playerId)
             ).sendTo(player);
             event.setCancelled(true);
 
