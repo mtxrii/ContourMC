@@ -6,6 +6,7 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.RankService;
 import com.mtxrii.contourmc.util.GameUtil;
+import com.mtxrii.contourmc.util.SearchUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -67,8 +68,9 @@ public final class GamemodeCommands {
 
         GameMode newGamemode;
         try {
-            newGamemode = GameMode.valueOf(gamemode.toUpperCase());
-        } catch (IllegalArgumentException e) {
+            String gamemodeStr = SearchUtil.findClosestStringStartingMatch(gamemode, this.gamemodeNames());
+            newGamemode = GameMode.valueOf(gamemodeStr.toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
             new Message(
                     MessagePrefix.GAME,
                     true,
@@ -97,9 +99,7 @@ public final class GamemodeCommands {
             @NotNull final CommandContext<Source> context,
             @NotNull final CommandInput input
     ) {
-        return Arrays.stream(GameMode.values())
-                     .map(Enum::name)
-                     .collect(Collectors.toSet());
+        return this.gamemodeNames();
     }
 
     @Suggestions("onlinePlayers")
@@ -108,5 +108,11 @@ public final class GamemodeCommands {
             @NotNull final CommandInput input
     ) {
         return GameUtil.getOnlinePlayers();
+    }
+
+    private Set<String> gamemodeNames() {
+        return Arrays.stream(GameMode.values())
+                     .map(Enum::name)
+                     .collect(Collectors.toSet());
     }
 }
