@@ -2,6 +2,9 @@ package com.mtxrii.contourmc.util;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.Comparator;
+import java.util.Set;
+
 @UtilityClass
 public final class SearchUtil {
 
@@ -87,6 +90,46 @@ public final class SearchUtil {
         }
 
         return bestMatch;
+    }
+
+    /**
+     * Finds the closest string in a set based on a partial starting input.
+     * <p>
+     * Priority:
+     *   1. Exact match
+     *   2. Case-insensitive exact match
+     *   3. Case-insensitive prefix match
+     *   4. null if nothing starts with the input
+     */
+    public static String findClosestStringStartingMatch(String input, Set<String> candidates) {
+        if (input == null || candidates == null || candidates.isEmpty()) {
+            return null;
+        }
+
+        String trimmedInput = input.trim();
+        if (trimmedInput.isEmpty()) {
+            return null;
+        }
+
+        for (String candidate : candidates) {
+            if (candidate != null && candidate.equals(trimmedInput)) {
+                return candidate;
+            }
+        }
+
+        for (String candidate : candidates) {
+            if (candidate != null && candidate.equalsIgnoreCase(trimmedInput)) {
+                return candidate;
+            }
+        }
+
+        String lowerInput = trimmedInput.toLowerCase();
+
+        return candidates.stream()
+                         .filter(candidate -> candidate != null && !candidate.isBlank())
+                         .filter(candidate -> candidate.toLowerCase().startsWith(lowerInput))
+                         .min(Comparator.comparingInt(String::length).thenComparing(String.CASE_INSENSITIVE_ORDER))
+                         .orElse(null);
     }
 
     private static int levenshteinDistance(String a, String b) {
