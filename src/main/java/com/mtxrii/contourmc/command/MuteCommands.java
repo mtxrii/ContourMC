@@ -90,6 +90,7 @@ public final class MuteCommands {
         if (targetOnlinePlayer != null) {
             new Message(
                     MessagePrefix.CHAT,
+                    true,
                     "You've been muted!"
             ).sendTo(targetOnlinePlayer);
         }
