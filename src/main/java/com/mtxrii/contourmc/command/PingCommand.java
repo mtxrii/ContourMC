@@ -33,8 +33,8 @@ public class PingCommand {
 
         new Message(
                 MessagePrefix.GAME,
-                "Your ping is {} ms",
-                String.valueOf(player.getPing())
+                "Your ping is {}",
+                String.valueOf(player.getPing()) + "ms"
         ).sendTo(player);
     }
 }
