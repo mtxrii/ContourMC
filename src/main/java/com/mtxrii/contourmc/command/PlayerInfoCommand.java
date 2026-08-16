@@ -191,8 +191,8 @@ public final class PlayerInfoCommand {
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nBanned: {}" +
-                        "\nBannedReason: {}" +
-                        "\nBannedUntil: {}",
+                        "\nBanned Reason: {}" +
+                        "\nBanned Until: {}",
                         String.valueOf(true),
                         ban.reason,
                         TimeUtil.formatInstantForPlayer(ban.expiresAt)
