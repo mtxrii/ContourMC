@@ -106,7 +106,7 @@ public final class PlayerInfoCommand {
                 messageTemplate,
                 player.getName(),
                 String.valueOf(true),
-                String.valueOf(player.getPing()) + "ms",
+                player.getPing() + "ms",
                 TextUtil.formatEnumName(this.rankService.getRank(player.getUniqueId())),
                 TextUtil.formatLocation(player.getLocation()),
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),

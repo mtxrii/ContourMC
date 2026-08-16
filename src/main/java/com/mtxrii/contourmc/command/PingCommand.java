@@ -34,7 +34,7 @@ public class PingCommand {
         new Message(
                 MessagePrefix.GAME,
                 "Your ping is {}",
-                String.valueOf(player.getPing()) + "ms"
+                player.getPing() + "ms"
         ).sendTo(player);
     }
 }
