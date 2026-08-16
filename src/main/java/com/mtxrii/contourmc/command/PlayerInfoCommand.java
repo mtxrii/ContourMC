@@ -124,8 +124,8 @@ public final class PlayerInfoCommand {
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nMuted: {}" +
-                        "\nMutedReason: {}" +
-                        "\nMutedUntil: {}",
+                        "\nMuted Reason: {}" +
+                        "\nMuted Until: {}",
                         String.valueOf(true),
                         mute.reason,
                         TimeUtil.formatInstantForPlayer(mute.expiresAt)
@@ -171,8 +171,8 @@ public final class PlayerInfoCommand {
                 response = response.append(new Message(
                         MessagePrefix.BLANK,
                         "\nMuted: {}" +
-                        "\nMutedReason: {}" +
-                        "\nMutedUntil: {}",
+                        "\nMuted Reason: {}" +
+                        "\nMuted Until: {}",
                         String.valueOf(true),
                         mute.reason,
                         TimeUtil.formatInstantForPlayer(mute.expiresAt)
