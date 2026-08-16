@@ -6,6 +6,8 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
 import com.mtxrii.contourmc.service.RankService;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
@@ -108,6 +110,71 @@ public final class KitCommands {
                 "Kit {} deleted successfully",
                 kitName
         ).sendTo(sender);
+    }
+
+    @Command("kit itemframe <kitName>")
+    @CommandDescription("Binds an item frame to a kit")
+    public void bindKitItemFrame(
+            @NotNull final Source sender,
+            @Argument(value = "kitName", suggestions = "kits") final String kitName
+    ) {
+        if (!(sender.source() instanceof Player player)) {
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "You must be a player to run this command."
+            ).sendTo(sender);
+            return;
+        }
+        this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+
+        if (!this.kitService.kitNames().contains(kitName)) {
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "Kit not found."
+            ).sendTo(player);
+            return;
+        }
+
+        ItemFrame targetItemFrame = findTargetItemFrame(player, 6);
+        if (targetItemFrame == null) {
+            new Message(
+                    MessagePrefix.KIT,
+                    true,
+                    "No item frame in range of sight."
+            ).sendTo(player);
+            return;
+        }
+
+        targetItemFrame.customName(net.kyori.adventure.text.Component.text(kitName));
+        targetItemFrame.setCustomNameVisible(false);
+
+        new Message(
+                MessagePrefix.KIT,
+                "Item frame successfully bound to kit {}.",
+                kitName
+        ).sendTo(player);
+    }
+
+    private ItemFrame findTargetItemFrame(Player player, double maxDistance) {
+        Entity targetEntity = player.getTargetEntity((int) maxDistance);
+        if (targetEntity instanceof ItemFrame itemFrame) {
+            return itemFrame;
+        }
+
+        ItemFrame closest = null;
+        double closestDistSq = maxDistance * maxDistance;
+        for (Entity entity : player.getNearbyEntities(maxDistance, maxDistance, maxDistance)) {
+            if (entity instanceof ItemFrame itemFrame) {
+                double distSq = player.getLocation().distanceSquared(itemFrame.getLocation());
+                if (distSq < closestDistSq) {
+                    closest = itemFrame;
+                    closestDistSq = distSq;
+                }
+            }
+        }
+        return closest;
     }
 
     @Suggestions("kits")
