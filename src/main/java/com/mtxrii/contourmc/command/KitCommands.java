@@ -84,7 +84,7 @@ public final class KitCommands {
             ).sendTo(sender);
             return;
         }
-        this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+        this.rankService.requireRank(MessagePrefix.KIT, Rank.STAFF, player);
 
         this.kitService.saveNewKit(kitName, player.getInventory());
         new Message(
@@ -101,7 +101,7 @@ public final class KitCommands {
             @Argument(value = "kitName", suggestions = "kits") final String kitName
     ) {
         if (sender.source() instanceof Player player) {
-            this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+            this.rankService.requireRank(MessagePrefix.KIT, Rank.STAFF, player);
         }
 
         this.kitService.deleteKit(kitName);
@@ -126,7 +126,7 @@ public final class KitCommands {
             ).sendTo(sender);
             return;
         }
-        this.rankService.requireRank(MessagePrefix.ENV, Rank.STAFF, player);
+        this.rankService.requireRank(MessagePrefix.KIT, Rank.STAFF, player);
 
         if (!this.kitService.kitNames().contains(kitName)) {
             new Message(
