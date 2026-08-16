@@ -17,7 +17,7 @@ public class PingCommand {
     @Inject private RankService rankService;
 
     @Command("ping")
-    @CommandDescription("")
+    @CommandDescription("Gets your ping in ms")
     public void ping(
             @NotNull final Source sender
     ) {
