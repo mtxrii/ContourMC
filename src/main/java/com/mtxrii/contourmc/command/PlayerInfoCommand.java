@@ -98,10 +98,7 @@ public final class PlayerInfoCommand {
                 "\nLast spawn: {}" +
                 "\nHealth: {}" +
                 "\nJoin Date: {}" +
-                "\nCurrent kit: {}" +
-                "\nTimezone: {}" +
-                "\nPast Names: {}" +
-                "\nIP Address: {}";
+                "\nCurrent kit: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
@@ -113,13 +110,20 @@ public final class PlayerInfoCommand {
                 this.spawnpointService.getLastSpawnpointForPlayer(player.getUniqueId()),
                 healthStr,
                 TextUtil.formatInstant(TimeUtil.stringToInstant(playerData.firstOnline)),
-                this.playerRegistryService.getCurrentKit(player.getUniqueId()),
-                this.playerRegistryService.getTimezone(player.getUniqueId()),
-                formatPastNames(playerData),
-                this.playerRegistryService.getPlayerIp(player.getUniqueId())
+                this.playerRegistryService.getCurrentKit(player.getUniqueId())
         );
 
         if (showPrivateInfo) {
+            response = response.append(new Message(
+                    MessagePrefix.BLANK,
+                    "\nTimezone: {}" +
+                    "\nPast Names: {}" +
+                    "\nIP Address: {}",
+                    this.playerRegistryService.getTimezone(player.getUniqueId()),
+                    formatPastNames(playerData),
+                    this.playerRegistryService.getPlayerIp(player.getUniqueId())
+            ));
+
             boolean isMuted = this.sanctionService.isMuted(player.getUniqueId());
             if (isMuted) {
                 SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(player.getUniqueId());
@@ -151,10 +155,7 @@ public final class PlayerInfoCommand {
                 "\nOnline: {}" +
                 "\nRank: {}" +
                 "\nLast Online: {}" +
-                "\nLast kit: {}" +
-                "\nTimezone: {}" +
-                "\nPast Names: {}" +
-                "\nIP Address: {}";
+                "\nLast kit: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
@@ -162,13 +163,20 @@ public final class PlayerInfoCommand {
                 String.valueOf(false),
                 TextUtil.formatEnumName(this.rankService.getRank(offlinePlayerId)),
                 TextUtil.formatInstant(TimeUtil.stringToInstant(offlinePlayerData.lastOnline)),
-                offlinePlayerData.currentKit,
-                this.playerRegistryService.getTimezone(offlinePlayerId),
-                formatPastNames(offlinePlayerData),
-                this.playerRegistryService.getPlayerIp(offlinePlayerId)
+                offlinePlayerData.currentKit
         );
 
         if (showPrivateInfo) {
+            response = response.append(new Message(
+                    MessagePrefix.BLANK,
+                    "\nTimezone: {}" +
+                    "\nPast Names: {}" +
+                    "\nIP Address: {}",
+                    this.playerRegistryService.getTimezone(offlinePlayerId),
+                    formatPastNames(offlinePlayerData),
+                    this.playerRegistryService.getPlayerIp(offlinePlayerId)
+            ));
+
             boolean isMuted = this.sanctionService.isMuted(offlinePlayerId);
             if (isMuted) {
                 SanctionsConfiguration.Sanction mute = this.sanctionService.getMute(offlinePlayerId);
