@@ -39,5 +39,8 @@ public class PlayerRegistryConfiguration {
         /// This is null when the local GeoIP database has no timezone for the address.
         @Setting
         public String timezone;
+
+        @Setting
+        public String lastIp;
     }
 }

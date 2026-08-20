@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.UUID;
@@ -71,7 +73,26 @@ public class PlayerRegistryService {
             this.saveConfig();
         }
 
-        // Do nothing for existing player with same name
+        // Existing player
+        // TODO: Move this to separate method
+
+        // Update IP if changed
+        String lastIp = playerData.lastIp;
+        String currentIp;
+        InetSocketAddress currentInetSocketAddress = player.getAddress();
+        if (currentInetSocketAddress == null) {
+            currentIp = "UNKNOWN";
+        } else {
+            currentIp = currentInetSocketAddress.getAddress().getHostAddress();
+        }
+        if (!lastIp.equals(currentIp)) {
+            this.pluginLogger.info(
+                    "Player " + player.getName() + "'s IP changed: " + lastIp + " -> " + currentIp +
+                    " (" + player.getUniqueId() + ")"
+            );
+            playerData.lastIp = currentIp;
+            this.saveConfig();
+        }
 
         // Refresh the timezone as IP geolocation can change between sessions.
         if (this.updateTimezone(player, playerData)) {
