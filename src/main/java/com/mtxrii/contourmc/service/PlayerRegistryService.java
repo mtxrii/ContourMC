@@ -73,23 +73,11 @@ public class PlayerRegistryService {
         }
 
         // Existing player
-        // TODO: Move this to separate method
 
-        // Update IP if changed
-        String lastIp = playerData.lastIp;
-        if (lastIp == null) {
-            lastIp = "UNKNOWN";
-        }
-        String currentIp = this.getPlayerIp(player.getUniqueId());
-        if (!lastIp.equals(currentIp)) {
-            this.pluginLogger.info(
-                    "Player " + player.getName() + "'s IP changed: " + lastIp + " -> " + currentIp +
-                    " (" + player.getUniqueId() + ")"
-            );
-            playerData.lastIp = currentIp;
+        // Update IP if changed since last session.
+        if (this.updateIp(player, playerData)) {
             this.saveConfig();
         }
-
         // Refresh the timezone as IP geolocation can change between sessions.
         if (this.updateTimezone(player, playerData)) {
             this.saveConfig();
@@ -216,6 +204,23 @@ public class PlayerRegistryService {
 
         playerData.timezone = timezone.getId();
         return true;
+    }
+
+    private boolean updateIp(Player player, PlayerRegistryConfiguration.PlayerData playerData) {
+        String lastIp = playerData.lastIp;
+        if (lastIp == null) {
+            lastIp = "UNKNOWN";
+        }
+        String currentIp = this.getPlayerIp(player.getUniqueId());
+        if (!lastIp.equals(currentIp)) {
+            this.pluginLogger.info(
+                    "Player " + player.getName() + "'s IP changed: " + lastIp + " -> " + currentIp +
+                    " (" + player.getUniqueId() + ")"
+            );
+            playerData.lastIp = currentIp;
+            return true;
+        }
+        return false;
     }
 
     private void saveConfig() {
