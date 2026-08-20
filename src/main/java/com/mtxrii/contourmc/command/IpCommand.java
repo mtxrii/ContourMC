@@ -22,7 +22,7 @@ public class IpCommand {
 
     @Command("ipaddress [player]")
     @CommandDescription("Get a player's IP address")
-    public void ping(
+    public void ipAddress(
             @NotNull final Source sender,
             @Argument("player") String targetPlayer
     ) {
