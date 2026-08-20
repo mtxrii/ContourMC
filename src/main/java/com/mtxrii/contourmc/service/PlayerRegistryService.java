@@ -73,7 +73,7 @@ public class PlayerRegistryService {
         }
 
         // Existing player
-        this.updateRegularlyOnlinePlayerRoutine(player, playerData);
+        this.updateRegularLogin(player, playerData);
     }
 
     public void logoutPlayer(@NotNull Player player) {
@@ -160,7 +160,7 @@ public class PlayerRegistryService {
         return Pair.of(targetPlayerId, targetPlayerName);
     }
 
-    private void updateRegularlyOnlinePlayerRoutine(Player player, PlayerRegistryConfiguration.PlayerData playerData) {
+    private void updateRegularLogin(Player player, PlayerRegistryConfiguration.PlayerData playerData) {
         // Update IP if changed since their last session
         if (this.updateIp(player, playerData)) {
             this.saveConfig();
