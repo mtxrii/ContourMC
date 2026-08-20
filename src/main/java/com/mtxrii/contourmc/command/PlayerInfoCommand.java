@@ -100,7 +100,8 @@ public final class PlayerInfoCommand {
                 "\nJoin Date: {}" +
                 "\nCurrent kit: {}" +
                 "\nTimezone: {}" +
-                "\nPast Names: {}";
+                "\nPast Names: {}" +
+                "\nIP Address: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
@@ -114,7 +115,8 @@ public final class PlayerInfoCommand {
                 TextUtil.formatInstant(TimeUtil.stringToInstant(playerData.firstOnline)),
                 this.playerRegistryService.getCurrentKit(player.getUniqueId()),
                 this.playerRegistryService.getTimezone(player.getUniqueId()),
-                formatPastNames(playerData)
+                formatPastNames(playerData),
+                player.getAddress().getAddress().getHostAddress()
         );
 
         if (showPrivateInfo) {
@@ -151,7 +153,8 @@ public final class PlayerInfoCommand {
                 "\nLast Online: {}" +
                 "\nLast kit: {}" +
                 "\nTimezone: {}" +
-                "\nPast Names: {}";
+                "\nPast Names: {}" +
+                "\nIP Address: {}";
         Message response = new Message(
                 MessagePrefix.INFO,
                 messageTemplate,
@@ -161,7 +164,8 @@ public final class PlayerInfoCommand {
                 TextUtil.formatInstant(TimeUtil.stringToInstant(offlinePlayerData.lastOnline)),
                 offlinePlayerData.currentKit,
                 this.playerRegistryService.getTimezone(offlinePlayerId),
-                formatPastNames(offlinePlayerData)
+                formatPastNames(offlinePlayerData),
+                this.playerRegistryService.getPlayerIp(offlinePlayerId)
         );
 
         if (showPrivateInfo) {
