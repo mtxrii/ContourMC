@@ -77,6 +77,9 @@ public class PlayerRegistryService {
 
         // Update IP if changed
         String lastIp = playerData.lastIp;
+        if (lastIp == null) {
+            lastIp = "UNKNOWN";
+        }
         String currentIp = this.getPlayerIp(player.getUniqueId());
         if (!lastIp.equals(currentIp)) {
             this.pluginLogger.info(
