@@ -20,16 +20,21 @@ public class IpCommand {
     @Inject private PlayerRegistryService playerRegistryService;
     @Inject private RankService rankService;
 
-    @Command("ipaddress <player>")
+    @Command("ipaddress [player]")
     @CommandDescription("Get a player's IP address")
     public void ping(
             @NotNull final Source sender,
-            @Argument("player") final String targetPlayer
+            @Argument("player") String targetPlayer
     ) {
         if (sender.source() instanceof Player player) {
             this.rankService.requireRank(MessagePrefix.ENV, Rank.MEDIATOR, player);
         }
 
+        if (targetPlayer == null) {
+            targetPlayer = sender.source().getName();
+        } else {
+            targetPlayer = targetPlayer.toLowerCase();
+        }
         Player target = Bukkit.getPlayer(targetPlayer);
         if (target == null) {
             new Message(
