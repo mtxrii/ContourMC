@@ -21,7 +21,7 @@ public class IpCommand {
     @Inject private RankService rankService;
 
     @Command("ipaddress [player]")
-    @CommandDescription("Get a player's IP address")
+    @CommandDescription("Gets a player's IP address")
     public void ipAddress(
             @NotNull final Source sender,
             @Argument("player") String targetPlayer
