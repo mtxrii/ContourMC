@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.jackson.JacksonConfigurationLoader;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -78,13 +77,7 @@ public class PlayerRegistryService {
 
         // Update IP if changed
         String lastIp = playerData.lastIp;
-        String currentIp;
-        InetSocketAddress currentInetSocketAddress = player.getAddress();
-        if (currentInetSocketAddress == null) {
-            currentIp = "UNKNOWN";
-        } else {
-            currentIp = currentInetSocketAddress.getAddress().getHostAddress();
-        }
+        String currentIp = this.getPlayerIp(player.getUniqueId());
         if (!lastIp.equals(currentIp)) {
             this.pluginLogger.info(
                     "Player " + player.getName() + "'s IP changed: " + lastIp + " -> " + currentIp +
@@ -182,6 +175,21 @@ public class PlayerRegistryService {
         }
 
         return Pair.of(targetPlayerId, targetPlayerName);
+    }
+
+    public String getPlayerIp(UUID playerId) {
+        Player onlinePlayer = Bukkit.getPlayer(playerId);
+        if (onlinePlayer != null) {
+            InetSocketAddress currentInetSocketAddress = onlinePlayer.getAddress();
+            if (currentInetSocketAddress == null) {
+                return "UNKNOWN";
+            }
+            return currentInetSocketAddress.getAddress().getHostAddress();
+        } else {
+            var playerData = this.getPlayerDataById(playerId);
+            assert playerData != null;
+            return playerData.lastIp;
+        }
     }
 
     private PlayerRegistryConfiguration.PlayerData getPlayerDataById(UUID playerId) {

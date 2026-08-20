@@ -116,7 +116,7 @@ public final class PlayerInfoCommand {
                 this.playerRegistryService.getCurrentKit(player.getUniqueId()),
                 this.playerRegistryService.getTimezone(player.getUniqueId()),
                 formatPastNames(playerData),
-                player.getAddress().getAddress().getHostAddress()
+                this.playerRegistryService.getPlayerIp(player.getUniqueId())
         );
 
         if (showPrivateInfo) {
