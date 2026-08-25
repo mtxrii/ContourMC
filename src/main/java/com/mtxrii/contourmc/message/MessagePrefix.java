@@ -10,6 +10,7 @@ public enum MessagePrefix {
     BUILD,
     MOD,
     CHAT,
+    ZIPLINE,
     RANK;
 
     public String getFormatted() {

@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.runnabletask;
 
 import com.mtxrii.contourmc.particle.ParticleSpawn;
+import com.mtxrii.contourmc.util.LocUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -38,12 +39,7 @@ public final class ZiplineTask extends BukkitRunnable {
 
         progress += speed;
         double ratio = Math.min(1.0, progress / totalDistance);
-
-        // @TODO: Move linear interpolation logic to separate method in util class
-        double x = start.getX() + (target.getX() - start.getX()) * ratio;
-        double y = start.getY() + (target.getY() - start.getY()) * ratio;
-        double z = start.getZ() + (target.getZ() - start.getZ()) * ratio;
-        Location currentLoc = new Location(start.getWorld(), x, y, z);
+        Location currentLoc = LocUtil.lerp(start, target, ratio);
         currentLoc.setDirection(target.clone().subtract(start).toVector());
 
         player.teleport(currentLoc);

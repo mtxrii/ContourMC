@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.particle;
 
 import com.mtxrii.contourmc.message.MessageConst;
+import com.mtxrii.contourmc.util.LocUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -394,7 +395,7 @@ public abstract class ParticleWithDataSpawn<T> extends ParticleSpawn {
             double zRandomizer;
             // Random offset spans entire coordinate. Leave as is for block locations.
             // Real locations need the randomizer to include area around other blocks.
-            if (isBlockLocation(super.location)) {
+            if (LocUtil.isBlockLocation(super.location)) {
                 xRandomizer = Math.random() * super.spread;
                 yRandomizer = Math.random() * super.spread;
                 zRandomizer = Math.random() * super.spread;

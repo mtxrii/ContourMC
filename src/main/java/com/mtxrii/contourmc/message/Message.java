@@ -119,6 +119,10 @@ public class Message {
         Bukkit.broadcast(this.getMessageComponent());
     }
 
+    public void sendAsActionBar(Player player) {
+        player.sendActionBar(this.getMessageComponent());
+    }
+
     public String getMessage() {
         return this.message;
     }
