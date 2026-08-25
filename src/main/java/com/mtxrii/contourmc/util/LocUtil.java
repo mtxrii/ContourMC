@@ -1,7 +1,12 @@
 package com.mtxrii.contourmc.util;
 
+import com.mtxrii.contourmc.config.SpawnpointsConfiguration;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public final class LocUtil {
@@ -32,5 +37,42 @@ public final class LocUtil {
         boolean isYAnEdge = location.getY() == location.getBlockY();
         boolean isZAnEdge = location.getZ() == location.getBlockZ();
         return isXAnEdge && isYAnEdge && isZAnEdge;
+    }
+
+    /**
+     * Converts a Bukkit Location into a Spawnpoint configuration object.
+     * @param location Location to convert
+     * @return Spawnpoint configuration representation of the location
+     */
+    public static SpawnpointsConfiguration.Spawnpoint toSpawnpoint(@NotNull Location location) {
+        SpawnpointsConfiguration.Spawnpoint spawnpoint = new SpawnpointsConfiguration.Spawnpoint();
+        spawnpoint.world = location.getWorld().getName();
+        spawnpoint.x = location.getX();
+        spawnpoint.y = location.getY();
+        spawnpoint.z = location.getZ();
+        spawnpoint.yaw = location.getYaw();
+        spawnpoint.pitch = location.getPitch();
+        return spawnpoint;
+    }
+
+    /**
+     * Converts a Spawnpoint configuration object into a Bukkit Location.
+     * @param spawnpoint Spawnpoint configuration object to convert
+     * @return Bukkit Location, or null if the world is not loaded
+     */
+    @Nullable
+    public static Location toLocation(@NotNull SpawnpointsConfiguration.Spawnpoint spawnpoint) {
+        World world = Bukkit.getWorld(spawnpoint.world);
+        if (world == null) {
+            return null;
+        }
+        return new Location(
+                world,
+                spawnpoint.x,
+                spawnpoint.y,
+                spawnpoint.z,
+                spawnpoint.yaw,
+                spawnpoint.pitch
+        );
     }
 }

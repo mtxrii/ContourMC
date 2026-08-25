@@ -6,11 +6,10 @@ import com.mtxrii.contourmc.config.SpawnpointsConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
+import com.mtxrii.contourmc.util.LocUtil;
 import com.sxtanna.platform.archetype.Component;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -64,13 +63,7 @@ public class SpawnpointService {
             );
         }
 
-        SpawnpointsConfiguration.Spawnpoint spawnpoint = new SpawnpointsConfiguration.Spawnpoint();
-        spawnpoint.world = spawnpointLocation.getWorld().getName();
-        spawnpoint.x = spawnpointLocation.getX();
-        spawnpoint.y = spawnpointLocation.getY();
-        spawnpoint.z = spawnpointLocation.getZ();
-        spawnpoint.yaw = spawnpointLocation.getYaw();
-        spawnpoint.pitch = spawnpointLocation.getPitch();
+        SpawnpointsConfiguration.Spawnpoint spawnpoint = LocUtil.toSpawnpoint(spawnpointLocation);
 
         this.spawnpointsConfig.spawnpoints.put(spawnpointName, spawnpoint);
         this.saveConfig();
@@ -96,19 +89,10 @@ public class SpawnpointService {
         }
 
         SpawnpointsConfiguration.Spawnpoint spawnpoint = this.spawnpointsConfig.spawnpoints.get(spawnpointName);
-        World world = Bukkit.getWorld(spawnpoint.world);
-        if (world == null) {
+        Location spawnpointLocation = LocUtil.toLocation(spawnpoint);
+        if (spawnpointLocation == null) {
             throw new CommandArgumentException(MessagePrefix.SPAWN, "The world for this spawn point is not loaded.");
         }
-
-        Location spawnpointLocation = new Location(
-                world,
-                spawnpoint.x,
-                spawnpoint.y,
-                spawnpoint.z,
-                spawnpoint.yaw,
-                spawnpoint.pitch
-        );
         entity.teleport(spawnpointLocation);
 
         if (entity instanceof Player player) {
@@ -146,20 +130,13 @@ public class SpawnpointService {
             return null;
         }
 
-        World world = Bukkit.getWorld(spawnpoint.world);
-        if (world == null) {
+        Location spawnpointLocation = LocUtil.toLocation(spawnpoint);
+        if (spawnpointLocation == null) {
             this.pluginLogger.warning("Failed to find random spawnpoint '" + spawnpointName + "' as world '" + spawnpoint.world + "' is not loaded.");
             return null;
         }
 
-        return new Location(
-                world,
-                spawnpoint.x,
-                spawnpoint.y,
-                spawnpoint.z,
-                spawnpoint.yaw,
-                spawnpoint.pitch
-        );
+        return spawnpointLocation;
     }
 
     public String getLastSpawnpointForPlayer(UUID playerId) {
