@@ -68,6 +68,32 @@ public enum CustomItem {
         }
     }),
 
+    GRAPPLING_HOOK(Material.TRIPWIRE_HOOK, "Grappling Hook", 3, (ignoreTargetLocation, player) -> {
+        final double MAX_DISTANCE = 30.0;
+        final double MIN_DISTANCE = 9.0;
+        final double SPEED = 1.5;
+
+        Location start = player.getEyeLocation();
+        Vector direction = start.getDirection();
+        Location target = start.clone();
+
+        // Raycast to find anchor point
+        boolean hit = false;
+        for (double d = 0; d < MAX_DISTANCE; d += 0.5) {
+            target.add(direction.clone().multiply(0.5));
+            if (!target.getBlock().getType().isAir()) {
+                hit = true;
+                break;
+            }
+        }
+
+        if (!hit || target.distanceSquared(start) < MIN_DISTANCE) {
+            return; // Too close or no valid landing block
+        } else {
+            new Message(MessagePrefix.GAME, "Grappling to {}", TextUtil.formatLocation(target)).sendTo(player);
+        }
+    }),
+
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, ignoredUser) -> {
         new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation)).sendToAll();
     });
