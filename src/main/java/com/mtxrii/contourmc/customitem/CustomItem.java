@@ -1,9 +1,11 @@
 package com.mtxrii.contourmc.customitem;
 
+import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleActionUtil;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
+import com.mtxrii.contourmc.runnabletask.ZiplineTask;
 import com.mtxrii.contourmc.util.ItemUtil;
 import com.mtxrii.contourmc.util.TextUtil;
 import lombok.Getter;
@@ -89,9 +91,9 @@ public enum CustomItem {
 
         if (!hit || target.distanceSquared(start) < MIN_DISTANCE) {
             return; // Too close or no valid landing block
-        } else {
-            new Message(MessagePrefix.GAME, "Grappling to {}", TextUtil.formatLocation(target)).sendTo(player);
         }
+
+        new ZiplineTask(player, start, target, SPEED).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
     }),
 
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, ignoredUser) -> {
