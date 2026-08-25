@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.runnabletask;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -13,6 +14,7 @@ public final class ZiplineTask extends BukkitRunnable {
     private final Location target;
     private final double speed;
     private final double totalDistance;
+    private final boolean originalGravityState;
     private double progress;
 
     public ZiplineTask(Player player, Location start, Location target, double speed) {
@@ -21,6 +23,7 @@ public final class ZiplineTask extends BukkitRunnable {
         this.target = target;
         this.speed = speed;
         this.totalDistance = start.distance(target);
+        this.originalGravityState = player.hasGravity();
         this.progress = 0.0;
         player.setGravity(false);
     }
@@ -28,6 +31,7 @@ public final class ZiplineTask extends BukkitRunnable {
     @Override
     public void run() {
         if (!player.isOnline() || player.isDead() || progress >= totalDistance) {
+            cleanup();
             cancel();
             return;
         }
@@ -49,7 +53,14 @@ public final class ZiplineTask extends BukkitRunnable {
         new ParticleSpawn(Particle.ELECTRIC_SPARK, player.getWorld(), currentLoc).spawn();
 
         if (ratio >= 1.0) {
+            cleanup();
             cancel();
         }
+    }
+
+    private void cleanup() {
+        player.setGravity(originalGravityState);
+        player.setVelocity(target.clone().subtract(start).toVector().normalize().multiply(0.8)); // Gentle forward boost on exit
+        player.getWorld().playSound(player.getLocation(), Sound.ITEM_LEAD_BREAK, 0.5f, 1.2f);
     }
 }
