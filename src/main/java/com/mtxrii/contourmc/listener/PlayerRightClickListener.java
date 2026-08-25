@@ -53,11 +53,11 @@ public class PlayerRightClickListener implements Listener {
         long cooldownSecondsLeft = CustomItemCooldown.getCooldownSecondsLeft(player.getName(), customItem);
         if (cooldownSecondsLeft > 0) {
             new Message(
-                    MessagePrefix.GAME,
+                    MessagePrefix.BLANK,
                     true,
                     "Wait {} seconds before using this item again.",
                     String.valueOf(cooldownSecondsLeft)
-            ).sendTo(player);
+            ).sendAsActionBar(player);
             return;
         }
         customItem.getEffect().execute(executionLocation, player);
