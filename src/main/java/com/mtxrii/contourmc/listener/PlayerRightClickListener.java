@@ -60,7 +60,10 @@ public class PlayerRightClickListener implements Listener {
             ).sendAsActionBar(player);
             return;
         }
-        customItem.getEffect().execute(executionLocation, player);
+        boolean itemWasUsed = customItem.getEffect().execute(executionLocation, player);
+        if (!itemWasUsed) {
+            return;
+        }
 
         if (!CustomItemCooldown.COOLDOWN_MAP.containsKey(player.getName())) {
             CustomItemCooldown.COOLDOWN_MAP.put(player.getName(), new HashMap<>());

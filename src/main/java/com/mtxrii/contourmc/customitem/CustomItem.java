@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 public enum CustomItem {
     LIGHTNING_STICK(Material.BREEZE_ROD, "Smite Stick", 5, (targetLocation, ignoredUser) -> {
         targetLocation.getWorld().strikeLightningEffect(targetLocation);
+        return true;
     }),
 
     TNT_PLANTER_SEED(Material.PUMPKIN_SEEDS, "TNT Seeds", 10, (targetLocation, ignoredUser) -> {
@@ -30,6 +31,7 @@ public enum CustomItem {
                     entity.setYield(4.0f);
                 }
         );
+        return true;
     }),
 
     LASER_POINTER(Material.BLAZE_ROD, "Laser Pointer", (ignoreTargetLocation, player) -> {
@@ -51,6 +53,7 @@ public enum CustomItem {
                 break;
             }
         }
+        return true;
     }),
 
     AURA_COLLECTOR(Material.DIAMOND_PICKAXE, "Aura Collector", (ignoreTargetLocation, player) -> {
@@ -68,6 +71,7 @@ public enum CustomItem {
                                                  .multiply(PULL_STRENGTH);
             targetPlayer.setVelocity(targetPlayer.getVelocity().add(pullDirection));
         }
+        return true;
     }),
 
     GRAPPLING_HOOK(Material.TRIPWIRE_HOOK, "Grappling Hook", 3, (ignoreTargetLocation, player) -> {
@@ -90,16 +94,18 @@ public enum CustomItem {
         }
 
         if (!hit || target.distanceSquared(start) < MIN_DISTANCE) {
-            return; // Too close or no valid landing block
+            return false; // Too close or no valid landing block
         }
 
         new ZiplineTask(player, start, target, SPEED).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
+        return true;
     }),
 
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, player) -> {
         Message message = new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation));
         message.sendTo(player);
         message.sendAsActionBar(player);
+        return true;
     });
 
     private final Material material;
