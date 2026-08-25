@@ -2,6 +2,7 @@ package com.mtxrii.contourmc.particle;
 
 import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.MessageConst;
+import com.mtxrii.contourmc.util.LocUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
@@ -201,7 +202,7 @@ public class ParticleSpawn {
             double zRandomizer;
             // Random offset spans entire coordinate. Leave as is for block locations.
             // Real locations need the randomizer to include area around other blocks.
-            if (isBlockLocation(this.location)) {
+            if (LocUtil.isBlockLocation(this.location)) {
                 xRandomizer = Math.random() * this.spread;
                 yRandomizer = Math.random() * this.spread;
                 zRandomizer = Math.random() * this.spread;
@@ -222,17 +223,5 @@ public class ParticleSpawn {
             assert this.world != null;
             this.world.spawnParticle(this.particleType, x, y, z, 0);
         }
-    }
-
-    /**
-     * Checks if this location is a block's location. Block locations are exact coordinates.
-     * @param location Location to check
-     * @return true if this location is an exact coordinate, false otherwise
-     */
-    public static boolean isBlockLocation(Location location) {
-        boolean isXAnEdge = location.getX() == location.getBlockX();
-        boolean isYAnEdge = location.getY() == location.getBlockY();
-        boolean isZAnEdge = location.getZ() == location.getBlockZ();
-        return isXAnEdge && isYAnEdge && isZAnEdge;
     }
 }

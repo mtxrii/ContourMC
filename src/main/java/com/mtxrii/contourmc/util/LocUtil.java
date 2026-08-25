@@ -21,4 +21,16 @@ public final class LocUtil {
         double z = start.getZ() + (end.getZ() - start.getZ()) * t;
         return new Location(start.getWorld(), x, y, z);
     }
+
+    /**
+     * Checks if this location is a block's location. Block locations are exact coordinates.
+     * @param location Location to check
+     * @return true if this location is an exact coordinate, false otherwise
+     */
+    public static boolean isBlockLocation(Location location) {
+        boolean isXAnEdge = location.getX() == location.getBlockX();
+        boolean isYAnEdge = location.getY() == location.getBlockY();
+        boolean isZAnEdge = location.getZ() == location.getBlockZ();
+        return isXAnEdge && isYAnEdge && isZAnEdge;
+    }
 }
