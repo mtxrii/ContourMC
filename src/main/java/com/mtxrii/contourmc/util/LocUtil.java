@@ -75,4 +75,18 @@ public final class LocUtil {
                 spawnpoint.pitch
         );
     }
+
+    /**
+     * Checks if two locations are within a specified maximum distance of each other.
+     * @param loc1 First location
+     * @param loc2 Second location
+     * @param maxDistance Maximum distance allowed
+     * @return true if the locations are in the same world and within the maximum distance, false otherwise
+     */
+    public static boolean isWithinDistance(@NotNull Location loc1, @NotNull Location loc2, double maxDistance) {
+        if (loc1.getWorld() != loc2.getWorld()) {
+            return false;
+        }
+        return loc1.distanceSquared(loc2) <= (maxDistance * maxDistance);
+    }
 }

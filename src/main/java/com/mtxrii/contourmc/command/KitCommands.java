@@ -6,6 +6,8 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.KitService;
 import com.mtxrii.contourmc.service.RankService;
+import com.mtxrii.contourmc.util.LocUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -164,13 +166,14 @@ public final class KitCommands {
         }
 
         ItemFrame closest = null;
-        double closestDistSq = maxDistance * maxDistance;
+        double currentMaxDistance = maxDistance;
+        Location playerLoc = player.getLocation();
+
         for (Entity entity : player.getNearbyEntities(maxDistance, maxDistance, maxDistance)) {
             if (entity instanceof ItemFrame itemFrame) {
-                double distSq = player.getLocation().distanceSquared(itemFrame.getLocation());
-                if (distSq < closestDistSq) {
+                if (LocUtil.isWithinDistance(playerLoc, itemFrame.getLocation(), currentMaxDistance)) {
                     closest = itemFrame;
-                    closestDistSq = distSq;
+                    currentMaxDistance = Math.sqrt(playerLoc.distanceSquared(itemFrame.getLocation()));
                 }
             }
         }
