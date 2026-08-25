@@ -96,8 +96,10 @@ public enum CustomItem {
         new ZiplineTask(player, start, target, SPEED).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
     }),
 
-    DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, ignoredUser) -> {
-        new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation)).sendToAll();
+    DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, player) -> {
+        Message message = new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation));
+        message.sendTo(player);
+        message.sendAsActionBar(player);
     });
 
     private final Material material;
