@@ -4,7 +4,6 @@ import com.mtxrii.contourmc.customitem.CustomItemCooldown;
 import com.mtxrii.contourmc.service.ZiplineService;
 import com.sxtanna.platform.Platform;
 import com.sxtanna.platform.paper.PlatformPaperPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public final class ContourMCPlugin extends PlatformPaperPlugin {
@@ -28,13 +27,12 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
                 20L
         );
 
-
         // Start periodic particle rendering task for all active ziplines
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                ziplineService.renderZiplineParticles();
-            }
-        }.runTaskTimer(ContourMCPlugin.pluginClass, 0L, 20L);
+        getServer().getScheduler().runTaskTimer(
+                this,
+                () -> ziplineService.renderZiplineParticles(),
+                0L,
+                20L
+        );
     }
 }
