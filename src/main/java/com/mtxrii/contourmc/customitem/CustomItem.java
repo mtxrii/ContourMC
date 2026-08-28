@@ -6,6 +6,7 @@ import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleActionUtil;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
 import com.mtxrii.contourmc.runnabletask.GroundSlamTask;
+import com.mtxrii.contourmc.runnabletask.StormCloudTask;
 import com.mtxrii.contourmc.runnabletask.ZiplineTask;
 import com.mtxrii.contourmc.util.ItemUtil;
 import com.mtxrii.contourmc.util.TextUtil;
@@ -13,6 +14,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -104,6 +106,28 @@ public enum CustomItem {
 
     GROUND_SLAM(Material.NETHERITE_AXE, "Ground Slammer", 8, (ignoreTargetLocation, player) -> {
         new GroundSlamTask(player, 6.0, 5.0).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
+        return true;
+    }),
+
+    STORM_CALLER(Material.PRISMARINE_SHARD, "Storm Caller", 12, (targetLocation, player) -> {
+        final double DAMAGE = 2.0;
+        final double RADIUS = 4.0;
+        final int DURATION_SECONDS = 5;
+        if (targetLocation == null) {
+            Block targetBlock = player.getTargetBlockExact(32);
+            if (targetBlock != null) {
+                targetLocation = targetBlock.getLocation();
+            } else {
+                targetLocation = player.getLocation();
+            }
+        }
+        new StormCloudTask(
+                player,
+                targetLocation,
+                RADIUS,
+                DAMAGE,
+                DURATION_SECONDS * 20
+        ).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 10L);
         return true;
     }),
 
