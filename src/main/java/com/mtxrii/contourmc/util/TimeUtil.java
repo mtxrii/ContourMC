@@ -95,4 +95,11 @@ public final class TimeUtil {
     public static String formatInstantForPlayer(String instantString) {
         return formatInstantForPlayer(stringToInstant(instantString));
     }
+
+    public static boolean isInstantInPast(Instant instant) {
+        if (instant == null) {
+            return true;
+        }
+        return Instant.now().isAfter(instant);
+    }
 }

@@ -210,7 +210,7 @@ public class SanctionService {
         }
 
         Instant expiration = TimeUtil.stringToInstant(currentMute.expiresAt);
-        if (Instant.now().isAfter(expiration)) {
+        if (TimeUtil.isInstantInPast(expiration)) {
             this.sanctionsConfig.mutes.remove(playerId);
             this.saveConfig();
         }
@@ -223,7 +223,7 @@ public class SanctionService {
         }
 
         Instant expiration = TimeUtil.stringToInstant(currentBan.expiresAt);
-        if (Instant.now().isAfter(expiration)) {
+        if (TimeUtil.isInstantInPast(expiration)) {
             this.sanctionsConfig.bans.remove(playerId);
             this.saveConfig();
         }
