@@ -5,6 +5,7 @@ import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleActionUtil;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
+import com.mtxrii.contourmc.runnabletask.GroundSlamTask;
 import com.mtxrii.contourmc.runnabletask.ZiplineTask;
 import com.mtxrii.contourmc.util.ItemUtil;
 import com.mtxrii.contourmc.util.TextUtil;
@@ -98,6 +99,11 @@ public enum CustomItem {
         }
 
         new ZiplineTask(player, start, target, SPEED).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
+        return true;
+    }),
+
+    GROUND_SLAM(Material.NETHERITE_AXE, "Ground Slammer", 8, (ignoreTargetLocation, player) -> {
+        new GroundSlamTask(player, 6.0, 5.0).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
         return true;
     }),
 
