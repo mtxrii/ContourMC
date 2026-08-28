@@ -15,7 +15,6 @@ public final class ZiplineTask extends BukkitRunnable {
     private final Location target;
     private final double speed;
     private final double totalDistance;
-    private final boolean originalGravityState;
     private double progress;
 
     public ZiplineTask(Player player, Location start, Location target, double speed) {
@@ -24,7 +23,6 @@ public final class ZiplineTask extends BukkitRunnable {
         this.target = target;
         this.speed = speed;
         this.totalDistance = start.distance(target);
-        this.originalGravityState = player.hasGravity();
         this.progress = 0.0;
         player.setGravity(false);
     }
@@ -55,7 +53,7 @@ public final class ZiplineTask extends BukkitRunnable {
     }
 
     private void cleanup() {
-        player.setGravity(originalGravityState);
+        player.setGravity(true);
         player.setVelocity(target.clone().subtract(start).toVector().normalize().multiply(0.8)); // Gentle forward boost on exit
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_LEAD_BREAK, 0.5f, 1.2f);
     }
