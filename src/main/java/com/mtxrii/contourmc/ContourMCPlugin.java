@@ -32,7 +32,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
                 this,
                 () -> ziplineService.renderZiplineParticles(),
                 0L,
-                20L
+                2L
         );
     }
 }

@@ -5,11 +5,10 @@ import com.google.inject.Singleton;
 import com.mtxrii.contourmc.config.ZiplineConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.MessagePrefix;
-import com.mtxrii.contourmc.particle.ParticleSpawn;
+import com.mtxrii.contourmc.particle.ParticleWithDataSpawn;
 import com.mtxrii.contourmc.util.LocUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -117,9 +116,14 @@ public class ZiplineService {
 
             double distance = start.distance(end);
             org.bukkit.util.Vector dir = end.toVector().subtract(start.toVector()).normalize();
-            for (double d = 0; d <= distance; d += 2.0) {
-                Location p = start.clone().add(dir.clone().multiply(d));
-                new ParticleSpawn(Particle.ELECTRIC_SPARK, start.getWorld(), p).spawn();
+            for (double d = 0; d <= distance; d += 0.5) {
+                Location particleLoc = start.clone().add(dir.clone().multiply(d));
+                new ParticleWithDataSpawn.DustParticleSpawn(
+                        start.getWorld(),
+                        particleLoc,
+                        ParticleWithDataSpawn.ParticleColor.BLACK,
+                        0.75f
+                ).spawn();
             }
         }
     }
