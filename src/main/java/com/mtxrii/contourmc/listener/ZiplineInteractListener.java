@@ -40,8 +40,12 @@ public class ZiplineInteractListener implements Listener {
             return;
         }
 
+        if (player.isSneaking()) {
+            return;
+        }
+
         event.setCancelled(true);
-        new Message(MessagePrefix.ZIPLINE, "Riding zipline '{}'...", match.name()).sendAsActionBar(player);
+        new Message(MessagePrefix.ZIPLINE, "Riding '{}'...", match.name()).sendAsActionBar(player);
         new ZiplineTask(player, match.from(), match.to(), 1.5).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
     }
 }

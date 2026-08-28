@@ -34,12 +34,12 @@ public final class ZiplineCommands {
         }
         this.rankService.requireRank(MessagePrefix.ZIPLINE, Rank.STAFF, player);
 
-        this.ziplineService.setPendingStart(player.getUniqueId(), player.getLocation());
+        this.ziplineService.setPendingStart(player.getUniqueId(), player.getLocation().toCenterLocation().subtract(0, 0.5, 0));
         new Message(
                 MessagePrefix.ZIPLINE,
-                "Zipline start set at your location for '{}'. Now go to the end point and run /zipline finish {}",
+                "Zipline start set at your location for '{}'. Now go to the end point and run '{}'",
                 name,
-                name
+                "/zipline finish " + name
         ).sendTo(player);
     }
 
@@ -60,16 +60,21 @@ public final class ZiplineCommands {
             new Message(
                     MessagePrefix.ZIPLINE,
                     true,
-                    "You have no pending zipline start location. Run /zipline create <name> first."
+                    "You have no pending zipline start location. Run {} first.",
+                    "/zipline create <name>"
             ).sendTo(player);
             return;
         }
 
-        this.ziplineService.createZipline(name, start, player.getLocation());
-        new Message(MessagePrefix.ZIPLINE, "Zipline '{}' created successfully", name).sendTo(player);
+        this.ziplineService.createZipline(name, start, player.getLocation().toCenterLocation().subtract(0, 0.5, 0));
+        new Message(
+                MessagePrefix.ZIPLINE,
+                "Zipline '{}' created successfully. (You'll need to restart the server to see the particles)",
+                name
+        ).sendTo(player);
     }
 
-    @Command("zipline delete|delzipline <name>")
+    @Command("zipline delete <name>")
     @CommandDescription("Deletes an existing zipline")
     public void deleteZipline(
             @NotNull final Source sender,
@@ -80,16 +85,21 @@ public final class ZiplineCommands {
         }
 
         this.ziplineService.deleteZipline(name);
-        new Message(MessagePrefix.ZIPLINE, "Zipline '{}' deleted successfully.", name).sendTo(sender);
+        new Message(
+                MessagePrefix.ZIPLINE,
+                "Zipline '{}' deleted successfully. (You'll need to restart the server to make the particles disappear)",
+                name
+        ).sendTo(sender);
     }
 
-    @Command("zipline list|listziplines")
+    @Command("zipline list")
+    @Command("listziplines")
     @CommandDescription("Lists all active ziplines")
     public void listZiplines(
             @NotNull final Source sender
     ) {
         if (sender.source() instanceof Player player) {
-            this.rankService.requireRank(MessagePrefix.ZIPLINE, Rank.STAFF, player);
+            this.rankService.requireRank(MessagePrefix.ZIPLINE, Rank.MEDIATOR, player);
         }
 
         Set<String> ziplines = this.ziplineService.ziplineNames();
