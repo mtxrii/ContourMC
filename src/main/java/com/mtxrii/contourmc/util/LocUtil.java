@@ -89,4 +89,21 @@ public final class LocUtil {
         }
         return loc1.distanceSquared(loc2) <= (maxDistance * maxDistance);
     }
+
+    /**
+     * Creates a {@link Location} object for a given world name and coordinates.
+     * If the specified world does not exist, this method will return null.
+     *
+     * @param worldName The name of the world in which the location is required.
+     * @param x The X-coordinate of the location.
+     * @param y The Y-coordinate of the location.
+     * @param z The Z-coordinate of the location.
+     * @return A {@link Location} object representing the specified world and coordinates,
+     *         or null if the world is not loaded.
+     */
+    public static Location getLocation(String worldName, double x, double y, double z) {
+        var world = Bukkit.getWorld(worldName);
+        if (world == null) return null;
+        return new Location(world, x, y, z);
+    }
 }

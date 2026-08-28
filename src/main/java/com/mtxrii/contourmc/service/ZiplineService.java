@@ -7,6 +7,7 @@ import com.mtxrii.contourmc.config.ZiplineConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
+import com.mtxrii.contourmc.util.LocUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -96,8 +97,8 @@ public class ZiplineService {
     public @Nullable ZiplineMatch findZiplineByAnchor(@NotNull Location location) {
         for (Map.Entry<String, ZiplineConfiguration.Zipline> entry : this.ziplineConfig.ziplines.entrySet()) {
             ZiplineConfiguration.Zipline z = entry.getValue();
-            Location start = getLocation(z.startWorld, z.startX, z.startY, z.startZ);
-            Location end = getLocation(z.endWorld, z.endX, z.endY, z.endZ);
+            Location start = LocUtil.getLocation(z.startWorld, z.startX, z.startY, z.startZ);
+            Location end = LocUtil.getLocation(z.endWorld, z.endX, z.endY, z.endZ);
 
             if (start != null && start.getWorld().equals(location.getWorld()) && start.distanceSquared(location) <= 4.0) {
                 return new ZiplineMatch(entry.getKey(), start, end, true);
@@ -111,8 +112,8 @@ public class ZiplineService {
 
     public void renderZiplineParticles() {
         for (ZiplineConfiguration.Zipline z : this.ziplineConfig.ziplines.values()) {
-            Location start = getLocation(z.startWorld, z.startX, z.startY, z.startZ);
-            Location end = getLocation(z.endWorld, z.endX, z.endY, z.endZ);
+            Location start = LocUtil.getLocation(z.startWorld, z.startX, z.startY, z.startZ);
+            Location end = LocUtil.getLocation(z.endWorld, z.endX, z.endY, z.endZ);
             if (start == null || end == null || !start.getWorld().equals(end.getWorld())) {
                 continue;
             }
@@ -124,12 +125,6 @@ public class ZiplineService {
                 new ParticleSpawn(Particle.ELECTRIC_SPARK, start.getWorld(), p).spawn();
             }
         }
-    }
-
-    private static Location getLocation(String worldName, double x, double y, double z) {
-        var world = Bukkit.getWorld(worldName);
-        if (world == null) return null;
-        return new Location(world, x, y, z);
     }
 
     private void saveConfig() {
