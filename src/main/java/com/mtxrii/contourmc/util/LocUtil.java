@@ -102,8 +102,25 @@ public final class LocUtil {
      *         or null if the world is not loaded.
      */
     public static Location getLocation(String worldName, double x, double y, double z) {
+        return getLocation(worldName, x, y, z, 0, 0);
+    }
+
+    /**
+     * Creates a {@link Location} object for a given world name, coordinates, and orientation.
+     * If the specified world does not exist, this method will return null.
+     *
+     * @param worldName The name of the world in which the location is required.
+     * @param x The X-coordinate of the location.
+     * @param y The Y-coordinate of the location.
+     * @param z The Z-coordinate of the location.
+     * @param yaw The rotation of the location on the horizontal plane in degrees (0 is south, 90 is west).
+     * @param pitch The vertical rotation of the location in degrees (negative is up, positive is down).
+     * @return A {@link Location} object representing the specified world, coordinates, and orientation,
+     *         or null if the world is not loaded.
+     */
+    public static Location getLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
         var world = Bukkit.getWorld(worldName);
         if (world == null) return null;
-        return new Location(world, x, y, z);
+        return new Location(world, x, y, z, yaw, pitch);
     }
 }
