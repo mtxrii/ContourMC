@@ -56,7 +56,7 @@ public class SanctionService {
                 reason
         )).append(MessageConst.SANCTION_MSG_BORDER);
 
-        target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICK_COMMAND);
+        target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICKED);
 
         this.pluginLogger.info("Kicked " + target.getName() + " with reason: '" + reason + "'");
     }
@@ -72,7 +72,7 @@ public class SanctionService {
                 """
         )).append(MessageConst.SANCTION_MSG_BORDER);
 
-        target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICK_COMMAND);
+        target.kick(kickMessage.getMessageComponent(), PlayerKickEvent.Cause.KICKED);
 
         this.pluginLogger.info("Kicked " + target.getName());
     }
