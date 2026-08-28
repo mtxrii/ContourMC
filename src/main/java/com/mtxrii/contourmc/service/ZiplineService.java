@@ -2,18 +2,15 @@ package com.mtxrii.contourmc.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.config.ZiplineConfiguration;
 import com.mtxrii.contourmc.exception.CommandArgumentException;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
 import com.mtxrii.contourmc.util.LocUtil;
 import com.sxtanna.platform.archetype.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurateException;

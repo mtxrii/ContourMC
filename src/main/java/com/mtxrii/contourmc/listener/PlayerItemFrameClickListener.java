@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.jetbrains.annotations.NotNull;
 
 @Component
 public class PlayerItemFrameClickListener implements Listener {
