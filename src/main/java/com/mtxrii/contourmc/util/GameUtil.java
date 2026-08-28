@@ -2,9 +2,11 @@ package com.mtxrii.contourmc.util;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -45,5 +47,16 @@ public final class GameUtil {
                      .stream()
                      .map(Player::getName)
                      .collect(Collectors.toSet());
+    }
+
+    public static boolean isOnGround(Player player, boolean strictMode) {
+        Location loc = player.getLocation();
+        boolean onGroundServerSide = loc.clone().subtract(0, 0.1, 0).getBlock().getType().isSolid();
+        boolean onGroundClientSide = ((Entity) player).isOnGround(); // Hiding deprecated warning
+        if (strictMode) {
+            return onGroundServerSide && onGroundClientSide;
+        } else {
+            return onGroundServerSide || onGroundClientSide;
+        }
     }
 }

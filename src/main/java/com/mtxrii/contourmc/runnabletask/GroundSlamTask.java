@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.runnabletask;
 
 import com.mtxrii.contourmc.particle.ParticleSpawn;
+import com.mtxrii.contourmc.util.GameUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -39,7 +40,7 @@ public final class GroundSlamTask extends BukkitRunnable {
             new ParticleSpawn(Particle.CLOUD, player.getWorld(), player.getLocation()).spawn();
         }
 
-        if (ticksInAir > 5 && (player.isOnGround() || player.getLocation().getBlock().getType().isSolid() || ticksInAir > 100)) {
+        if (ticksInAir > 5 && (GameUtil.isOnGround(player, false) || ticksInAir > 100)) {
             executeSlam();
             cancel();
         }
