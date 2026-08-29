@@ -13,12 +13,13 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
     public ContourMCPlugin(@NotNull final Platform platform) {
         super(platform);
         pluginClass = this;
-        ziplineService = new ZiplineService(this);
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
+
+        ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
 
         getServer().getScheduler().runTaskTimer(
                 this,

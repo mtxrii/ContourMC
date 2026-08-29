@@ -69,8 +69,7 @@ public final class ZiplineCommands {
         this.ziplineService.createZipline(name, start, player.getLocation().toCenterLocation().subtract(0, 0.5, 0));
         new Message(
                 MessagePrefix.ZIPLINE,
-                // @TODO: Make particles for new ziplines appear instantly
-                "Zipline '{}' created successfully. (You'll need to restart the server to see the particles)",
+                "Zipline '{}' created successfully.",
                 name
         ).sendTo(player);
     }
@@ -88,7 +87,7 @@ public final class ZiplineCommands {
         this.ziplineService.deleteZipline(name);
         new Message(
                 MessagePrefix.ZIPLINE,
-                "Zipline '{}' deleted successfully. (You'll need to restart the server to make the particles disappear)",
+                "Zipline '{}' deleted successfully.",
                 name
         ).sendTo(sender);
     }
