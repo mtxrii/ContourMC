@@ -109,7 +109,6 @@ public enum CustomItem {
         return true;
     }),
 
-    // @TODO: Test this
     STORM_CALLER(Material.PRISMARINE_SHARD, "Storm Caller", 12, (targetLocation, player) -> {
         final double DAMAGE = 2.0;
         final double RADIUS = 4.0;
