@@ -104,11 +104,13 @@ public enum CustomItem {
         return true;
     }),
 
+    // @TODO: Test this
     GROUND_SLAM(Material.NETHERITE_AXE, "Ground Slammer", 8, (ignoreTargetLocation, player) -> {
         new GroundSlamTask(player, 6.0, 5.0).runTaskTimer(ContourMCPlugin.pluginClass, 0L, 1L);
         return true;
     }),
 
+    // @TODO: Test this
     STORM_CALLER(Material.PRISMARINE_SHARD, "Storm Caller", 12, (targetLocation, player) -> {
         final double DAMAGE = 2.0;
         final double RADIUS = 4.0;
