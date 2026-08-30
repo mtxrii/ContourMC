@@ -102,7 +102,7 @@ public final class ZiplineCommands {
             this.rankService.requireRank(MessagePrefix.ZIPLINE, Rank.MEDIATOR, player);
         }
 
-        Set<String> ziplines = this.ziplineService.ziplineNames();
+        Set<String> ziplines  = this.ziplineService.ziplineNames();
         if (ziplines.isEmpty()) {
             new Message(MessagePrefix.ZIPLINE, "No ziplines found.").sendTo(sender);
             return;
