@@ -85,7 +85,7 @@ public class KitService {
         if (this.kitsConfig.kits.containsKey(kitName)) {
             throw new CommandArgumentException(
                     MessagePrefix.KIT,
-                    "Kit already exists with this name. Please delete it first or choose a different name."
+                    "Kit already exists with this name. Please delete it first or choose a different name. "
             );
         }
 
