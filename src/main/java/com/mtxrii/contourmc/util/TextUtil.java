@@ -24,14 +24,14 @@ public final class TextUtil {
     }
 
     public static String formatLocation(Location location) {
-        String coords = '(' +
-                        String.valueOf(location.getBlockX()) +
+        final String coords = '(' +
+                        location.getBlockX() +
                         ", " +
                         location.getBlockY() +
                         ", " +
                         location.getBlockZ()
                         + ')';
-        String worldName = location.getWorld().getName();
+        final String worldName = location.getWorld().getName();
         return coords + " " + worldName;
     }
 
