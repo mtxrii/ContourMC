@@ -131,6 +131,26 @@ public enum CustomItem {
         return true;
     }),
 
+    VAMPIRE_BLADE(Material.IRON_SWORD, "Vampire Blade", 10, (ignoreTargetLocation, player) -> {
+        final double RANGE = 3.0;
+        final double DAMAGE = 4.0;
+        final double HEAL = 2.0;
+        boolean damaged = false;
+        for (double d = 0; d < RANGE; d += 0.5) {
+             Location checkLoc = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(d));
+             java.util.Collection<org.bukkit.entity.LivingEntity> entities = checkLoc.getNearbyLivingEntities(1.0);
+             for (org.bukkit.entity.LivingEntity entity : entities) {
+                 if (entity.equals(player)) continue;
+                 entity.damage(DAMAGE, player);
+                 player.setHealth(Math.min(player.getMaxHealth(), player.getHealth() + HEAL));
+                 damaged = true;
+                 break;
+             }
+             if (damaged) break;
+        }
+        return damaged;
+    }),
+
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, player) -> {
         Message message = new Message(MessagePrefix.GAME, "Pointing at {}", TextUtil.formatLocation(targetLocation));
         message.sendTo(player);
