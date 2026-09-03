@@ -5,15 +5,16 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CombatService {
-    private final Map<UUID, Long> combatMap = new ConcurrentHashMap<>();
     private static final long COMBAT_DURATION_MS = 15000; // 15 seconds
 
+    private final Map<UUID, Long> combatMap = new ConcurrentHashMap<>();
+
     public void tag(UUID playerId) {
-        combatMap.put(playerId, System.currentTimeMillis());
+        this.combatMap.put(playerId, System.currentTimeMillis());
     }
 
     public void unTag(UUID playerId) {
-        combatMap.remove(playerId);
+        this.combatMap.remove(playerId);
     }
 
     public boolean isInCombat(UUID playerId) {
