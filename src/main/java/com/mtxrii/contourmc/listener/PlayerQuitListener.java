@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.PlayerRegistryService;
@@ -27,6 +28,10 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         String playerName = player.getName();
+
+        if (ContourMCPlugin.combatService.isInCombat(player.getUniqueId())) {
+            player.setHealth(0);
+        }
 
         this.playerRegistryService.logoutPlayer(player);
 
