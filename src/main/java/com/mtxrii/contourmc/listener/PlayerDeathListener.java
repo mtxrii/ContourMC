@@ -1,6 +1,7 @@
 package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
+import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
@@ -38,6 +39,14 @@ public class PlayerDeathListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getPlayer();
+        
+        if (ContourMCPlugin.COMBAT_LOGGING_ENABLED && ContourMCPlugin.combatService != null) {
+            ContourMCPlugin.combatService.unTag(victim.getUniqueId());
+            if (victim.getKiller() != null) {
+                ContourMCPlugin.combatService.unTag(victim.getKiller().getUniqueId());
+            }
+        }
+
         Message deathMessage = generateDeathMessage(victim, victim.getKiller());
         event.deathMessage(deathMessage.getMessageComponent());
 

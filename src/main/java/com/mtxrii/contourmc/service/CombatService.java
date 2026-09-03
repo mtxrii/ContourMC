@@ -9,7 +9,11 @@ public class CombatService {
     private static final long COMBAT_DURATION_MS = 15000; // 15 seconds
 
     public void tag(UUID playerId) {
-        this.combatMap.put(playerId, System.currentTimeMillis());
+        combatMap.put(playerId, System.currentTimeMillis());
+    }
+
+    public void unTag(UUID playerId) {
+        combatMap.remove(playerId);
     }
 
     public boolean isInCombat(UUID playerId) {
