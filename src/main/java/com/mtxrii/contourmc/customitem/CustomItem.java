@@ -135,7 +135,7 @@ public enum CustomItem {
         final double RANGE = 3.0;
         final double DAMAGE = 4.0;
         final double HEAL = 2.0;
-        boolean damaged = false;
+        boolean hitEntity = false;
         for (double d = 0; d < RANGE; d += 0.5) {
              Location checkLoc = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(d));
              java.util.Collection<org.bukkit.entity.LivingEntity> entities = checkLoc.getNearbyLivingEntities(1.0);
@@ -143,12 +143,12 @@ public enum CustomItem {
                  if (entity.equals(player)) continue;
                  entity.damage(DAMAGE, player);
                  player.setHealth(Math.min(player.getMaxHealth(), player.getHealth() + HEAL));
-                 damaged = true;
+                 hitEntity = true;
                  break;
              }
-             if (damaged) break;
+             if (hitEntity) break;
         }
-        return damaged;
+        return hitEntity;
     }),
 
     DEBUG_HOE(Material.COPPER_HOE, "Debug Hoe", (targetLocation, player) -> {
