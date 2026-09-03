@@ -14,6 +14,8 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
     public static ZiplineService ziplineService;
     public static CombatService combatService;
 
+    public static final boolean COMBAT_LOGGING_ENABLED = true;
+
     public ContourMCPlugin(@NotNull final Platform platform) {
         super(platform);
         pluginClass = this;
@@ -24,10 +26,12 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
         super.onEnable();
 
         ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
-        combatService = new CombatService();
-
-        getServer().getPluginManager().registerEvents(new CombatListener(combatService), this);
-        new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
+        
+        if (COMBAT_LOGGING_ENABLED) {
+            combatService = new CombatService();
+            getServer().getPluginManager().registerEvents(new CombatListener(combatService), this);
+            new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
+        }
 
         getServer().getScheduler().runTaskTimer(
                 this,

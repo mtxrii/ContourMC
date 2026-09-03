@@ -29,7 +29,7 @@ public class PlayerQuitListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
 
-        if (ContourMCPlugin.combatService.isInCombat(player.getUniqueId())) {
+        if (ContourMCPlugin.COMBAT_LOGGING_ENABLED && ContourMCPlugin.combatService != null && ContourMCPlugin.combatService.isInCombat(player.getUniqueId())) {
             player.setHealth(0);
         }
 
