@@ -7,8 +7,10 @@ import com.mtxrii.contourmc.service.CombatService;
 import com.mtxrii.contourmc.service.ZiplineService;
 import com.sxtanna.platform.Platform;
 import com.sxtanna.platform.paper.PlatformPaperPlugin;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+@Slf4j
 public final class ContourMCPlugin extends PlatformPaperPlugin {
     public static ContourMCPlugin pluginClass;
     public static ZiplineService ziplineService;
@@ -31,6 +33,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
             combatService = new CombatService();
             getServer().getPluginManager().registerEvents(new CombatListener(combatService), this);
             new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
+            log.info("Combat logging enabled. (force-complete combats)");
         }
 
         getServer().getScheduler().runTaskTimer(
