@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CombatService {
-    private static final long COMBAT_DURATION_MS = 15_000; // 15 seconds
+    public static final long COMBAT_DURATION_MS = 15_000; // 15 seconds
 
     private final Map<UUID, Long> combatMap = new ConcurrentHashMap<>();
 

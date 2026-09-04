@@ -15,9 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CombatNotificationTask extends BukkitRunnable {
     private final CombatService combatService;
     private final Map<UUID, BossBar> combatBossBars = new ConcurrentHashMap<>();
+    private final double lengthOfCombatSeconds;
 
     public CombatNotificationTask(CombatService combatService) {
         this.combatService = combatService;
+        this.lengthOfCombatSeconds = CombatService.COMBAT_DURATION_MS / 1000.0;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class CombatNotificationTask extends BukkitRunnable {
                 );
                 bossBar.addPlayer(player);
                 bossBar.setTitle("In Combat: " + remaining + "s");
-                bossBar.setProgress((double) remaining / 15.0);
+                bossBar.setProgress((double) remaining / this.lengthOfCombatSeconds);
             } else {
                 BossBar bossBar = combatBossBars.remove(player.getUniqueId());
                 if (bossBar != null) {
