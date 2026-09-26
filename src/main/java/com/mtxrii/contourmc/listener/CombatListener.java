@@ -25,24 +25,30 @@ public class CombatListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
-            if (this.safeZoneService.isInSafeZone(attacker.getLocation()) || this.safeZoneService.isInSafeZone(victim.getLocation())) {
-                new Message(MessagePrefix.GAME, "&cYou cannot fight in a safe zone!").sendTo(attacker);
-                event.setCancelled(true);
-                return;
+        if (!(event.getDamager() instanceof Player attacker) || !(event.getEntity() instanceof Player victim)) {
+            return;
+        }
+
+        if (this.safeZoneService.isInSafeZone(attacker.getLocation()) || this.safeZoneService.isInSafeZone(victim.getLocation())) {
+            new Message(MessagePrefix.GAME, "&cYou cannot fight in a safe zone!").sendTo(attacker);
+            event.setCancelled(true);
+            return;
+        }
+
+        this.tagPlayersInCombat(attacker, victim);
+    }
+
+    private void tagPlayersInCombat(Player attacker, Player victim) {
+        if (ContourMCPlugin.COMBAT_LOGGING_ENABLED) {
+            if (!this.combatService.isInCombat(attacker.getUniqueId())) {
+                new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(attacker);
+            }
+            if (!this.combatService.isInCombat(victim.getUniqueId())) {
+                new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(victim);
             }
 
-            if (ContourMCPlugin.COMBAT_LOGGING_ENABLED) {
-                if (!this.combatService.isInCombat(attacker.getUniqueId())) {
-                    new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(attacker);
-                }
-                if (!this.combatService.isInCombat(victim.getUniqueId())) {
-                    new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(victim);
-                }
-
-                this.combatService.tag(attacker.getUniqueId());
-                this.combatService.tag(victim.getUniqueId());
-            }
+            this.combatService.tag(attacker.getUniqueId());
+            this.combatService.tag(victim.getUniqueId());
         }
     }
 }
