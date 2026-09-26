@@ -3,7 +3,6 @@ package com.mtxrii.contourmc;
 import com.mtxrii.contourmc.customitem.CustomItemCooldown;
 import com.mtxrii.contourmc.runnabletask.CombatNotificationTask;
 import com.mtxrii.contourmc.service.CombatService;
-import com.mtxrii.contourmc.service.SafeZoneService;
 import com.mtxrii.contourmc.service.ZiplineService;
 import com.sxtanna.platform.Platform;
 import com.sxtanna.platform.paper.PlatformPaperPlugin;
@@ -15,7 +14,6 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
     public static ContourMCPlugin pluginClass;
     public static ZiplineService ziplineService;
     public static CombatService combatService;
-    public static SafeZoneService safeZoneService;
 
     public static final boolean COMBAT_LOGGING_ENABLED = true;
 
@@ -29,10 +27,9 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
         super.onEnable();
 
         ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
-        safeZoneService = new SafeZoneService();
+        combatService = getPlatform().getInjector().getInstance(CombatService.class);
         
         if (COMBAT_LOGGING_ENABLED) {
-            combatService = new CombatService();
             new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
             log.info("Combat logging enabled. (force-complete combats)");
         }
