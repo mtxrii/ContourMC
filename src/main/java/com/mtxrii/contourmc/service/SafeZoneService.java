@@ -4,7 +4,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
@@ -12,13 +11,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.Bukkit;
 
 public class SafeZoneService {
-    private boolean worldGuardEnabled = false;
+    private final boolean worldGuardEnabled;
 
     public SafeZoneService() {
         Plugin worldGuardPlugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
-        if (worldGuardPlugin != null && worldGuardPlugin.isEnabled()) {
-            this.worldGuardEnabled = true;
-        }
+        this.worldGuardEnabled = (worldGuardPlugin != null && worldGuardPlugin.isEnabled());
     }
 
     public boolean isInSafeZone(Location location) {
