@@ -1,5 +1,6 @@
 package com.mtxrii.contourmc.service;
 
+import com.google.inject.Singleton;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -8,19 +9,16 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import com.sxtanna.platform.archetype.Component;
 
+@Component
+@Singleton
 public class SafeZoneService {
-    private final boolean worldGuardEnabled;
-
-    public SafeZoneService() {
-        Plugin worldGuardPlugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
-        this.worldGuardEnabled = (worldGuardPlugin != null && worldGuardPlugin.isEnabled());
-    }
-
     public boolean isInSafeZone(Location location) {
-        if (!this.worldGuardEnabled) {
+        Plugin worldGuardPlugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
+        if (worldGuardPlugin == null || !worldGuardPlugin.isEnabled()) {
             return false;
         }
         
