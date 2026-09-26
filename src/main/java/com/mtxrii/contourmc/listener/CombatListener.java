@@ -3,6 +3,7 @@ package com.mtxrii.contourmc.listener;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.CombatService;
+import com.mtxrii.contourmc.service.SafeZoneService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,14 +11,22 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class CombatListener implements Listener {
     private final CombatService combatService;
+    private final SafeZoneService safeZoneService;
 
-    public CombatListener(CombatService combatService) {
+    public CombatListener(CombatService combatService, SafeZoneService safeZoneService) {
         this.combatService = combatService;
+        this.safeZoneService = safeZoneService;
     }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
+            if (this.safeZoneService.isInSafeZone(attacker.getLocation()) || this.safeZoneService.isInSafeZone(victim.getLocation())) {
+                new Message(MessagePrefix.GAME, "&cYou cannot fight in a safe zone!").sendTo(attacker);
+                event.setCancelled(true);
+                return;
+            }
+
             if (!this.combatService.isInCombat(attacker.getUniqueId())) {
                 new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(attacker);
             }
