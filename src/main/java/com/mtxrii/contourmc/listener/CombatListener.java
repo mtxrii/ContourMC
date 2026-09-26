@@ -14,6 +14,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 @Component
 public class CombatListener implements Listener {
+    private static final String COMBAT_ENGAGED_MESSAGE = "&cYou have engaged in combat! (Don't leave now)";
+
     private final CombatService combatService;
     private final SafeZoneService safeZoneService;
 
@@ -41,10 +43,10 @@ public class CombatListener implements Listener {
     private void tagPlayersInCombat(Player attacker, Player victim) {
         if (ContourMCPlugin.COMBAT_LOGGING_ENABLED) {
             if (!this.combatService.isInCombat(attacker.getUniqueId())) {
-                new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(attacker);
+                new Message(MessagePrefix.GAME, COMBAT_ENGAGED_MESSAGE).sendTo(attacker);
             }
             if (!this.combatService.isInCombat(victim.getUniqueId())) {
-                new Message(MessagePrefix.GAME, "&cYou have engaged in combat! (Don't leave now)").sendTo(victim);
+                new Message(MessagePrefix.GAME, COMBAT_ENGAGED_MESSAGE).sendTo(victim);
             }
 
             this.combatService.tag(attacker.getUniqueId());
