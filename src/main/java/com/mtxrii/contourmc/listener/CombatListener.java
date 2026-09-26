@@ -30,7 +30,7 @@ public class CombatListener implements Listener {
         }
 
         if (this.safeZoneService.isInSafeZone(attacker.getLocation()) || this.safeZoneService.isInSafeZone(victim.getLocation())) {
-            new Message(MessagePrefix.GAME, "&cYou cannot fight in a safe zone!").sendTo(attacker);
+            new Message(MessagePrefix.GAME, "&cYou cannot fight in a spawn zone!").sendTo(attacker);
             event.setCancelled(true);
             return;
         }
