@@ -1,9 +1,14 @@
 package com.mtxrii.contourmc.service;
 
+import com.google.inject.Singleton;
+import com.sxtanna.platform.archetype.Component;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
+@Singleton
 public class CombatService {
     public static final long COMBAT_DURATION_MS = 15_000; // 15 seconds
 
