@@ -26,6 +26,9 @@ lib-geoip2 = "4.3.0"
 
 lib-platform = "1.0.0-SNAPSHOT"
 
+lib-worldguard = "7.0.10"
+lib-worldedit = "7.3.0"
+
 # cloud
 lib-cloud-core = "2.0.0"
 lib-cloud-platform = "2.0.0-SNAPSHOT"
@@ -60,6 +63,9 @@ geoip2 = { group = "com.maxmind.geoip2", name = "geoip2", version.ref = "lib-geo
 
 platform-core = { group = "com.sxtanna.platform", name = "platform-core", version.ref = "lib-platform" }
 platform-paper = { group = "com.sxtanna.platform", name = "platform-paper", version.ref = "lib-platform" }
+
+worldguard = { group = "com.sk89q.worldguard", name = "worldguard-bukkit", version.ref = "lib-worldguard" }
+worldedit = { group = "com.sk89q.worldedit", name = "worldedit-bukkit", version.ref = "lib-worldedit" }
 
 cloud-annotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "lib-cloud-core" }
 cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "lib-cloud-platform" }

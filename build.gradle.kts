@@ -26,6 +26,7 @@ fun xyz.jpenilla.runtask.pluginsapi.DownloadPluginsSpec.modrinth(provider: Provi
 
 repositories {
     mavenCentral()
+    maven("https://maven.enginehub.org/repo/")
 
     github("Sxtanna/platform") {
         content {
@@ -62,6 +63,9 @@ dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     implementation(libs.google.guice)
+    
+    compileOnly(libs.worldguard)
+    compileOnly(libs.worldedit)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
