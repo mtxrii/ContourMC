@@ -13,9 +13,10 @@ import org.jetbrains.annotations.NotNull;
 @Slf4j
 public final class ContourMCPlugin extends PlatformPaperPlugin {
     public static ContourMCPlugin pluginClass;
-    public static ZiplineService ziplineService;
-    public static CombatService combatService;
-    public static ValkeyOptionsClientService valkeyOptionsClientService;
+
+    private ZiplineService ziplineService;
+    private CombatService combatService;
+    private ValkeyOptionsClientService valkeyOptionsClientService;
 
     public ContourMCPlugin(@NotNull final Platform platform) {
         super(platform);
@@ -26,12 +27,12 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
     public void onEnable() {
         super.onEnable();
 
-        ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
-        combatService = getPlatform().getInjector().getInstance(CombatService.class);
-        valkeyOptionsClientService = getPlatform().getInjector().getInstance(ValkeyOptionsClientService.class);
+        this.ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
+        this.combatService = getPlatform().getInjector().getInstance(CombatService.class);
+        this.valkeyOptionsClientService = getPlatform().getInjector().getInstance(ValkeyOptionsClientService.class);
         
-        if (valkeyOptionsClientService.isCombatLoggingEnabled()) {
-            new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
+        if (this.valkeyOptionsClientService.isCombatLoggingEnabled()) {
+            new CombatNotificationTask(this.combatService).runTaskTimer(this, 0L, 20L);
             log.info("Combat logging enabled. (force-complete combats)");
         }
 
@@ -45,7 +46,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
         // Start periodic particle rendering task for all active ziplines
         getServer().getScheduler().runTaskTimer(
                 this,
-                () -> ziplineService.renderZiplineParticles(),
+                () -> this.ziplineService.renderZiplineParticles(),
                 0L,
                 2L
         );
@@ -53,8 +54,8 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
 
     @Override
     public void onDisable() {
-        if (valkeyOptionsClientService != null) {
-            valkeyOptionsClientService.close();
+        if (this.valkeyOptionsClientService != null) {
+            this.valkeyOptionsClientService.close();
         }
         super.onDisable();
     }

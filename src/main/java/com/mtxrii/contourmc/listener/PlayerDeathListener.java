@@ -1,11 +1,12 @@
 package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
-import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
 import com.mtxrii.contourmc.service.SpawnpointService;
+import com.mtxrii.contourmc.service.CombatService;
+import com.mtxrii.contourmc.service.ValkeyOptionsClientService;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.Particle;
@@ -23,27 +24,37 @@ import org.bukkit.plugin.Plugin;
 /// - Spawn particles
 /// - Generate custom death message
 /// - Auto-respawn player
+/// - Enforce combat logging
 @Component
 public class PlayerDeathListener implements Listener {
     private static final Particle PARTICLE_ON_DEATH = Particle.CHERRY_LEAVES;
 
     private Plugin plugin;
     private SpawnpointService spawnpointService;
+    private CombatService combatService;
+    private ValkeyOptionsClientService valkeyOptionsClientService;
 
     @Inject
-    public PlayerDeathListener(Plugin plugin, SpawnpointService spawnpointService) {
+    public PlayerDeathListener(
+            Plugin plugin,
+            SpawnpointService spawnpointService,
+            CombatService combatService,
+            ValkeyOptionsClientService valkeyOptionsClientService
+    ) {
         this.plugin = plugin;
         this.spawnpointService = spawnpointService;
+        this.combatService = combatService;
+        this.valkeyOptionsClientService = valkeyOptionsClientService;
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getPlayer();
         
-        if (ContourMCPlugin.valkeyOptionsClientService.isCombatLoggingEnabled() && ContourMCPlugin.combatService != null) {
-            ContourMCPlugin.combatService.unTag(victim.getUniqueId());
+        if (this.valkeyOptionsClientService.isCombatLoggingEnabled()) {
+            this.combatService.unTag(victim.getUniqueId());
             if (victim.getKiller() != null) {
-                ContourMCPlugin.combatService.unTag(victim.getKiller().getUniqueId());
+                this.combatService.unTag(victim.getKiller().getUniqueId());
             }
         }
 

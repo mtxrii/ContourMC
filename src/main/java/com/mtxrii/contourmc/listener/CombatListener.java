@@ -1,11 +1,11 @@
 package com.mtxrii.contourmc.listener;
 
 import com.google.inject.Inject;
-import com.mtxrii.contourmc.ContourMCPlugin;
 import com.mtxrii.contourmc.message.Message;
 import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.service.CombatService;
 import com.mtxrii.contourmc.service.SafeZoneService;
+import com.mtxrii.contourmc.service.ValkeyOptionsClientService;
 import com.sxtanna.platform.archetype.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,11 +18,17 @@ public class CombatListener implements Listener {
 
     private final CombatService combatService;
     private final SafeZoneService safeZoneService;
+    private final ValkeyOptionsClientService valkeyOptionsClientService;
 
     @Inject
-    public CombatListener(CombatService combatService, SafeZoneService safeZoneService) {
+    public CombatListener(
+            CombatService combatService,
+            SafeZoneService safeZoneService,
+            ValkeyOptionsClientService valkeyOptionsClientService
+    ) {
         this.combatService = combatService;
         this.safeZoneService = safeZoneService;
+        this.valkeyOptionsClientService = valkeyOptionsClientService;
     }
 
     @EventHandler
@@ -41,7 +47,7 @@ public class CombatListener implements Listener {
     }
 
     private void tagPlayersInCombat(Player attacker, Player victim) {
-        if (ContourMCPlugin.valkeyOptionsClientService.isCombatLoggingEnabled()) {
+        if (this.valkeyOptionsClientService.isCombatLoggingEnabled()) {
             if (!this.combatService.isInCombat(attacker.getUniqueId())) {
                 new Message(MessagePrefix.GAME, COMBAT_ENGAGED_MESSAGE).sendTo(attacker);
             }
