@@ -3,6 +3,7 @@ package com.mtxrii.contourmc;
 import com.mtxrii.contourmc.customitem.CustomItemCooldown;
 import com.mtxrii.contourmc.runnabletask.CombatNotificationTask;
 import com.mtxrii.contourmc.service.CombatService;
+import com.mtxrii.contourmc.service.ValkeyOptionsClientService;
 import com.mtxrii.contourmc.service.ZiplineService;
 import com.sxtanna.platform.Platform;
 import com.sxtanna.platform.paper.PlatformPaperPlugin;
@@ -14,6 +15,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
     public static ContourMCPlugin pluginClass;
     public static ZiplineService ziplineService;
     public static CombatService combatService;
+    public static ValkeyOptionsClientService valkeyOptionsClientService;
 
     public static final boolean COMBAT_LOGGING_ENABLED = true;
 
@@ -28,6 +30,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
 
         ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
         combatService = getPlatform().getInjector().getInstance(CombatService.class);
+        valkeyOptionsClientService = getPlatform().getInjector().getInstance(ValkeyOptionsClientService.class);
         
         if (COMBAT_LOGGING_ENABLED) {
             new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
@@ -48,5 +51,13 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
                 0L,
                 2L
         );
+    }
+
+    @Override
+    public void onDisable() {
+        if (valkeyOptionsClientService != null) {
+            valkeyOptionsClientService.close();
+        }
+        super.onDisable();
     }
 }
