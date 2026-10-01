@@ -58,6 +58,7 @@ dependencies {
 
     implementation(libs.classgraph)
     implementation(libs.geoip2)
+    implementation(libs.valkey.java)
 
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.lombok)

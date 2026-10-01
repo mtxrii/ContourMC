@@ -23,6 +23,7 @@ lib-guice = "7.0.0"
 
 lib-classgraph = "4.8.184"
 lib-geoip2 = "4.3.0"
+lib-valkey = "5.5.0"
 
 lib-platform = "1.0.0-SNAPSHOT"
 
@@ -60,6 +61,7 @@ configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", v
 
 classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "lib-classgraph" }
 geoip2 = { group = "com.maxmind.geoip2", name = "geoip2", version.ref = "lib-geoip2" }
+valkey-java = { group = "io.valkey", name = "valkey-java", version.ref = "lib-valkey" }
 
 platform-core = { group = "com.sxtanna.platform", name = "platform-core", version.ref = "lib-platform" }
 platform-paper = { group = "com.sxtanna.platform", name = "platform-paper", version.ref = "lib-platform" }
