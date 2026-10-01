@@ -40,7 +40,7 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getPlayer();
         
-        if (ContourMCPlugin.COMBAT_LOGGING_ENABLED && ContourMCPlugin.combatService != null) {
+        if (ContourMCPlugin.valkeyOptionsClientService.isCombatLoggingEnabled() && ContourMCPlugin.combatService != null) {
             ContourMCPlugin.combatService.unTag(victim.getUniqueId());
             if (victim.getKiller() != null) {
                 ContourMCPlugin.combatService.unTag(victim.getKiller().getUniqueId());

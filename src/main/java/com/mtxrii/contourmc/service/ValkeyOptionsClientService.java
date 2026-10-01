@@ -8,6 +8,7 @@ import io.valkey.Jedis;
 import io.valkey.JedisPool;
 import io.valkey.JedisPoolConfig;
 import io.valkey.Transaction;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.bukkit.plugin.Plugin;
@@ -29,6 +30,8 @@ import java.util.Objects;
 @Component
 @Singleton
 public final class ValkeyOptionsClientService implements AutoCloseable {
+    public static final String COMBAT_LOGGING_ENABLED_OPTION = "COMBAT_LOGGING_ENABLED";
+
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 6379;
     private static final int DEFAULT_TIMEOUT = 2_000;
@@ -36,6 +39,9 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
 
     private final JedisPool pool;
     private final String optionsKey;
+
+    @Getter
+    private volatile boolean combatLoggingEnabled;
 
     /**
      * Creates the application-managed Valkey service.
@@ -88,6 +94,14 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
                 timeout,
                 password
         );
+
+        String configuredCombatLogging = this.get(COMBAT_LOGGING_ENABLED_OPTION);
+        if (configuredCombatLogging == null) {
+            this.combatLoggingEnabled = true; // @TODO: Store defaults somewhere
+            this.set(COMBAT_LOGGING_ENABLED_OPTION, Boolean.toString(this.combatLoggingEnabled));
+        } else {
+            this.combatLoggingEnabled = Boolean.parseBoolean(configuredCombatLogging);
+        }
     }
 
     /**
@@ -128,8 +142,13 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
 
     /** Sets or replaces one option. */
     public void set(@NotNull String option, @NotNull String value) {
+        String validatedOption = requireText(option, "option");
+        String validatedValue = Objects.requireNonNull(value, "value");
         try (Jedis jedis = this.pool.getResource()) {
-            jedis.hset(this.optionsKey, requireText(option, "option"), Objects.requireNonNull(value, "value"));
+            jedis.hset(this.optionsKey, validatedOption, validatedValue);
+        }
+        if (COMBAT_LOGGING_ENABLED_OPTION.equals(validatedOption)) {
+            this.combatLoggingEnabled = Boolean.parseBoolean(validatedValue);
         }
     }
 

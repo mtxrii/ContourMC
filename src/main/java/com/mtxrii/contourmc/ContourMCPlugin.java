@@ -17,8 +17,6 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
     public static CombatService combatService;
     public static ValkeyOptionsClientService valkeyOptionsClientService;
 
-    public static final boolean COMBAT_LOGGING_ENABLED = true;
-
     public ContourMCPlugin(@NotNull final Platform platform) {
         super(platform);
         pluginClass = this;
@@ -32,7 +30,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
         combatService = getPlatform().getInjector().getInstance(CombatService.class);
         valkeyOptionsClientService = getPlatform().getInjector().getInstance(ValkeyOptionsClientService.class);
         
-        if (COMBAT_LOGGING_ENABLED) {
+        if (valkeyOptionsClientService.isCombatLoggingEnabled()) {
             new CombatNotificationTask(combatService).runTaskTimer(this, 0L, 20L);
             log.info("Combat logging enabled. (force-complete combats)");
         }

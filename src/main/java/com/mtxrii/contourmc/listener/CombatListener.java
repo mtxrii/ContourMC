@@ -41,7 +41,7 @@ public class CombatListener implements Listener {
     }
 
     private void tagPlayersInCombat(Player attacker, Player victim) {
-        if (ContourMCPlugin.COMBAT_LOGGING_ENABLED) {
+        if (ContourMCPlugin.valkeyOptionsClientService.isCombatLoggingEnabled()) {
             if (!this.combatService.isInCombat(attacker.getUniqueId())) {
                 new Message(MessagePrefix.GAME, COMBAT_ENGAGED_MESSAGE).sendTo(attacker);
             }
