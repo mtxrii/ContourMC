@@ -30,9 +30,6 @@ import java.util.Objects;
 @Component
 @Singleton
 public final class ValkeyOptionsClientService implements AutoCloseable {
-    public static final String COMBAT_LOGGING_ENABLED_OPTION = "COMBAT_LOGGING_ENABLED";
-    public static final String SERVER_JOINABLE_OPTION = OptionsConfiguration.SERVER_JOINABLE;
-
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 6379;
     private static final int DEFAULT_TIMEOUT = 2_000;
@@ -99,18 +96,18 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
                 password
         );
 
-        String configuredCombatLogging = this.get(COMBAT_LOGGING_ENABLED_OPTION);
+        String configuredCombatLogging = this.get(OptionsConfiguration.COMBAT_LOGGING_ENABLED);
         if (configuredCombatLogging == null) {
             this.combatLoggingEnabled = true; // @TODO: Store defaults somewhere
-            this.set(COMBAT_LOGGING_ENABLED_OPTION, Boolean.toString(this.combatLoggingEnabled));
+            this.set(OptionsConfiguration.COMBAT_LOGGING_ENABLED, Boolean.toString(this.combatLoggingEnabled));
         } else {
             this.combatLoggingEnabled = Boolean.parseBoolean(configuredCombatLogging);
         }
 
-        String configuredServerJoinable = this.get(SERVER_JOINABLE_OPTION);
+        String configuredServerJoinable = this.get(OptionsConfiguration.SERVER_JOINABLE);
         if (configuredServerJoinable == null) {
             this.serverJoinable = true;
-            this.set(SERVER_JOINABLE_OPTION, Boolean.toString(this.serverJoinable));
+            this.set(OptionsConfiguration.SERVER_JOINABLE, Boolean.toString(this.serverJoinable));
         } else {
             this.serverJoinable = Boolean.parseBoolean(configuredServerJoinable);
         }
@@ -159,10 +156,10 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
         try (Jedis jedis = this.pool.getResource()) {
             jedis.hset(this.optionsKey, validatedOption, validatedValue);
         }
-        if (COMBAT_LOGGING_ENABLED_OPTION.equals(validatedOption)) {
+        if (OptionsConfiguration.COMBAT_LOGGING_ENABLED.equals(validatedOption)) {
             this.combatLoggingEnabled = Boolean.parseBoolean(validatedValue);
         }
-        if (SERVER_JOINABLE_OPTION.equals(validatedOption)) {
+        if (OptionsConfiguration.SERVER_JOINABLE.equals(validatedOption)) {
             this.serverJoinable = Boolean.parseBoolean(validatedValue);
         }
     }
