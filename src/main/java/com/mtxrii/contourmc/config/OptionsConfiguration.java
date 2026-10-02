@@ -15,6 +15,8 @@ import java.util.Map;
  */
 @ConfigSerializable
 public class OptionsConfiguration {
+    public static final String SERVER_JOINABLE = "SERVER_JOINABLE";
+
     @Setting
     public Map<String, String> options = new LinkedHashMap<>();
 }

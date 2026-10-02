@@ -31,6 +31,7 @@ import java.util.Objects;
 @Singleton
 public final class ValkeyOptionsClientService implements AutoCloseable {
     public static final String COMBAT_LOGGING_ENABLED_OPTION = "COMBAT_LOGGING_ENABLED";
+    public static final String SERVER_JOINABLE_OPTION = OptionsConfiguration.SERVER_JOINABLE;
 
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 6379;
@@ -42,6 +43,9 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
 
     @Getter
     private volatile boolean combatLoggingEnabled;
+
+    @Getter
+    private volatile boolean serverJoinable;
 
     /**
      * Creates the application-managed Valkey service.
@@ -102,6 +106,14 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
         } else {
             this.combatLoggingEnabled = Boolean.parseBoolean(configuredCombatLogging);
         }
+
+        String configuredServerJoinable = this.get(SERVER_JOINABLE_OPTION);
+        if (configuredServerJoinable == null) {
+            this.serverJoinable = true;
+            this.set(SERVER_JOINABLE_OPTION, Boolean.toString(this.serverJoinable));
+        } else {
+            this.serverJoinable = Boolean.parseBoolean(configuredServerJoinable);
+        }
     }
 
     /**
@@ -149,6 +161,9 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
         }
         if (COMBAT_LOGGING_ENABLED_OPTION.equals(validatedOption)) {
             this.combatLoggingEnabled = Boolean.parseBoolean(validatedValue);
+        }
+        if (SERVER_JOINABLE_OPTION.equals(validatedOption)) {
+            this.serverJoinable = Boolean.parseBoolean(validatedValue);
         }
     }
 
