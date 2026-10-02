@@ -30,6 +30,8 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
         this.ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
         this.combatService = getPlatform().getInjector().getInstance(CombatService.class);
         this.valkeyOptionsClientService = getPlatform().getInjector().getInstance(ValkeyOptionsClientService.class);
+
+        log.info("Plugin config: {}", this.valkeyOptionsClientService.load().options.toString());
         
         if (this.valkeyOptionsClientService.isCombatLoggingEnabled()) {
             new CombatNotificationTask(this.combatService).runTaskTimer(this, 0L, 20L);
