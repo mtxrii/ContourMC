@@ -60,31 +60,12 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
      */
     @Inject
     public ValkeyOptionsClientService(Plugin plugin) {
-        this(
-                setting("contourmc.valkey.host", "CONTOURMC_VALKEY_HOST", DEFAULT_HOST),
-                integerSetting("contourmc.valkey.port", "CONTOURMC_VALKEY_PORT", DEFAULT_PORT),
-                integerSetting("contourmc.valkey.timeout", "CONTOURMC_VALKEY_TIMEOUT", DEFAULT_TIMEOUT),
-                optionalSetting("contourmc.valkey.password", "CONTOURMC_VALKEY_PASSWORD"),
-                setting("contourmc.valkey.options-key", "CONTOURMC_VALKEY_OPTIONS_KEY", DEFAULT_OPTIONS_KEY)
-        );
-    }
+        String host = setting("contourmc.valkey.host", "CONTOURMC_VALKEY_HOST", DEFAULT_HOST);
+        int port = integerSetting("contourmc.valkey.port", "CONTOURMC_VALKEY_PORT", DEFAULT_PORT);
+        int timeout = integerSetting("contourmc.valkey.timeout", "CONTOURMC_VALKEY_TIMEOUT", DEFAULT_TIMEOUT);
+        String password = optionalSetting("contourmc.valkey.password", "CONTOURMC_VALKEY_PASSWORD");
+        String optionsKey = setting("contourmc.valkey.options-key", "CONTOURMC_VALKEY_OPTIONS_KEY", DEFAULT_OPTIONS_KEY);
 
-    /**
-     * Creates a client for a standalone Valkey server.
-     *
-     * @param host Valkey hostname
-     * @param port Valkey port
-     * @param timeout connection and socket timeout in milliseconds
-     * @param password password, or {@code null} when authentication is disabled
-     * @param optionsKey Valkey hash key used for the options document
-     */
-    public ValkeyOptionsClientService(
-            @NotNull String host,
-            int port,
-            int timeout,
-            @Nullable String password,
-            @NotNull String optionsKey
-    ) {
         this.optionsKey = requireText(optionsKey, "optionsKey");
 
         JedisPoolConfig poolConfig = new JedisPoolConfig();
