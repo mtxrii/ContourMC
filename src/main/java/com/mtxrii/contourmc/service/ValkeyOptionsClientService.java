@@ -107,6 +107,16 @@ public final class ValkeyOptionsClientService implements AutoCloseable {
         }
     }
 
+    /** Reloads the cached boolean options from Valkey. */
+    public void reload() {
+        OptionsConfiguration configuration = this.load();
+        String combatLogging = configuration.options.get(OptionsConfiguration.COMBAT_LOGGING_ENABLED);
+        String serverJoinable = configuration.options.get(OptionsConfiguration.SERVER_JOINABLE);
+
+        this.combatLoggingEnabled = combatLogging == null || Boolean.parseBoolean(combatLogging);
+        this.serverJoinable = serverJoinable == null || Boolean.parseBoolean(serverJoinable);
+    }
+
     /**
      * Replaces the complete options document in one Valkey transaction.
      */
