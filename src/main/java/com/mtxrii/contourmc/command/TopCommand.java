@@ -27,6 +27,7 @@ import java.util.function.ToIntFunction;
 @CommandContainer
 public final class TopCommand {
     private static final int MAX_ENTRIES = 10;
+    private static final Set<String> SUPPORTED_CATEGORIES = Set.of("kills", "deaths", "killstreak");
 
     @Inject private PlayerStatsService playerStatsService;
 
@@ -41,7 +42,8 @@ public final class TopCommand {
             new Message(
                     MessagePrefix.GAME,
                     true,
-                    "Unknown leaderboard. Choose kills, deaths, or killstreak."
+                    "Unknown leaderboard. Choose {}",
+                    Message.multi(SUPPORTED_CATEGORIES)
             ).sendTo(sender);
             return;
         }
@@ -81,7 +83,7 @@ public final class TopCommand {
             @NotNull final CommandContext<Source> context,
             @NotNull final CommandInput input
     ) {
-        return Set.of("kills", "deaths", "killstreak");
+        return SUPPORTED_CATEGORIES;
     }
 
     private String formatLeaderboard(
@@ -123,6 +125,11 @@ public final class TopCommand {
     }
 
     private static boolean isSupportedCategory(String category) {
-        return category.equals("kills") || category.equals("deaths") || category.equals("killstreak");
+        for (String supportedCategory : SUPPORTED_CATEGORIES) {
+            if (supportedCategory.equals(category)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
