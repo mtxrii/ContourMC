@@ -26,6 +26,11 @@ public final class CustomItemCooldown {
     public static void cleanupExpiredCooldowns() {
         final long now = System.currentTimeMillis();
 
-        COOLDOWN_MAP.values().forEach(map -> map.entrySet().removeIf(entry -> now - entry.getValue().getTime() > COOLDOWN_EXPIRY_MILLIS));
+        COOLDOWN_MAP.entrySet().removeIf(playerEntry -> {
+            playerEntry.getValue().entrySet().removeIf(entry ->
+                    now - entry.getValue().getTime() > COOLDOWN_EXPIRY_MILLIS
+            );
+            return playerEntry.getValue().isEmpty();
+        });
     }
 }
