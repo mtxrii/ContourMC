@@ -6,6 +6,7 @@ import com.mtxrii.contourmc.message.MessagePrefix;
 import com.mtxrii.contourmc.particle.ParticleSpawn;
 import com.mtxrii.contourmc.service.SpawnpointService;
 import com.mtxrii.contourmc.service.CombatService;
+import com.mtxrii.contourmc.service.PlayerStatsService;
 import com.mtxrii.contourmc.service.ValkeyOptionsClientService;
 import com.mtxrii.contourmc.util.TextUtil;
 import com.sxtanna.platform.archetype.Component;
@@ -25,6 +26,7 @@ import org.bukkit.plugin.Plugin;
 /// - Generate custom death message
 /// - Auto-respawn player
 /// - Enforce combat logging
+/// - Record players' pvp stats
 @Component
 public class PlayerDeathListener implements Listener {
     private static final Particle PARTICLE_ON_DEATH = Particle.CHERRY_LEAVES;
@@ -32,6 +34,7 @@ public class PlayerDeathListener implements Listener {
     private Plugin plugin;
     private SpawnpointService spawnpointService;
     private CombatService combatService;
+    private PlayerStatsService playerStatsService;
     private ValkeyOptionsClientService valkeyOptionsClientService;
 
     @Inject
@@ -39,26 +42,35 @@ public class PlayerDeathListener implements Listener {
             Plugin plugin,
             SpawnpointService spawnpointService,
             CombatService combatService,
+            PlayerStatsService playerStatsService,
             ValkeyOptionsClientService valkeyOptionsClientService
     ) {
         this.plugin = plugin;
         this.spawnpointService = spawnpointService;
         this.combatService = combatService;
+        this.playerStatsService = playerStatsService;
         this.valkeyOptionsClientService = valkeyOptionsClientService;
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getPlayer();
+        Player killer = victim.getKiller();
+
+        if (killer == null) {
+            this.playerStatsService.recordDeath(victim.getUniqueId());
+        } else {
+            this.playerStatsService.recordKillAndDeath(killer.getUniqueId(), victim.getUniqueId());
+        }
         
         if (this.valkeyOptionsClientService.isCombatLoggingEnabled()) {
             this.combatService.unTag(victim.getUniqueId());
-            if (victim.getKiller() != null) {
-                this.combatService.unTag(victim.getKiller().getUniqueId());
+            if (killer != null) {
+                this.combatService.unTag(killer.getUniqueId());
             }
         }
 
-        Message deathMessage = generateDeathMessage(victim, victim.getKiller());
+        Message deathMessage = generateDeathMessage(victim, killer);
         event.deathMessage(deathMessage.getMessageComponent());
 
         ParticleSpawn deathParticles = new ParticleSpawn(
