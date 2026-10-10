@@ -2,7 +2,9 @@ package com.mtxrii.contourmc;
 
 import com.mtxrii.contourmc.customitem.CustomItemCooldown;
 import com.mtxrii.contourmc.runnabletask.CombatNotificationTask;
+import com.mtxrii.contourmc.runnabletask.ScoreboardTask;
 import com.mtxrii.contourmc.service.CombatService;
+import com.mtxrii.contourmc.service.ScoreboardService;
 import com.mtxrii.contourmc.service.ValkeyOptionsClientService;
 import com.mtxrii.contourmc.service.ZiplineService;
 import com.sxtanna.platform.Platform;
@@ -16,6 +18,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
 
     private ZiplineService ziplineService;
     private CombatService combatService;
+    private ScoreboardService scoreboardService;
     private ValkeyOptionsClientService valkeyOptionsClientService;
 
     public ContourMCPlugin(@NotNull final Platform platform) {
@@ -29,6 +32,7 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
 
         this.ziplineService = getPlatform().getInjector().getInstance(ZiplineService.class);
         this.combatService = getPlatform().getInjector().getInstance(CombatService.class);
+        this.scoreboardService = getPlatform().getInjector().getInstance(ScoreboardService.class);
         this.valkeyOptionsClientService = getPlatform().getInjector().getInstance(ValkeyOptionsClientService.class);
 
         log.info("Plugin config: {}", this.valkeyOptionsClientService.load().options.toString());
@@ -45,6 +49,8 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
                 20L
         );
 
+        new ScoreboardTask(this.scoreboardService).runTaskTimer(this, 0L, 20L);
+
         // Start periodic particle rendering task for all active ziplines
         getServer().getScheduler().runTaskTimer(
                 this,
@@ -56,6 +62,9 @@ public final class ContourMCPlugin extends PlatformPaperPlugin {
 
     @Override
     public void onDisable() {
+        if (this.scoreboardService != null) {
+            this.scoreboardService.clear();
+        }
         if (this.valkeyOptionsClientService != null) {
             this.valkeyOptionsClientService.close();
         }
