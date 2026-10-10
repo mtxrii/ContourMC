@@ -39,7 +39,7 @@ public final class TopCommand {
         String normalizedCategory = category == null ? null : category.toLowerCase();
         if (normalizedCategory != null && !isSupportedCategory(normalizedCategory)) {
             new Message(
-                    MessagePrefix.INFO,
+                    MessagePrefix.GAME,
                     true,
                     "Unknown leaderboard. Choose kills, deaths, or killstreak."
             ).sendTo(sender);
@@ -48,7 +48,7 @@ public final class TopCommand {
 
         if (normalizedCategory == null) {
             new Message(
-                    MessagePrefix.INFO,
+                    MessagePrefix.GAME,
                     "Top leaderboards:\n\n{}\n\n{}\n\n{}",
                     this.formatLeaderboard("Kills", stats -> stats.kills),
                     this.formatLeaderboard("Deaths", stats -> stats.deaths),
@@ -71,7 +71,7 @@ public final class TopCommand {
         };
 
         new Message(
-                MessagePrefix.INFO,
+                MessagePrefix.GAME,
                 this.formatLeaderboard(title, valueFunction)
         ).sendTo(sender);
     }
